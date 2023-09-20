@@ -18,21 +18,6 @@ You should have received a copy of the GNU General Public License along with Nat
 global TimerGuiTransparency:=0
 global TimerX:=150
 global TimerY:=150
-
-if (TimerX && TimerY)
-{
-	SysGet, MonitorCount, MonitorCount
-	loop %MonitorCount%
-	{
-		SysGet, Mon, MonitorWorkArea, %A_Index%
-		if(TimerX>MonLeft && TimerX<MonRight && TimerY>MonTop && TimerY<MonBottom)
-			break
-		if(A_Index=MonitorCount)
-			TimerX:=TimerY:=0
-	}
-}
-else
-	TimerX:=TimerY:=0
 	
 SetWorkingDir %A_ScriptDir%\..
 RunWith(32)
@@ -57,6 +42,21 @@ if(fileexist("settings\nm_config.ini")){
 	IniRead, TimerX, settings\nm_config.ini, gui, TimerX
 	IniRead, TimerY, settings\nm_config.ini, gui, TimerY
 	IniRead, TimerGuiTransparency, settings\nm_config.ini, gui, TimerGuiTransparency
+
+	if (TimerX && TimerY)
+	{
+		SysGet, MonitorCount, MonitorCount
+		loop %MonitorCount%
+		{
+			SysGet, Mon, MonitorWorkArea, %A_Index%
+			if(TimerX>MonLeft && TimerX<MonRight && TimerY>MonTop && TimerY<MonBottom)
+				break
+			if(A_Index=MonitorCount)
+				TimerX:=TimerY:=0
+		}
+	}
+	else
+		TimerX:=TimerY:=0
 }
 
 gui ptimers:+AlwaysOnTop +border +minsize50x30 +E0x08040000 +hwndhGUI +lastfound
