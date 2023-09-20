@@ -12148,7 +12148,7 @@ nm_Mondo(){
 								mondoDead:=nm_HealthDetection()
 								if(mondoDead.Length() > 0)
 									Break
-								if (A_Index=40)
+								if (A_Index=60)
 								{
 									repeat:=0
 									send {%RotRight%}
