@@ -734,7 +734,7 @@ nm_command(command)
 		case "stop":
 		DetectHiddenWindows, On
 		SetTitleMatchMode, 2
-		if WinExist("natro_macro.ahk ahk_class AutoHotkey")
+		if WinExist("natro_macro ahk_class AutoHotkey")
 		{
 			PostMessage, 0x5550, 3
 			discord.SendEmbed("Stopping Macro...", 5066239, , , , id)
@@ -750,7 +750,7 @@ nm_command(command)
 		{
 			DetectHiddenWindows, On
 			SetTitleMatchMode, 2
-			if WinExist("natro_macro.ahk ahk_class AutoHotkey")
+			if WinExist("natro_macro ahk_class AutoHotkey")
 			{
 				PostMessage, 0x5550, 2
 				discord.SendEmbed(((MacroState = 2) ? "Pausing" : "Unpausing") " Macro...", 5066239, , , , id)
@@ -765,7 +765,7 @@ nm_command(command)
 		{
 			DetectHiddenWindows, On
 			SetTitleMatchMode, 2
-			if WinExist("natro_macro.ahk ahk_class AutoHotkey"){
+			if WinExist("natro_macro ahk_class AutoHotkey"){
 				PostMessage, 0x5550, 1
 				discord.SendEmbed("Starting Macro...", 5066239, , , , id)
 			}
@@ -783,7 +783,7 @@ nm_command(command)
 		{
 			WinGet, windowPID, PID
 			DetectHiddenWindows, On
-			if WinExist("natro_macro.ahk ahk_class AutoHotkey")
+			if WinExist("natro_macro ahk_class AutoHotkey")
 				WinGet, natroPID, PID
 			DetectHiddenWindows, Off
 			if (windowPID = natroPID)
@@ -832,7 +832,7 @@ nm_command(command)
 			delay := params[2] ? params[2] : 0
 			DetectHiddenWindows, On
 			SetTitleMatchMode, 2
-			if WinExist("natro_macro.ahk ahk_class AutoHotkey")
+			if WinExist("natro_macro ahk_class AutoHotkey")
 			{
 				PostMessage, 0x5557, delay
 				discord.SendEmbed((delay > 0) ? ("Rejoining after " delay " seconds!") : "Rejoining...", 5066239, , , , id)
@@ -851,7 +851,7 @@ nm_command(command)
 		case "keep":
 		DetectHiddenWindows, On
 		SetTitleMatchMode, 2
-		if WinExist("natro_macro.ahk ahk_class AutoHotkey")
+		if WinExist("natro_macro ahk_class AutoHotkey")
 		{
 			SendMessage, 0x5558, 1, , , , , , , 2000
 			switch % ErrorLevel
@@ -873,7 +873,7 @@ nm_command(command)
 		case "replace":
 		DetectHiddenWindows, On
 		SetTitleMatchMode, 2
-		if WinExist("natro_macro.ahk ahk_class AutoHotkey")
+		if WinExist("natro_macro ahk_class AutoHotkey")
 		{
 			SendMessage, 0x5558, 2, , , , , , , 2000
 			switch % ErrorLevel
@@ -1561,7 +1561,7 @@ nm_command(command)
 			state := (params[2] = "on") ? 1 : (params[2] = "off") ? 0 : params[2]
 			DetectHiddenWindows, On
 			SetTitleMatchMode, 2
-			if WinExist("natro_macro.ahk ahk_class AutoHotkey")
+			if WinExist("natro_macro ahk_class AutoHotkey")
 			{
 				SendMessage, 0x5551, state, , , , , , , 2000
 				(ErrorLevel = 2) ? discord.SendEmbed("No Roblox window found!", 16711731, , , , id) : discord.SendEmbed(((state = 1) ? "Enabled" : "Disabled") " Shift Lock!", 5066239, , , , id)
@@ -1998,7 +1998,7 @@ UpdateStr(var, value, section)
 	IniWrite, % (%var% := value), settings\nm_config.ini, %section%, %var%
 	DetectHiddenWindows, On
 	SetTitleMatchMode, 2
-	if WinExist("natro_macro.ahk ahk_class AutoHotkey")
+	if WinExist("natro_macro ahk_class AutoHotkey")
 		PostMessage, 0x5553, settings[var].enum, sections[section]
 	if WinExist("background.ahk ahk_class AutoHotkey")
 		PostMessage, 0x5553, settings[var].enum, sections[section]
@@ -2010,7 +2010,7 @@ UpdateInt(var, value, section)
 	IniWrite, % (%var% := value), settings\nm_config.ini, %section%, %var%
 	DetectHiddenWindows, On
 	SetTitleMatchMode, 2
-	if WinExist("natro_macro.ahk ahk_class AutoHotkey")
+	if WinExist("natro_macro ahk_class AutoHotkey")
 		PostMessage, 0x5552, settings[var].enum, value
 	if WinExist("background.ahk ahk_class AutoHotkey")
 		PostMessage, 0x5552, settings[var].enum, value
