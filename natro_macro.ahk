@@ -21,8 +21,8 @@ You should have received a copy of the GNU General Public License along with Nat
 
 SetBatchLines -1
 SetWorkingDir %A_ScriptDir%
-CoordMode, Mouse, Client
-CoordMode, Pixel, Client
+CoordMode, Mouse, Screen
+CoordMode, Pixel, Screen
 
 ; checks for the correct AHK version before starting
 RunWith(32)
@@ -104,6 +104,7 @@ ZoomIn:="sc017" ; i
 ZoomOut:="sc018" ; o
 SC_E:="sc012" ; e
 SC_R:="sc013" ; r
+SC_L:="sc026" ; l
 SC_Esc:="sc001" ; Esc
 SC_Enter:="sc01c" ; Enter
 SC_LShift:="sc02a" ; LShift
@@ -161,6 +162,7 @@ nm_import() ; at every start of macro, import patterns
 		ZoomOut:=""" ZoomOut """
 		SC_E:=""" SC_E """
 		SC_R:=""" SC_R """
+		SC_L:=""" SC_L """
 		SC_Esc:=""" SC_Esc """
 		SC_Enter:=""" SC_Enter """
 		SC_LShift:=""" SC_LShift """
@@ -2711,8 +2713,8 @@ mp_PlantPlanter(PlanterIndex) {
 	nm_setStatus("Traveling", MPlanterName " (" MFieldName ")")
 	nm_gotoPlanter(MFieldName, 0)
 
-	WinActivate, Roblox ahk_exe RobloxPlayerBeta.exe
-	WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
+	WinActivate, Roblox
+	WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
 
 	planterPos := nm_InventorySearch(MPlanterName, "up", 4) ;~ new function
 
@@ -2722,7 +2724,7 @@ mp_PlantPlanter(PlanterIndex) {
 		return 0
 	}
 	else
-		MouseMove, planterPos[1], planterPos[2]
+		MouseMove, windowX+planterPos[1], windowY+planterPos[2]
 
 	KeyWait, F14, T120 L ; wait for gotoPlanter finish
 	nm_endWalk()
@@ -2730,7 +2732,7 @@ mp_PlantPlanter(PlanterIndex) {
 	nm_setStatus("Placing", MPlanterName)
 	Loop, 10
 	{
-		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
+		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
 		pBMScreen := Gdip_BitmapFromScreen(windowX "|" windowY+150 "|" windowWidth//2 "|" Max(480, windowHeight-120))
 
 		if (A_Index = 1)
@@ -2764,21 +2766,21 @@ mp_PlantPlanter(PlanterIndex) {
 		}
 		Gdip_DisposeImage(pBMScreen)
 
-		MouseClickDrag, Left, 30, SubStr(planterPos, InStr(planterPos, ",")+1)+190, windowWidth//2, windowHeight//2, 5
+		MouseClickDrag, Left, windowX+30, windowY+SubStr(planterPos, InStr(planterPos, ",")+1)+190, windowX+windowWidth//2, windowY+windowHeight//2, 5
 		sleep, 200
 	}
 	Loop, 50
 	{
-		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
+		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
 		loop 3 {
 			pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//2-250 "|" windowY+((6*windowHeight)//10 - 60) "|500|150")
 			if (Gdip_ImageSearch(pBMScreen, bitmaps["yes"], pos, , , , , 2, , 2) = 1) {
-				MouseMove, windowWidth//2-250+SubStr(pos, 1, InStr(pos, ",")-1), ((6*windowHeight)//10 - 60)+SubStr(pos, InStr(pos, ",")+1)
+				MouseMove, windowX+windowWidth//2-250+SubStr(pos, 1, InStr(pos, ",")-1), windowY+((6*windowHeight)//10 - 60)+SubStr(pos, InStr(pos, ",")+1)
 				sleep, 150
 				Click
 				sleep 100
 				Gdip_DisposeImage(pBMScreen)
-				MouseMove, 350, 100
+				MouseMove, windowX+350, windowY+100
 				break 2
 			}
 			Gdip_DisposeImage(pBMScreen)
@@ -2866,14 +2868,17 @@ mp_UseGlitter(PlanterIndex, atField:=0) {
 		return 0
 	}
 	else
-		MouseMove, glitterPos[1], glitterPos[2]
+	{
+		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
+		MouseMove, windowX+glitterPos[1], windowY+glitterPos[2]
+	}
 
 	KeyWait, F14, T120 L ; wait for gotoPlanter finish
 	nm_endWalk()
 
 	Loop, 10
 	{
-		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
+		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
 		pBMScreen := Gdip_BitmapFromScreen(windowX "|" windowY+150 "|" windowWidth//2 "|" Max(480, windowHeight-120))
 
 		if (A_Index = 1)
@@ -2907,7 +2912,7 @@ mp_UseGlitter(PlanterIndex, atField:=0) {
 		}
 		Gdip_DisposeImage(pBMScreen)
 
-		MouseClickDrag, Left, 30, SubStr(glitterPos, InStr(glitterPos, ",")+1)+190, windowWidth//2, windowHeight//2, 5
+		MouseClickDrag, Left, windowX+30, windowY+SubStr(glitterPos, InStr(glitterPos, ",")+1)+190, windowX+windowWidth//2, windowY+windowHeight//2, 5
 		sleep, 200
 	}
 
@@ -2988,7 +2993,7 @@ mp_HarvestPlanter(PlanterIndex) {
 
 		Loop, 50
 		{
-			WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
+			WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
 			pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//2-200 "|" windowY+36 "|200|120")
 			if (Gdip_ImageSearch(pBMScreen, bitmaps["e_button"], , , , , , 2, , 6) = 0) {
 				Gdip_DisposeImage(pBMScreen)
@@ -3003,16 +3008,16 @@ mp_HarvestPlanter(PlanterIndex) {
 		}
 
 		Sleep, 50 ; wait for game to update frame
-		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
+		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
 		if (PlanterHarvestFull%PlanterIndex% == "Full") {
 			loop 3 {
 				pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//2-250 "|" windowY+((6*windowHeight)//10 - 60) "|500|150")
 				if (Gdip_ImageSearch(pBMScreen, bitmaps["no"], pos, , , , , 2, , 3) = 1) {
-					MouseMove, windowWidth//2-250+SubStr(pos, 1, InStr(pos, ",")-1), ((6*windowHeight)//10 - 60)+SubStr(pos, InStr(pos, ",")+1)
+					MouseMove, windowX+windowWidth//2-250+SubStr(pos, 1, InStr(pos, ",")-1), windowY+((6*windowHeight)//10 - 60)+SubStr(pos, InStr(pos, ",")+1)
 					sleep, 150
 					Click
 					sleep 100
-					MouseMove, 350, 100
+					MouseMove, windowX+350, windowY+100
 					Gdip_DisposeImage(pBMScreen)
 					nm_PlanterTimeUpdate(FieldName)
 					return 2
@@ -3024,12 +3029,12 @@ mp_HarvestPlanter(PlanterIndex) {
 			loop 3 {
 				pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//2-250 "|" windowY+((6*windowHeight)//10 - 60) "|500|150")
 				if (Gdip_ImageSearch(pBMScreen, bitmaps["yes"], pos, , , , , 2, , 2) = 1) {
-					MouseMove, windowWidth//2-250+SubStr(pos, 1, InStr(pos, ",")-1), ((6*windowHeight)//10 - 60)+SubStr(pos, InStr(pos, ",")+1)
+					MouseMove, windowX+windowWidth//2-250+SubStr(pos, 1, InStr(pos, ",")-1), windowY+((6*windowHeight)//10 - 60)+SubStr(pos, InStr(pos, ",")+1)
 					sleep, 150
 					Click
 					sleep 100
 					Gdip_DisposeImage(pBMScreen)
-					MouseMove, 350, 100
+					MouseMove, windowX+350, windowY+100
 					break
 				}
 				Gdip_DisposeImage(pBMScreen)
@@ -3128,7 +3133,7 @@ return
 ; MAIN LOOP
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 nm_Start(){
-	WinActivate, Roblox ahk_exe RobloxPlayerBeta.exe
+	WinActivate, Roblox
 	global serverStart
 	global QuestGatherField
 	serverStart:=nowUnix()
@@ -3374,7 +3379,7 @@ nm_testButton(){ ;~~ lines 3464 and 3465 have the same change as 14156
 	GuiControlGet, TestMsgBox
 	Gui, +OwnDialogs
 
-	if !WinExist("Roblox ahk_exe RobloxPlayerBeta.exe")
+	if !GetRobloxHWND()
 	{
 		msgbox, 0x40030, Test Paths/Patterns, You must have Bee Swarm Simulator open to use this!, 20
 		return 0
@@ -3422,6 +3427,7 @@ nm_testButton(){ ;~~ lines 3464 and 3465 have the same change as 14156
 	ZoomOut:=""" ZoomOut """
 	SC_E:=""" SC_E """
 	SC_R:=""" SC_R """
+	SC_L:=""" SC_L """
 	SC_Esc:=""" SC_Esc """
 	SC_Enter:=""" SC_Enter """
 	SC_LShift:=""" SC_LShift """
@@ -3456,8 +3462,7 @@ nm_testButton(){ ;~~ lines 3464 and 3465 have the same change as 14156
 	#KeyHistory 0
 	ListLines, Off
 	OnExit(""""ExitFunc"""")
-	CoordMode, Pixel, Client
-	CoordMode, Mouse, Client
+	CoordMode, Mouse, Screen
 
 	#Include " A_ScriptDir "\lib
 	#Include Gdip_All.ahk
@@ -3473,8 +3478,9 @@ nm_testButton(){ ;~~ lines 3464 and 3465 have the same change as 14156
 
 	Loop" ((TestInfinite = 0) ? (", " TestCount) : "") "
 	{
-		WinActivate, Roblox ahk_exe RobloxPlayerBeta.exe
-		MouseMove, 350, 100
+		WinActivate, Roblox
+		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, """"ahk_id """" GetRobloxHWND())
+		MouseMove, windowX+350, windowY+100
 		" ((TestMsgBox = 1) ? "msgbox, 0x40044, Test Paths/Patterns, % """"Start Cycle: """" A_Index """"````r````nContinue?""""`r`n`t`tIfMsgBox, No`r`n`t`tExitApp" : "tooltip % """"Testing````nCycle: """" A_Index") "
 		" ((TestReset = 1) ? "nm_reset()" : "") "
 		" ((NewWalk = 1) ? """ Test1 """ : (""" RegExReplace(Test1, ""im)Walk\((?<param>.+?)(?:\,|\)(?=[^()]*(?:\(|$)))(?:.*\))?"", ""HyperSleep(2000/9*"" round(18/" MoveSpeedNum ", 2) ""*(${param}))"") """)) "
@@ -3511,12 +3517,12 @@ nm_testButton(){ ;~~ lines 3464 and 3465 have the same change as 14156
 		pBMCannon := Gdip_BitmapFromBase64(""""iVBORw0KGgoAAAANSUhEUgAAABsAAAAMAQMAAACpyVQ1AAAABlBMVEUAAAD3//lCqWtQAAAAAXRSTlMAQObYZgAAAEdJREFUeAEBPADD/wDAAGBgAMAAYGAA/gBgYAD+AGBgAMAAYGAAwABgYADAAGBgAMAAYGAAwABgYADAAGBgAMAAYGAAwABgYDdgEn1l8cC/AAAAAElFTkSuQmCC"""")
 		Loop, 10
 		{
-			MouseMove, 350, 100
+			WinGetClientPos(windowX, windowY, windowWidth, windowHeight, """"ahk_id """" GetRobloxHWND())
+			MouseMove, windowX+350, windowY+100
 			Send {"" SC_Space "" down}
 			Sleep, 100
 			Send {"" SC_Space "" up}{"" RightKey "" down}
 
-			WinGetClientPos(windowX, windowY, windowWidth, windowHeight, """"Roblox ahk_exe RobloxPlayerBeta.exe"""")
 			DllCall(""""GetSystemTimeAsFileTime"""",""""int64p"""",s)
 			n := s, f := s+100000000, success := 0
 			while (n < f)
@@ -3571,10 +3577,11 @@ nm_testButton(){ ;~~ lines 3464 and 3465 have the same change as 14156
 		pBMH3 := Gdip_CreateBitmap(240,3), G := Gdip_GraphicsFromImage(pBMH3), Gdip_GraphicsClear(G,0xff8e7d4d), Gdip_DeleteGraphics(G)
 		pBMR := Gdip_CreateBitmap(20,1), G := Gdip_GraphicsFromImage(pBMR), Gdip_GraphicsClear(G,0xffa7a7a7), Gdip_DeleteGraphics(G)
 		success := 0
-		MouseMove, 350, 100
+		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, """"ahk_id """" GetRobloxHWND())
+		MouseMove, windowX+350, windowY+100
 		Loop, 10
 		{
-			WinActivate, Roblox ahk_exe RobloxPlayerBeta.exe
+			WinActivate, Roblox
 			SetKeyDelay, 250+"" KeyDelay ""
 			SendEvent {"" SC_Esc ""}{"" SC_R ""}{"" SC_Enter ""}
 			SetKeyDelay, 100+"" KeyDelay ""
@@ -3582,7 +3589,7 @@ nm_testButton(){ ;~~ lines 3464 and 3465 have the same change as 14156
 			while ((n < 2) && (A_Index <= 80))
 			{
 				Sleep, 250
-				WinGetClientPos(windowX, windowY, windowWidth, windowHeight, """"Roblox ahk_exe RobloxPlayerBeta.exe"""")
+				WinGetClientPos(windowX, windowY, windowWidth, windowHeight, """"ahk_id """" GetRobloxHWND())
 				pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth-100 """"|"""" windowY """"|100|32"""")
 				n += (Gdip_ImageSearch(pBMScreen, pBMR, , , , , , 10) = (n = 0))
 				Gdip_DisposeImage(pBMScreen)
@@ -3592,7 +3599,7 @@ nm_testButton(){ ;~~ lines 3464 and 3465 have the same change as 14156
 			SendEvent {"" ZoomOut "" 8}
 			SetKeyDelay, 10
 			Sleep, 500
-			WinGetClientPos(windowX, windowY, windowWidth, windowHeight, """"Roblox ahk_exe RobloxPlayerBeta.exe"""")
+			WinGetClientPos(windowX, windowY, windowWidth, windowHeight, """"ahk_id """" GetRobloxHWND())
 			Loop, 4
 			{
 				pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//4 """"|"""" windowY+3*windowHeight//4 """"|"""" windowWidth//2 """"|"""" windowHeight//4)
@@ -3612,6 +3619,18 @@ nm_testButton(){ ;~~ lines 3464 and 3465 have the same change as 14156
 			msgbox, 0x40034, Test Paths/Patterns, Reset Failed!````r````nTest has been aborted.
 			ExitApp
 		}
+	}
+	GetRobloxHWND()
+	{
+		if (hwnd := WinExist(""""Roblox ahk_exe RobloxPlayerBeta.exe""""))
+			return hwnd
+		else if (WinExist(""""Roblox ahk_exe ApplicationFrameHost.exe""""))
+		{
+			ControlGet, hwnd, Hwnd, , ApplicationFrameInputSinkWindow1
+			return hwnd
+		}
+		else
+			return 0
 	}
 	ExitFunc()
 	{
@@ -6104,8 +6123,7 @@ nm_DebugLogCheck(){
 	SetTitleMatchMode %Prev_TitleMatchMode%
 }
 nm_testReconnect(){
-	for p in ComObjGet("winmgmts:").ExecQuery("Select * from Win32_Process where Name like '%Roblox%'")
-		Process, Close, % p.ProcessID
+	CloseRoblox()
 	if (DisconnectCheck(1) = 1)
 		msgbox success
 }
@@ -6174,7 +6192,7 @@ nm_saveHotkey(hCtrl){
 		; do not allow necessary keys
 		switch % Format("sc{:03X}", GetKeySC(%k%))
 		{
-			case FwdKey,LeftKey,BackKey,RightKey,RotLeft,RotRight,RotUp,RotDown,ZoomIn,ZoomOut,SC_E,SC_R,SC_Esc,SC_Enter,SC_LShift,SC_Space:
+			case FwdKey,LeftKey,BackKey,RightKey,RotLeft,RotRight,RotUp,RotDown,ZoomIn,ZoomOut,SC_E,SC_R,SC_L,SC_Esc,SC_Enter,SC_LShift,SC_Space:
 			GuiControl, , %hCtrl%, % %v%
 			msgbox, 0x1030, Unacceptable Hotkey!, % "That hotkey cannot be used!`nThe key is already used elsewhere in the macro."
 			return
@@ -7456,9 +7474,10 @@ nm_ContributorsDiscordLink(){
 		, "217700684835979265": [113,147,170,157]
 		, "350433227380621322": [113,159,138,169]
 		, "487989990937198602": [113,171,144,181]}
+	WinGetClientPos(window_x, window_y, , , "Natro ahk_class AutoHotkeyGUI") ;gets the location of the natro window
 	MouseGetPos, mouse_x, mouse_y, , hCtrl, 2
-	ControlGetPos, ctrl_x, ctrl_y, , , , ahk_id %hCtrl% ;gets the location of the natro window
-	x := mouse_x - ctrl_x, y := mouse_y - ctrl_y
+	ControlGetPos, ctrl_x, ctrl_y, , , , ahk_id %hCtrl%
+	x := mouse_x - window_x - ctrl_x, y := mouse_y - window_y - ctrl_y
 	for k,v in id_list
 	{
 		if ((x >= v[1]) && (x <= v[3]) && (y >= v[2]) && (y <= v[4]))
@@ -7911,7 +7930,7 @@ WaitForAsync(ByRef Object)
 ;OCRMutation(ByRef amount, ByRef stat, x1, y1, w1, h1)
 ba_OCRStringExists(findString, aim:="full")
 {
-	WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
+	WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
     xi := 0
     yi := 0
 	ww := windowWidth
@@ -7971,8 +7990,8 @@ nm_PlanterDetection()
 		pGraphics := Gdip_GraphicsFromImage(pBMRemain), Gdip_GraphicsClear(pGraphics, 0xff567848), Gdip_DeleteGraphics(pGraphics)
 	}
 
-	WinActivate, Roblox ahk_exe RobloxPlayerBeta.exe
-	WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
+	WinActivate, Roblox
+	WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
 	pBMScreen := Gdip_BitmapFromScreen(windowX "|" windowY "|" windowWidth "|" windowHeight)
 
 	sPlanterStart := Gdip_ImageSearch(pBMScreen, pBMProgressStart, PStart, , , , , , , 5)
@@ -8049,8 +8068,8 @@ nm_HealthDetection()
         pBMDamage := Gdip_CreateBitmap(1,4)
         pGraphics := Gdip_GraphicsFromImage(pBMDamage), Gdip_GraphicsClear(pGraphics, 0xff6b131a), Gdip_DeleteGraphics(pGraphics)
 	}
-	WinActivate, Roblox ahk_exe RobloxPlayerBeta.exe
-	WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
+	WinActivate, Roblox
+	WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
 	pBMScreen := Gdip_BitmapFromScreen(windowX "|" windowY "|" windowWidth "|" windowHeight)
     G := Gdip_GraphicsFromImage(pBMScreen)
     pBrush := Gdip_BrushCreateSolid(0xff000000)
@@ -8162,7 +8181,7 @@ nm_KillTimeEstimation(bossName, bossTimer)
 
 
 nm_imgSearch(fileName,v,aim := "full", trans:="none"){
-	WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
+	WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
     ;xi := 0
     ;yi := 0
 	;ww := windowWidth
@@ -8170,19 +8189,19 @@ nm_imgSearch(fileName,v,aim := "full", trans:="none"){
 	xi:=(aim="actionbar") ? windowWidth/4 : (aim="highright") ? windowWidth/2 : (aim="right") ? windowWidth/2 : (aim="center") ? windowWidth/4 : (aim="lowright") ? windowWidth/2 : 0
 	yi:=(aim="low") ? windowHeight/2 : (aim="actionbar") ? (windowHeight/4)*3 : (aim="center") ? yi:=windowHeight/4 : (aim="lowright") ? windowHeight/2 : (aim="quest") ? 150 : 0
 	ww:=(aim="actionbar") ? xi*3 : (aim="highleft") ? windowWidth/2 : (aim="left") ? windowWidth/2 : (aim="center") ? xi*3 : (aim="quest") ? 310 : windowWidth
-	wh:=(aim="high") ? windowHeight/2 : (aim="highright") ? windowHeight/2 : (aim="highleft") ? windowHeight/2 : (aim="buff") ? 150 : (aim="abovebuff") ? 30 : (aim="center") ? yi*3 : (aim="quest") ? Max(560, windowHeight-140) : windowHeight
+	wh:=(aim="high") ? windowHeight/2 : (aim="highright") ? windowHeight/2 : (aim="highleft") ? windowHeight/2 : (aim="buff") ? 150 : (aim="abovebuff") ? 30 : (aim="center") ? yi*3 : (aim="quest") ? Max(560, windowHeight-100) : windowHeight
 	IfExist, %A_ScriptDir%\nm_image_assets\
 	{
 		if(trans!="none")
-			ImageSearch, FoundX, FoundY, %xi%, %yi%, %ww%, %wh%, *%v% *Trans%trans% %A_ScriptDir%\nm_image_assets\%fileName%
+			ImageSearch, FoundX, FoundY, windowX + xi, windowY + yi, windowX + ww, windowY + wh, *%v% *Trans%trans% %A_ScriptDir%\nm_image_assets\%fileName%
 		else
-			ImageSearch, FoundX, FoundY, %xi%, %yi%, %ww%, %wh%, *%v% %A_ScriptDir%\nm_image_assets\%fileName%
+			ImageSearch, FoundX, FoundY, windowX + xi, windowY + yi, windowX + ww, windowY + wh, *%v% %A_ScriptDir%\nm_image_assets\%fileName%
 		if (ErrorLevel = 2) {
 			nm_setStatus("Error", "Image file " filename " was not found in:`n" A_ScriptDir "\nm_image_assets\" fileName)
 			Sleep, 5000
 			Process, Close, % DllCall("GetCurrentProcessId")
 		}
-		return [ErrorLevel,FoundX,FoundY]
+		return [ErrorLevel,FoundX-windowX,FoundY-windowY]
 	} else {
 		MsgBox Folder location cannot be found:`n%A_ScriptDir%\nm_image_assets\
 		return 3, 0, 0
@@ -8219,8 +8238,7 @@ nm_Reset(checkAll:=1, wait:=2000, convert:=1, force:=0){
 	;check for game frozen conditions
 	if (GameFrozenCounter>=3) { ;3 strikes
 		nm_setStatus("Detected", "Roblox Game Frozen, Restarting")
-		for p in ComObjGet("winmgmts:").ExecQuery("Select * from Win32_Process where Name like '%Roblox%'")
-			Process, Close, % p.ProcessID
+		CloseRoblox()
 		GameFrozenCounter:=0
 	}
 	DisconnectCheck()
@@ -8244,43 +8262,42 @@ nm_Reset(checkAll:=1, wait:=2000, convert:=1, force:=0){
 		;failsafe game frozen
 		if(Mod(A_Index, 10) = 0) {
 			nm_setStatus("Closing", "and Re-Open Roblox")
-			for p in ComObjGet("winmgmts:").ExecQuery("Select * from Win32_Process where Name like '%Roblox%'")
-				Process, Close, % p.ProcessID
+			CloseRoblox()
 			DisconnectCheck()
 			continue
 		}
 		DisconnectCheck()
-		WinActivate, Roblox ahk_exe RobloxPlayerBeta.exe
+		WinActivate, Roblox
 		;check to make sure you are not in dialog before reset
 		Loop, 500
 		{
-			WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
+			WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
 			pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//2-50 "|" windowY+2*windowHeight//3 "|100|" windowHeight//3)
 			if (Gdip_ImageSearch(pBMScreen, bitmaps["dialog"], pos, , , , , 10, , 3) = 0) {
 				Gdip_DisposeImage(pBMScreen)
 				break
 			}
 			Gdip_DisposeImage(pBMScreen)
-			MouseMove, windowWidth//2, 2*windowHeight//3+SubStr(pos, InStr(pos, ",")+1)-15
+			MouseMove, windowX+windowWidth//2, windowY+2*windowHeight//3+SubStr(pos, InStr(pos, ",")+1)-15
 			Click
 			sleep, 150
 		}
-		MouseMove, 350, 100
+		MouseMove, windowX+350, windowY+100
 		;check to make sure you are not in a yes/no prompt
-		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
+		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
 		pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//2-250 "|" windowY+((6*windowHeight)//10 - 60) "|500|150")
 		if (Gdip_ImageSearch(pBMScreen, bitmaps["no"], pos, , , , , 2, , 3) = 1) {
-			MouseMove, windowWidth//2-250+SubStr(pos, 1, InStr(pos, ",")-1), ((6*windowHeight)//10 - 60)+SubStr(pos, InStr(pos, ",")+1)
+			MouseMove, windowX+windowWidth//2-250+SubStr(pos, 1, InStr(pos, ",")-1), windowY+((6*windowHeight)//10 - 60)+SubStr(pos, InStr(pos, ",")+1)
 			Click
-			MouseMove, 350, 100
+			MouseMove, windowX+350, windowY+100
 		}
 		Gdip_DisposeImage(pBMScreen)
 		;check to make sure you are not in feed window on accident
 		imgPos := nm_imgSearch("cancel.png",30)
 		If (imgPos[1] = 0){
-			MouseMove, (imgPos[2]), (imgPos[3])
+			MouseMove, windowX+(imgPos[2]), windowY+(imgPos[3])
 			Click
-			MouseMove, 350, 100
+			MouseMove, windowX+350, windowY+100
 		}
 		;check to make sure you are not in shop before reset
 		searchRet := nm_imgSearch("e_button.png",30,"high")
@@ -8299,13 +8316,13 @@ nm_Reset(checkAll:=1, wait:=2000, convert:=1, force:=0){
 		;check to make sure there is not a window open
 		searchRet := nm_imgSearch("close.png",30,"full")
 		If (searchRet[1] = 0) {
-			MouseMove, searchRet[2],searchRet[3]
+			MouseMove, windowX+searchRet[2],windowY+searchRet[3]
 			click
-			MouseMove, 350, 100
+			MouseMove, windowX+350, windowY+100
 			sleep, 1000
 		}
 		nm_setStatus("Resetting", "Character " . Mod(A_Index, 10))
-		MouseMove, 350, 100
+		MouseMove, windowX+350, windowY+100
 		PrevKeyDelay:=A_KeyDelay
 		SetKeyDelay, 250+KeyDelay
 		Loop % (VBState = 0) ? (1 + MultiReset + (GatherDoubleReset && (CheckAll=2))) : 1
@@ -8321,13 +8338,13 @@ nm_Reset(checkAll:=1, wait:=2000, convert:=1, force:=0){
 			DetectHiddenWindows %Prev_DetectHiddenWindows%
 			SetTitleMatchMode %Prev_TitleMatchMode%
 			;reset
-			WinActivate, Roblox ahk_exe RobloxPlayerBeta.exe
+			WinActivate, Roblox
 			send {%SC_Esc%}{%SC_R%}{%SC_Enter%}
 			n := 0
 			while ((n < 2) && (A_Index <= 80))
 			{
 				Sleep, 250
-				WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
+				WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
 				pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth-100 "|" windowY "|100|32")
 				n += (Gdip_ImageSearch(pBMScreen, bitmaps["emptyhealth"], , , , , , 10) = (n = 0))
 				Gdip_DisposeImage(pBMScreen)
@@ -8365,11 +8382,11 @@ nm_Reset(checkAll:=1, wait:=2000, convert:=1, force:=0){
 }
 nm_setShiftLock(state){
 	global bitmaps, SC_LShift, ShiftLockEnabled
-	WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
+	WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe") ; Shift Lock is not supported on UWP app at the moment
 	if (windowWidth = 0)
 		return 2
 	else
-		WinActivate, Roblox ahk_exe RobloxPlayerBeta.exe
+		WinActivate, Roblox
 
 	pBMScreen := Gdip_BitmapFromScreen(windowX+5 "|" windowY+windowHeight-54 "|50|50")
 
@@ -8384,7 +8401,6 @@ nm_setShiftLock(state){
 		}
 		else
 			result := 1
-
 
 		; shift lock disabled - enable if needed
 		case 0:
@@ -8407,11 +8423,11 @@ nm_AmuletPrompt(decision:=0){
 	Prev_ShiftLock := ShiftLockEnabled
 	nm_setShiftLock(0)
 
-	WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
+	WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
 	if (windowWidth = 0)
 		return 2
 	else
-		WinActivate, Roblox ahk_exe RobloxPlayerBeta.exe
+		WinActivate, Roblox
 
 	pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//2-250 "|" windowY "|500|" windowHeight)
 
@@ -8420,14 +8436,14 @@ nm_AmuletPrompt(decision:=0){
 		switch % decision
 		{
 			case "keep",1:
-			MouseMove, % windowWidth//2-250+SubStr(pos, 1, InStr(pos, ",")-1)+10, % SubStr(pos, InStr(pos, ",")+1)+10, 5
+			MouseMove, windowX+windowWidth//2-250+SubStr(pos, 1, InStr(pos, ",")-1)+10, windowY+SubStr(pos, InStr(pos, ",")+1)+10, 5
 			Click
 			Gdip_DisposeImage(pBMScreen)
 			nm_setShiftLock(Prev_ShiftLock)
 			return 1
 
 			case "replace",2:
-			MouseMove, % windowWidth//2-250+SubStr(pos, 1, InStr(pos, ",")-1)+190, % SubStr(pos, InStr(pos, ",")+1)+10, 5
+			MouseMove, windowX+windowWidth//2-250+SubStr(pos, 1, InStr(pos, ",")-1)+190, windowY+SubStr(pos, InStr(pos, ",")+1)+10, 5
 			Click
 			Gdip_DisposeImage(pBMScreen)
 			Loop, 25
@@ -8435,7 +8451,7 @@ nm_AmuletPrompt(decision:=0){
 				pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//2-250 "|" windowY "|500|" windowHeight)
 				if (Gdip_ImageSearch(pBMScreen, bitmaps["yes"], pos, , , , , 2, , 2) = 1)
 				{
-					MouseMove, % windowWidth//2-250+SubStr(pos, 1, InStr(pos, ",")-1), % SubStr(pos, InStr(pos, ",")+1), 5
+					MouseMove, windowX+windowWidth//2-250+SubStr(pos, 1, InStr(pos, ",")-1), windowY+SubStr(pos, InStr(pos, ",")+1), 5
 					Click
 					Gdip_DisposeImage(pBMScreen)
 					break
@@ -8479,8 +8495,8 @@ nm_gotoCannon(){
 
 	nm_setShiftLock(0)
 
-	WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
-	MouseMove, 350, 100
+	WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
+	MouseMove, windowX+350, windowY+100
 
 	success := 0
 	Loop, 10
@@ -8544,15 +8560,14 @@ nm_gotoCannon(){
 	}
 	if (success = 0) { ;game frozen close roblox
 		nm_setStatus("Detected", "Roblox Game Frozen, Restarting")
-		for p in ComObjGet("winmgmts:").ExecQuery("Select * from Win32_Process where Name like '%Roblox%'")
-			Process, Close, % p.ProcessID
+		CloseRoblox()
 	}
 }
 nm_findHiveSlot(){
 	global FwdKey, LeftKey, BackKey, RightKey, RotLeft, RotRight, ZoomIn, ZoomOut, KeyDelay, HiveConfirmed, bitmaps
 
-	WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
-	MouseMove, 350, 100
+	WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
+	MouseMove, windowX+350, windowY+100
 
 	pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//2-200 "|" windowY "|400|125")
 	if ((Gdip_ImageSearch(pBMScreen, bitmaps["makehoney"], , , , , , 2, , 2) = 1) || (Gdip_ImageSearch(pBMScreen, bitmaps["collectpollen"], , , , , , 2, , 2) = 1))
@@ -8800,7 +8815,7 @@ nm_Collect(){
 	if ((nowUnix()-GatherFieldBoostedStart<900) || (nowUnix()-LastGlitter<900) || nm_boostBypassCheck())
 		return
 
-	WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
+	WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
 
 	if(CurrentAction!="Collect") {
 		PreviousAction:=CurrentAction
@@ -8971,9 +8986,10 @@ nm_Collect(){
 					searchRet3 := nm_imgSearch("g_ant_amulet.png",30,"center")
 					If (searchRet[1]=0 && (searchRet2[1]=0 || searchRet3[1]=0)) {
 						nm_setStatus("Keeping", "Ant Amulet")
-						MouseMove, searchRet[2], searchRet[3], 5
+						WinGetClientPos(windowX, windowY, , , "ahk_id " GetRobloxHWND())
+						MouseMove, windowX+searchRet[2], windowY+searchRet[3], 5
 						click
-						MouseMove, 350, 100
+						MouseMove, windowX+350, windowY+100
 						break
 					}
 					sleep, 1000
@@ -9150,11 +9166,12 @@ nm_Collect(){
 				nm_OpenMenu()
 				continue
 			}
-			MouseMove, gumdropPos[1], gumdropPos[2]
+			WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
+			MouseMove, windowX+gumdropPos[1], windowY+gumdropPos[2]
 			KeyWait, F14, T120 L
 			nm_endWalk()
 
-			MouseClickDrag, Left, gumdropPos[1], gumdropPos[2], (windowWidth/2), (windowHeight/2), 5
+			MouseClickDrag, Left, windowX+gumdropPos[1], windowY+gumdropPos[2], windowX+(windowWidth/2), windowY+(windowHeight/2), 5
 			;close inventory
 			nm_OpenMenu()
 			Sleep, 500
@@ -11330,7 +11347,8 @@ nm_Bugrun(){
 					If (imgPos[1] = 0){
 						if (KingBeetleAmuletMode = 1) {
 							nm_setStatus("Keeping", "King Beetle Amulet")
-							MouseMove, (imgPos[2] + 10), (imgPos[3] + 10)
+							WinGetClientPos(windowX, windowY, , , "ahk_id " GetRobloxHWND())
+							MouseMove, windowX+(imgPos[2] + 10), windowY+(imgPos[3] + 10)
 							Click
 							sleep, 1000
 						} else {
@@ -11449,7 +11467,8 @@ nm_Bugrun(){
 								Send {%RotDown% 2}
 								if (ShellAmuletMode = 1) {
 									nm_setStatus("Keeping", "Shell Amulet")
-									MouseMove, (imgPos[2] + 10), (imgPos[3] + 10)
+									WinGetClientPos(windowX, windowY, , , "ahk_id " GetRobloxHWND())
+									MouseMove, windowX+(imgPos[2] + 10), windowY+(imgPos[3] + 10)
 									Click
 									sleep, 1000
 								} else {
@@ -12623,7 +12642,8 @@ nm_GoGather(){
 	}
 
 	;gather loop
-	MouseMove, 350, 100
+	WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
+	MouseMove, windowX+350, windowY+100
 	bypass:=0
 	inactiveHoney:=0
 	interruptReason := ""
@@ -13048,7 +13068,7 @@ nm_loot(length, reps, direction, tokenlink:=0){ ; length in tiles instead of ms 
 		KeyWait, F14, % "T" length*reps " L"
 	else ; wait for token link or pattern finish
 	{
-		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
+		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
 		Sleep, 1000 ; primary delay, only accept token links after this
 		DllCall("GetSystemTimeAsFileTime","int64p",s)
 		n := s, f := s+length*reps*10000000 ; timeout at length * reps
@@ -13071,8 +13091,8 @@ nm_OpenMenu(menu:="", refresh:=0){
 	global bitmaps
 	static x := {"itemmenu":30, "questlog":85, "beemenu":140}, open:=""
 
-	if WinExist("Roblox ahk_exe RobloxPlayerBeta.exe")
-		WinActivate
+	if GetRobloxHWND()
+		WinActivate, Roblox
 	else
 		return 0
 
@@ -13082,7 +13102,7 @@ nm_OpenMenu(menu:="", refresh:=0){
 		{
 			Loop, 10
 			{
-				WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
+				WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
 				pBMScreen := Gdip_BitmapFromScreen(windowX "|" windowY+72 "|350|80")
 				if (Gdip_ImageSearch(pBMScreen, bitmaps[open], , , , , , 2) != 1) {
 					Gdip_DisposeImage(pBMScreen)
@@ -13090,9 +13110,9 @@ nm_OpenMenu(menu:="", refresh:=0){
 					break
 				}
 				Gdip_DisposeImage(pBMScreen)
-				MouseMove, x[open], 120
+				MouseMove, windowX+x[open], windowY+120
 				Click
-				MouseMove, 350, 100
+				MouseMove, windowX+350, windowY+100
 				sleep, 500
 			}
 		}
@@ -13102,16 +13122,16 @@ nm_OpenMenu(menu:="", refresh:=0){
 			{
 				Loop, 10
 				{
-					WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
+					WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
 					pBMScreen := Gdip_BitmapFromScreen(windowX "|" windowY+72 "|350|80")
 					if (Gdip_ImageSearch(pBMScreen, bitmaps[k], , , , , , 2) != 1) {
 						Gdip_DisposeImage(pBMScreen)
 						break
 					}
 					Gdip_DisposeImage(pBMScreen)
-					MouseMove, v, 120
+					MouseMove, windowX+v, windowY+120
 					Click
-					MouseMove, 350, 100
+					MouseMove, windowX+350, windowY+100
 					sleep, 500
 				}
 			}
@@ -13124,7 +13144,7 @@ nm_OpenMenu(menu:="", refresh:=0){
 		{
 			Loop, 10
 			{
-				WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
+				WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
 				pBMScreen := Gdip_BitmapFromScreen(windowX "|" windowY+72 "|350|80")
 				if (Gdip_ImageSearch(pBMScreen, bitmaps[open], , , , , , 2) != 1) {
 					Gdip_DisposeImage(pBMScreen)
@@ -13132,16 +13152,16 @@ nm_OpenMenu(menu:="", refresh:=0){
 					break
 				}
 				Gdip_DisposeImage(pBMScreen)
-				MouseMove, x[open], 120
+				MouseMove, windowX+x[open], windowY+120
 				Click
-				MouseMove, 350, 100
+				MouseMove, windowX+350, windowY+100
 				sleep, 500
 			}
 		}
 		; open the desired menu
 		Loop, 10
 		{
-			WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
+			WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
 			pBMScreen := Gdip_BitmapFromScreen(windowX "|" windowY+72 "|350|80")
 			if (Gdip_ImageSearch(pBMScreen, bitmaps[menu], , , , , , 2) = 1) {
 				Gdip_DisposeImage(pBMScreen)
@@ -13149,9 +13169,9 @@ nm_OpenMenu(menu:="", refresh:=0){
 				break
 			}
 			Gdip_DisposeImage(pBMScreen)
-			MouseMove, x[menu], 120
+			MouseMove, windowX+x[menu], windowY+120
 			Click
-			MouseMove, 350, 100
+			MouseMove, windowX+350, windowY+100
 			sleep, 500
 		}
 	}
@@ -13163,12 +13183,12 @@ nm_InventorySearch(item, direction:="down", prescroll:=0, prescrolldir:="", scro
 	nm_OpenMenu("itemmenu")
 
 	; detect inventory end for current hwnd
-	if (hwnd := WinExist("Roblox ahk_exe RobloxPlayerBeta.exe"))
+	if (hwnd := WinExist("ahk_id " GetRobloxHWND()))
 	{
 		if (hwnd != hRoblox)
 		{
-			WinActivate, Roblox ahk_exe RobloxPlayerBeta.exe
-			WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
+			WinActivate, Roblox
+			WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
 			pBMScreen := Gdip_BitmapFromScreen(windowX "|" windowY+150 "|306|" windowHeight-150)
 
 			Loop, 40
@@ -13202,8 +13222,8 @@ nm_InventorySearch(item, direction:="down", prescroll:=0, prescrolldir:="", scro
 	; search inventory
 	Loop %max%
 	{
-		WinActivate, Roblox ahk_exe RobloxPlayerBeta.exe
-		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
+		WinActivate, Roblox
+		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
 		pBMScreen := Gdip_BitmapFromScreen(windowX "|" windowY+150 "|306|" l)
 
 		; wait for red vignette effect to disappear
@@ -13240,13 +13260,13 @@ nm_InventorySearch(item, direction:="down", prescroll:=0, prescrolldir:="", scro
 			{
 				Loop, 100
 				{
-					MouseMove, 30, 200, 5
+					MouseMove, windowX+30, windowY+200, 5
 					sendinput % "{Wheel" ((direction = "down") ? "Up" : "Down") "}"
 					Sleep, 50
 				}
 			}
 			default: ; scroll once
-			MouseMove, 30, 200, 5
+			MouseMove, windowX+30, windowY+200, 5
 			sendinput % "{Wheel" ((A_Index <= prescroll) ? (prescrolldir ? ((prescrolldir = "Down") ? "Down" : "Up") : ((direction = "down") ? "Down" : "Up")) : ((direction = "down") ? "Down" : "Up")) "}"
 			Sleep, 50
 		}
@@ -13256,7 +13276,7 @@ nm_InventorySearch(item, direction:="down", prescroll:=0, prescrolldir:="", scro
 }
 nm_BitterberryFeeder()
 {
-	if !WinExist("Roblox ahk_exe RobloxPlayerBeta.exe")
+	if !GetRobloxHWND()
 	{
 		msgbox, 0x40030, Bitterberry Auto-Feeder v0.2, You must have Bee Swarm Simulator open to use this!, 20
 		return
@@ -13272,7 +13292,7 @@ nm_BitterberryFeeder()
 	#Include " A_ScriptDir "\lib\Gdip_ImageSearch.ahk
 	#Include " A_ScriptDir "\submacros\shared\nm_misc.ahk
 
-	CoordMode, Mouse, Client
+	CoordMode, Mouse, Screen
 	SetBatchLines -1
 	OnExit(""ExitFunc"")
 	pToken := Gdip_Startup()
@@ -13314,21 +13334,20 @@ nm_BitterberryFeeder()
 	IfMsgBox, Cancel
 		ExitApp
 
-	WinGetClientPos(x, y, w, h, ""Roblox ahk_exe RobloxPlayerBeta.exe"")
-	WinActivate, Roblox ahk_exe RobloxPlayerBeta.exe
+	WinGetClientPos(x, y, w, h, ""ahk_id "" GetRobloxHWND())
+	WinActivate, Roblox
 	Gui, -Caption +E0x80000 +hwndhOverlay +AlwaysOnTop +ToolWindow -DPIScale
 	Gui, Show, NA
-	DllCall(""SetParent"", ""UInt"", hOverlay, ""UInt"", WinExist(""Roblox ahk_exe RobloxPlayerBeta.exe""))
 	hbm := CreateDIBSection(w, h), hdc := CreateCompatibleDC(), obm := SelectObject(hdc, hbm)
 	G := Gdip_GraphicsFromHDC(hdc), Gdip_SetSmoothingMode(G, 2), Gdip_SetInterpolationMode(G, 2)
 	Gdip_FillRectangle(G, pBrush := Gdip_BrushCreateSolid(0x60000000), -1, -1, w+1, h+1), Gdip_DeleteBrush(pBrush)
-	UpdateLayeredWindow(hOverlay, hdc, 0, 0, w, h)
+	UpdateLayeredWindow(hOverlay, hdc, x, y, w, h)
 
 	KeyWait, LButton, D ; Wait for the left mouse button to be pressed down.
 	MouseGetPos, beeX, beeY
 	Gdip_GraphicsClear(G), Gdip_FillRectangle(G, pBrush := Gdip_BrushCreateSolid(0xd0000000), -1, -1, w+1, 38), Gdip_DeleteBrush(pBrush)
 	Gdip_TextToGraphics(G, ""Mutating... Right Click or Shift to Stop!"", ""x0 y0 cffff5f1f Bold Center vCenter s24"", ""Tahoma"", w, 38)
-	UpdateLayeredWindow(hOverlay, hdc, 0, 0, w, 38)
+	UpdateLayeredWindow(hOverlay, hdc, x, y, w, 38)
 	SelectObject(hdc, obm), DeleteObject(hbm), DeleteDC(hdc), Gdip_DeleteGraphics(G)
 	Hotkey, Shift, ExitFunc, UseErrorLevel On
 	Hotkey, RButton, ExitFunc, UseErrorLevel On
@@ -13342,13 +13361,13 @@ nm_BitterberryFeeder()
 			MsgBox, 0x40010, Bitterberry Auto-Feeder v0.2, You ran out of Bitterberries!
 			break
 		}
-		MouseMove, pos[1], pos[2]
+		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, ""ahk_id "" GetRobloxHWND())
+		MouseMove, windowX+pos[1], windowY+pos[2]
 		SendInput {Click Down}
 		Sleep, 100
 		MouseMove, beeX, beeY
 		Sleep, 100
 		SendInput {Click Up}
-		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, ""Roblox ahk_exe RobloxPlayerBeta.exe"")
 		Loop, 10
 		{
 			Sleep, 100
@@ -13356,14 +13375,14 @@ nm_BitterberryFeeder()
 			if (Gdip_ImageSearch(pBMScreen, bitmaps[""feed""], pos, , , , , 2, , 2) = 1)
 			{
 				Gdip_DisposeImage(pBMScreen)
-				Click, % (51*windowWidth)//100-216+SubStr(pos, 1, InStr(pos, "","")-1)+140 "" "" (58*windowHeight)//100-59+SubStr(pos, InStr(pos, "","")+1)+5 ; Click Number
+				Click, % windowX+(51*windowWidth)//100-216+SubStr(pos, 1, InStr(pos, "","")-1)+140 "" "" windowY+(58*windowHeight)//100-59+SubStr(pos, InStr(pos, "","")+1)+5 ; Click Number
 				Sleep, 100
 				Loop % StrLen(bitterberrynos)
 				{
 					SendEvent % ""{Text}"" SubStr(bitterberrynos, A_Index, 1)
 					Sleep, 100
 				}
-				Click, % (51*windowWidth)//100-216+SubStr(pos, 1, InStr(pos, "","")-1) "" "" (58*windowHeight)//100-59+SubStr(pos, InStr(pos, "","")+1) ; Click Feed
+				Click, % windowX+(51*windowWidth)//100-216+SubStr(pos, 1, InStr(pos, "","")-1) "" "" windowY+(58*windowHeight)//100-59+SubStr(pos, InStr(pos, "","")+1) ; Click Feed
 				break
 			}
 			Gdip_DisposeImage(pBMScreen)
@@ -13382,8 +13401,8 @@ nm_BitterberryFeeder()
 			}
 			else
 			{
-				WinActivate, Roblox ahk_exe RobloxPlayerBeta.exe
-				Click, % (windowWidth//2 - 132) "" "" ((4*windowHeight)//10 - 150) ; Close Bee
+				WinActivate, Roblox
+				Click, % windowX + (windowWidth//2 - 132) "" "" windowY + ((4*windowHeight)//10 - 150) ; Close Bee
 			}
 		}
 		Gdip_DisposeImage(pBMScreen)
@@ -13408,7 +13427,7 @@ nm_BitterberryFeeder()
 }
 nm_BasicEggHatcher()
 {
-	if !WinExist("Roblox ahk_exe RobloxPlayerBeta.exe")
+	if !GetRobloxHWND()
 	{
 		msgbox, 0x40030, Basic Bee Replacement Program, You must have Bee Swarm Simulator open to use this!, 20
 		return
@@ -13424,7 +13443,7 @@ nm_BasicEggHatcher()
 	#Include " A_ScriptDir "\lib\Gdip_ImageSearch.ahk
 	#Include " A_ScriptDir "\submacros\shared\nm_misc.ahk
 
-	CoordMode, Mouse, Client
+	CoordMode, Mouse, Screen
 	SetBatchLines -1
 	OnExit(""ExitFunc"")
 	pToken := Gdip_Startup()
@@ -13447,21 +13466,20 @@ nm_BasicEggHatcher()
 	IfMsgBox, Cancel
 		ExitApp
 
-	WinGetClientPos(x, y, w, h, ""Roblox ahk_exe RobloxPlayerBeta.exe"")
-	WinActivate, Roblox ahk_exe RobloxPlayerBeta.exe
+	WinActivate, Roblox
+	WinGetClientPos(x, y, w, h, ""ahk_id "" GetRobloxHWND())
 	Gui, -Caption +E0x80000 +hwndhOverlay +AlwaysOnTop +ToolWindow -DPIScale
 	Gui, Show, NA
-	DllCall(""SetParent"", ""UInt"", hOverlay, ""UInt"", WinExist(""Roblox ahk_exe RobloxPlayerBeta.exe""))
 	hbm := CreateDIBSection(w, h), hdc := CreateCompatibleDC(), obm := SelectObject(hdc, hbm)
 	G := Gdip_GraphicsFromHDC(hdc), Gdip_SetSmoothingMode(G, 2), Gdip_SetInterpolationMode(G, 2)
 	Gdip_FillRectangle(G, pBrush := Gdip_BrushCreateSolid(0x60000000), -1, -1, w+1, h+1), Gdip_DeleteBrush(pBrush)
-	UpdateLayeredWindow(hOverlay, hdc, 0, 0, w, h)
+	UpdateLayeredWindow(hOverlay, hdc, x, y, w, h)
 
 	KeyWait, LButton, D ; Wait for the left mouse button to be pressed down.
 	MouseGetPos, beeX, beeY
 	Gdip_GraphicsClear(G), Gdip_FillRectangle(G, pBrush := Gdip_BrushCreateSolid(0xd0000000), -1, -1, w+1, 38), Gdip_DeleteBrush(pBrush)
 	Gdip_TextToGraphics(G, ""Hatching... Right Click or Shift to Stop!"", ""x0 y0 cffff5f1f Bold Center vCenter s24"", ""Tahoma"", w, 38)
-	UpdateLayeredWindow(hOverlay, hdc, 0, 0, w, 38)
+	UpdateLayeredWindow(hOverlay, hdc, x, y, w, 38)
 	SelectObject(hdc, obm), DeleteObject(hbm), DeleteDC(hdc), Gdip_DeleteGraphics(G)
 	Hotkey, Shift, ExitFunc, UseErrorLevel On
 	Hotkey, RButton, ExitFunc, UseErrorLevel On
@@ -13479,13 +13497,13 @@ nm_BasicEggHatcher()
 			MsgBox, 0x40010, Basic Bee Replacement Program, % ""You ran out of "" ((rj = 1) ? ""Royal Jellies!"" : ""Basic Eggs!"")
 			break
 		}
-		MouseMove, pos[1], pos[2]
+		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, ""ahk_id "" GetRobloxHWND())
+		MouseMove, windowX+pos[1], windowY+pos[2]
 		SendInput {Click Down}
 		Sleep, 100
 		MouseMove, beeX, beeY
 		Sleep, 100
 		SendInput {Click Up}
-		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, ""Roblox ahk_exe RobloxPlayerBeta.exe"")
 		Loop, 10
 		{
 			Sleep, 100
@@ -13493,7 +13511,7 @@ nm_BasicEggHatcher()
 			if (Gdip_ImageSearch(pBMScreen, bitmaps[""yes""], pos, , , , , 2, , 2) = 1)
 			{
 				Gdip_DisposeImage(pBMScreen)
-				Click % windowWidth//2-250+SubStr(pos, 1, InStr(pos, "","")-1) "" "" ((6*windowHeight)//10-60)+SubStr(pos, InStr(pos, "","")+1)
+				Click % windowX+windowWidth//2-250+SubStr(pos, 1, InStr(pos, "","")-1) "" "" windowY+((6*windowHeight)//10-60)+SubStr(pos, InStr(pos, "","")+1)
 				break
 			}
 			Gdip_DisposeImage(pBMScreen)
@@ -13556,7 +13574,7 @@ nm_GenerateBeeList()
 	global bitmaps
 	static bees := ["basic","bomber","brave","bumble","cool","hasty","looker","rad","rascal","stubborn","bubble","bucko","commander","demo","exhausted","fire","frosty","honey","rage","riley","shocked","baby","carpenter","demon","diamond","lion","music","ninja","shy","buoyant","fuzzy","precise","spicy","tadpole","vector","bear","cobalt","crimson","digital","festive","gummy","photon","puppy","tabby","vicious","windy"]
 
-	if !WinExist("Roblox ahk_exe RobloxPlayerBeta.exe")
+	if !GetRobloxHWND()
 	{
 		msgbox, 0x40030, Export Bee List, You must have Bee Swarm Simulator open to use this!, 20
 		return
@@ -13566,13 +13584,13 @@ nm_GenerateBeeList()
 	bee_data := {}
 
 	; open menu
+	WinActivate, Roblox
+	WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
 	nm_OpenMenu()
 	nm_OpenMenu("beemenu")
-	MouseMove, 30, 200, 5
+	MouseMove, windowX+30, windowY+200, 5
 
 	; obtain lower bound of search
-	WinActivate, Roblox ahk_exe RobloxPlayerBeta.exe
-	WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
 	pBMScreen := Gdip_BitmapFromScreen(windowX "|" windowY+150 "|306|" windowHeight-150)
 	lb := 450
 	for k,v in {"white":0xffc4c8cb,"red":0xffc7403c,"blue":0xff4d87ca}
@@ -13609,7 +13627,7 @@ nm_GenerateBeeList()
 			{
 				Loop % (lb//150 - 2)
 				{
-					MouseMove, 30, 200, 5
+					MouseMove, windowX+30, windowY+200, 5
 					Sleep, 50
 					SendInput {WheelDown}
 				}
@@ -14295,7 +14313,7 @@ nm_endWalk() ; this function ends the walk script
 nm_convert(){
 	global KeyDelay, RotRight, ZoomOut, SC_E, AFBrollingDice, AFBuseGlitter, AFBuseBooster, CurrentField, HiveConfirmed, EnzymesKey, LastEnzymes, ConvertStartTime, TotalConvertTime, SessionConvertTime, BackpackPercent, BackpackPercentFiltered, PFieldBoosted, GatherFieldBoosted, GameFrozenCounter, CurrentAction, PreviousAction, PFieldBoosted, GatherFieldBoosted, GatherFieldBoostedStart, LastGlitter, GlitterKey, LastConvertBalloon, ConvertBalloon, ConvertMins, HiveBees,state, ConvertDelay, bitmaps
 
-	WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
+	WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
 	pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//2-200 "|" windowY+36 "|400|120")
 	if ((HiveConfirmed = 0) || (state = "Converting") || (Gdip_ImageSearch(pBMScreen, bitmaps["e_button"], , , , , , 2, , 6) = 0)) {
 		Gdip_DisposeImage(pBMScreen)
@@ -14332,7 +14350,7 @@ nm_convert(){
 				GameFrozenCounter:=GameFrozenCounter+1
 				return
 			}
-			WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
+			WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
 			pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//2-200 "|" windowY+36 "|400|120")
 			if (Gdip_ImageSearch(pBMScreen, bitmaps["makehoney"], , , , , , 2, , 2) = 1) {
 				sendinput {%SC_E% down}
@@ -14353,7 +14371,7 @@ nm_convert(){
 		;balloon check
 		strikes:=0
 		while ((strikes <= 5) && (A_Index <= 50)) {
-			WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
+			WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
 			pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//2-200 "|" windowY+36 "|400|120")
 			if (Gdip_ImageSearch(pBMScreen, bitmaps["e_button"], , , , , , 2, , 6) != 1)
 				strikes++
@@ -14389,9 +14407,9 @@ nm_convert(){
 					nm_setStatus("Interupted", "Field Boosted")
 					return
 				}
-				WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
+				WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
 				if (Mod(A_Index, 30) = 0) {
-					MouseMove, windowWidth-30, 16
+					MouseMove, windowX+windowWidth-30, windowY+16
 					click
 				}
 				pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//2-200 "|" windowY "|400|125")
@@ -14611,7 +14629,7 @@ nm_fieldDriftCompensation(){
 	if (!PFieldDriftSteps) {
 		PFieldDriftSteps:=10
 	}
-	WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
+	WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
 	winUp := windowHeight / 2.14
 	winDown := windowHeight / 1.88
 	winLeft := windowWidth / 2.14
@@ -14662,13 +14680,42 @@ nm_Move(MoveTime, MoveKey1, MoveKey2:="None"){
 		send, {%MoveKey2% up}
 	SetKeyDelay, PrevKeyDelay
 }
+GetRobloxHWND()
+{
+	if (hwnd := WinExist("Roblox ahk_exe RobloxPlayerBeta.exe"))
+		return hwnd
+	else if (WinExist("Roblox ahk_exe ApplicationFrameHost.exe"))
+	{
+		ControlGet, hwnd, Hwnd, , ApplicationFrameInputSinkWindow1
+		return hwnd
+	}
+	else
+		return 0
+}
+CloseRoblox()
+{
+	local PrevKeyDelay, p
+	; if roblox exists, activate it and send Esc+L+Enter
+	if GetRobloxHWND()
+	{
+		WinActivate, Roblox
+		PrevKeyDelay := A_KeyDelay
+		SetKeyDelay, 250+KeyDelay
+		send {%SC_Esc%}{%SC_L%}{%SC_Enter%}
+		SetKeyDelay, PrevKeyDelay
+		WinClose, Roblox
+	}
+	; kill any remnant processes
+	for p in ComObjGet("winmgmts:").ExecQuery("SELECT * FROM Win32_Process WHERE Name LIKE '%Roblox%' OR CommandLine LIKE '%ROBLOXCORPORATION%'")
+		Process, Close, % p.ProcessID
+}
 DisconnectCheck(testCheck := 0)
 {
 	global LastClock, LastGingerbread, KeyDelay, HiveSlot, CurrentAction, PreviousAction, PrivServer, TotalDisconnects, SessionDisconnects, DailyReconnect, PublicFallback, resetTime, SC_Esc, SC_R, SC_Enter, SC_E, bitmaps, PlanterName1, PlanterName2, PlanterName3, PlanterHarvestTime1, PlanterHarvestTime2, PlanterHarvestTime3, MacroState, ReconnectDelay, FallbackServer1, FallbackServer2, FallbackServer3, beesmasActive
 	static ServerLabels := {0: "Public Server Link", 1: "Private Server Link", 2: "Fallback Server Link 1", 3: "Fallback Server Link 2", 4: "Fallback Server Link 3"}, LegacyOverride := 0
 	
 	; return if not disconnected or crashed
-	if (nm_imgSearch("disconnected.png",25, "center")[1] = 1 && WinExist("Roblox ahk_exe RobloxPlayerBeta.exe") && !WinExist("Roblox Crash"))
+	if (nm_imgSearch("disconnected.png",25, "center")[1] = 1 && GetRobloxHWND() && !WinExist("Roblox Crash"))
 		return 0
 
 	; end any residual movement and set reconnect start time
@@ -14744,23 +14791,22 @@ DisconnectCheck(testCheck := 0)
 			{
 				case 1:
 				;Close Roblox
-				for p in ComObjGet("winmgmts:").ExecQuery("Select * from Win32_Process where Name like '%Roblox%'")
-					Process, Close, % p.ProcessID
+				CloseRoblox()
+				Sleep 500 ;Delay to prevent error during UWP reconnect
 				;Run Server Deeplink
 				nm_setStatus("Attempting", ServerLabels[server])
-				Run % "roblox://placeID=1537690962" (server ? ("&linkCode=" linkCodes[server]) : "")
+				try Run % "roblox://placeID=1537690962" (server ? ("&linkCode=" linkCodes[server]) : "")
 				
 				case 2:
 				;Run Server Deeplink (without closing)
 				nm_setStatus("Attempting", ServerLabels[server])
-				Run % "roblox://placeID=1537690962" (server ? ("&linkCode=" linkCodes[server]) : "")
+				try Run % "roblox://placeID=1537690962" (server ? ("&linkCode=" linkCodes[server]) : "")
 				
 				default:
 				if server
 				{
 					;Close Roblox
-					for p in ComObjGet("winmgmts:").ExecQuery("Select * from Win32_Process where Name like '%Roblox%'")
-						Process, Close, % p.ProcessID
+					CloseRoblox()
 					;Run Server Link (legacy method w/ browser)
 					nm_setStatus("Attempting", ServerLabels[server] " (Browser)")
 					if (success := LegacyReconnect(linkCodes[server]) = 1)
@@ -14777,16 +14823,18 @@ DisconnectCheck(testCheck := 0)
 				{
 					;Close Roblox
 					if (i = 1)
-						for p in ComObjGet("winmgmts:").ExecQuery("Select * from Win32_Process where Name like '%Roblox%'")
-							Process, Close, % p.ProcessID
+					{
+						CloseRoblox()
+						Sleep 500
+					}
 					;Run Server Link (spam deeplink method)
-					Run % "roblox://placeID=1537690962"
+					try Run % "roblox://placeID=1537690962"
 				}
 			}
-			;STAGE 1 - wait for RobloxPlayerBeta.exe
+			;STAGE 1 - wait for Roblox window
 			Loop, 240 {
-				if WinExist("Roblox ahk_exe RobloxPlayerBeta.exe") {
-					WinActivate
+				if GetRobloxHWND() {
+					WinActivate, Roblox
 					nm_setStatus("Detected", "Roblox Open")
 					break
 				}
@@ -14799,8 +14847,8 @@ DisconnectCheck(testCheck := 0)
 			}
 			;STAGE 2 - wait for loading screen (or loaded game)
 			Loop, 180 {
-				WinActivate, Roblox ahk_exe RobloxPlayerBeta.exe
-				WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
+				WinActivate, Roblox
+				WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
 				pBMScreen := Gdip_BitmapFromScreen(windowX "|" windowY+30 "|" windowWidth "|150")
 				if (Gdip_ImageSearch(pBMScreen, bitmaps["loading"], , , , , , 4) = 1)
 				{
@@ -14830,8 +14878,8 @@ DisconnectCheck(testCheck := 0)
 			}
 			;STAGE 3 - wait for loaded game
 			Loop, 180 {
-				WinActivate, Roblox ahk_exe RobloxPlayerBeta.exe
-				WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
+				WinActivate, Roblox
+				WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
 				pBMScreen := Gdip_BitmapFromScreen(windowX "|" windowY+30 "|" windowWidth "|150")
 				if ((Gdip_ImageSearch(pBMScreen, bitmaps["loading"], , , , , , 4) = 0) || (Gdip_ImageSearch(pBMScreen, bitmaps["science"], , , , , , 2) = 1))
 				{
@@ -14858,7 +14906,7 @@ DisconnectCheck(testCheck := 0)
 		;Successful Reconnect
 		if (success = 1)
 		{
-			WinActivate, Roblox ahk_exe RobloxPlayerBeta.exe
+			WinActivate, Roblox
 			VarSetCapacity(duration,256),DllCall("GetDurationFormatEx","str","!x-sys-default-locale","uint",0,"ptr",0,"int64",(ReconnectDuration := (nowUnix() - ReconnectStart))*10000000,"wstr","mm:ss","str",duration,"int",256)
 			nm_setStatus("Completed", "Reconnect`nTime: " duration " - Attempts: " i)
 			Sleep, 500
@@ -15063,8 +15111,9 @@ nm_claimHiveSlot(){
 
 	Loop, 5
 	{
-		WinActivate, Roblox ahk_exe RobloxPlayerBeta.exe
-		MouseMove, 350, 100
+		WinActivate, Roblox
+		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
+		MouseMove, windowX+350, windowY+100
 
 		;reset
 		if (A_Index > 1)
@@ -15078,7 +15127,7 @@ nm_claimHiveSlot(){
 				PostMessage, 0x5554, 1, resetTime
 			DetectHiddenWindows %Prev_DetectHiddenWindows%
 			SetTitleMatchMode %Prev_TitleMatchMode%
-			WinActivate, Roblox ahk_exe RobloxPlayerBeta.exe
+			WinActivate, Roblox
 			PrevKeyDelay := A_KeyDelay
 			SetKeyDelay, 250+KeyDelay
 			send {%SC_Esc%}{%SC_R%}{%SC_Enter%}
@@ -15087,7 +15136,7 @@ nm_claimHiveSlot(){
 			while ((n < 2) && (A_Index <= 80))
 			{
 				Sleep, 250
-				WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
+				WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
 				pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth-100 "|" windowY "|100|32")
 				n += (Gdip_ImageSearch(pBMScreen, bitmaps["emptyhealth"], , , , , , 10) = (n = 0))
 				Gdip_DisposeImage(pBMScreen)
@@ -15097,8 +15146,8 @@ nm_claimHiveSlot(){
 
 		;go to slot 1
 		Sleep, 500
-		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
-		MouseMove, 350, 100
+		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
+		MouseMove, windowX+350, windowY+100
 		send {%ZoomOut% 8}
 
 		movement := "
@@ -15192,16 +15241,16 @@ nm_claimHiveSlot(){
 	Sleep, 100
 	sendinput {%SC_E% up}
 	HiveConfirmed := 1
-	MouseMove, 350, 100
+	MouseMove, windowX+350, windowY+100
 
 	return 1
 }
 nm_activeHoney(){
 	global HiveBees, GameFrozenCounter
-	WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
+	WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
     x1 := (windowWidth//2)-90
     x2 := (windowWidth//2)-20
-    PixelSearch, bx2, by2, x1, 0, x2, 36, 0xFFE280, 20, RGB Fast
+    PixelSearch, bx2, by2, windowX + x1, windowY, windowX + x2, windowY + 36, 0xFFE280, 20, RGB Fast
     if (ErrorLevel = 0){
 		GameFrozenCounter:=0
         return 1
@@ -15209,7 +15258,7 @@ nm_activeHoney(){
 		if(HiveBees<25){
 			x1 := (windowWidth//2)+210
 			x2 := (windowWidth//2)+280
-			PixelSearch, bx2, by2, x1, 0, x2, 36, 0xFFFFFF, 20, RGB Fast
+			PixelSearch, bx2, by2, windowX + x1, windowY, windowX + x2, windowY + 36, 0xFFFFFF, 20, RGB Fast
 			if (ErrorLevel = 0){
 				return 1
 			} else {
@@ -15239,8 +15288,8 @@ nm_searchForE(){
 	nm_createWalk(movement)
 	KeyWait, F14, D T5 L
 
-	WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
-	MouseMove, 350, 100
+	WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
+	MouseMove, windowX+350, windowY+100
 	success := 0
 	DllCall("GetSystemTimeAsFileTime","int64p",s)
 	n := s, f := s+90*10000000 ; 90 second timeout
@@ -15830,7 +15879,7 @@ nm_hotbar(boost:=0){
 		}
 		;snowflake
 		else if(ActiveHotkeys[key][1]="Snowflake" && (nowUnix()-ActiveHotkeys[key][4])>ActiveHotkeys[key][3]) {
-			WinGetClientPos(_x, _y, _w, _h, "Roblox ahk_exe RobloxPlayerBeta.exe")
+			WinGetClientPos(_x, _y, _w, _h, "ahk_id " GetRobloxHWND())
 			;check that roblox window exists
 			if (_w > 0) {
 				pBMArea := Gdip_BitmapFromScreen(_x "|" _y+30 "|" _w "|50")
@@ -15910,25 +15959,25 @@ nm_HoneyQuest(){
 			break
 		}
 
-		WinActivate, Roblox ahk_exe RobloxPlayerBeta.exe
+		WinActivate, Roblox
 		switch A_Index
 		{
 			case 1:
-			MouseMove, 30, 200, 5
+			WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
+			MouseMove, windowX+30, windowY+200, 5
 			Loop, 50 ; scroll all the way up
 			{
-				MouseMove, 30, 200, 5
+				MouseMove, windowX+30, windowX+200, 5
 				sendinput {WheelUp}
 				Sleep, 50
 			}
-			WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
 			pBMLog := Gdip_BitmapFromScreen(windowX+30 "|" windowY+180 "|30|400")
 
 			default:
-			MouseMove, 30, 200, 5
+			WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
+			MouseMove, windowX+30, windowY+200, 5
 			sendinput {WheelDown}
 			Sleep, 500 ; wait for scroll to finish
-			WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
 			pBMScreen := Gdip_BitmapFromScreen(windowX+30 "|" windowY+180 "|30|400")
 			if (Gdip_ImageSearch(pBMScreen, pBMLog, , , , , , 50) = 1) { ; end of quest log
 				Gdip_DisposeImage(pBMLog), Gdip_DisposeImage(pBMScreen)
@@ -15940,20 +15989,20 @@ nm_HoneyQuest(){
 	Sleep, 500
 
 	if(Qfound[1]=0){
-		MouseMove, 350, 100
 		;locate exact bottom of quest title bar coordinates
 		;titlebar = 30 pixels high
 		;quest objective bar spacing = 10 pixels
 		;quest objective bar height = 40 pixels
-		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
-		xi := 0
-		yi := Qfound[3]
-		ww := 306
-		wh := windowHeight
+		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
+		MouseMove, windowX+350, windowY+100
+		xi := windowX
+		yi := windowY+Qfound[3]
+		ww := windowX+306
+		wh := windowY+windowHeight
 		fileName:="questbargap.png"
 		IfExist, %A_ScriptDir%\nm_image_assets\
 		{
-			ImageSearch, FoundX, FoundY, %xi%, %yi%, %ww%, %wh%, *5 %A_ScriptDir%\nm_image_assets\%fileName%
+			ImageSearch, FoundX, FoundY, xi, yi, ww, wh, *5 %A_ScriptDir%\nm_image_assets\%fileName%
 			if (ErrorLevel = 2) {
 				nm_setStatus("Error", "Image file " filename " was not found in:`n" A_ScriptDir "\nm_image_assets\" fileName)
 				Sleep, 5000
@@ -15962,23 +16011,23 @@ nm_HoneyQuest(){
 		} else {
 			MsgBox Folder location cannot be found:`n%A_ScriptDir%\nm_image_assets\
 		}
-		HoneyStart:=[ErrorLevel, FoundX, FoundY]
+		HoneyStart:=[ErrorLevel, FoundX-windowX, FoundY-windowY]
 		;determine quest bar sizes and spacing
 		if(QuestBarGapSize=0 || QuestBarSize=0 || QuestBarInset=0) {
 			Loop, 3 {
-				xi := 0
-				yi := HoneyStart[3]+15
-				ww := 306
-				wh := HoneyStart[3]+100
-				ImageSearch, FoundX, FoundY, %xi%, %yi%, %ww%, %wh%, *5 nm_image_assets\questbargap.png
+				xi := windowX
+				yi := windowY+HoneyStart[3]+15
+				ww := windowX+306
+				wh := windowY+HoneyStart[3]+100
+				ImageSearch, FoundX, FoundY, xi, yi, ww, wh, *5 nm_image_assets\questbargap.png
 				if(ErrorLevel=0) {
-					QuestBarSize:=FoundY-HoneyStart[3]
+					QuestBarSize:=FoundY-windowY-HoneyStart[3]
 					QuestBarGapSize:=3
 					QuestBarInset:=3
 					NextY:=FoundY+1
 					NextX:=FoundX+1
 					loop 20 {
-						ImageSearch, FoundX, FoundY, %FoundX%, %NextY%, %ww%, %wh%, *5 nm_image_assets\questbargap.png
+						ImageSearch, FoundX, FoundY, FoundX, NextY, ww, wh, *5 nm_image_assets\questbargap.png
 						if(ErrorLevel=0) {
 							NextY:=FoundY+1
 							QuestBarGapSize:=QuestBarGapSize+1
@@ -15986,9 +16035,9 @@ nm_HoneyQuest(){
 							break
 						}
 					}
-					wh := HoneyStart[3]+200
+					wh := windowY+HoneyStart[3]+200
 					loop 20 {
-						ImageSearch, FoundX, FoundY, %NextX%, %yi%, %ww%, %wh%, *5 nm_image_assets\questbarinset.png
+						ImageSearch, FoundX, FoundY, NextX, yi, ww, wh, *5 nm_image_assets\questbarinset.png
 						if(ErrorLevel=0) {
 							NextX:=FoundX+1
 							QuestBarInset:=QuestBarInset+1
@@ -15999,7 +16048,7 @@ nm_HoneyQuest(){
 					break
 					;msgbox QuestBarSize=%QuestBarSize%`nQuestBarGapSize=%QuestBarGapSize%`nQuestBarInset=%QuestBarInset%
 				} else {
-					MouseMove, 30, 225
+					MouseMove, windowX+30, windowY+225
 					Sleep, 50
 					send, {WheelDown 1}
 					Sleep, 50
@@ -16011,7 +16060,7 @@ nm_HoneyQuest(){
 		;Update Honey quest progress in GUI
 		honeyProgress:=""
 		;also set next steps
-		PixelGetColor, questbarColor, QuestBarInset+10, HoneyStart[3]+QuestBarGapSize+1, RGB fast
+		PixelGetColor, questbarColor, windowX+QuestBarInset+10, windowY+HoneyStart[3]+QuestBarGapSize+5, RGB fast
 		;temp%A_Index%:=questbarColor
 		if((questbarColor=Format("{:d}",0xF46C55)) || (questbarColor=Format("{:d}",0x6EFF60))) {
 			HoneyQuestComplete:=0
@@ -16078,25 +16127,25 @@ nm_PolarQuestProg(){
 			break
 		}
 
-		WinActivate, Roblox ahk_exe RobloxPlayerBeta.exe
+		WinActivate, Roblox
 		switch A_Index
 		{
 			case 1:
-			MouseMove, 30, 200, 5
+			WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
+			MouseMove, windowX+30, windowY+200, 5
 			Loop, 50 ; scroll all the way up
 			{
-				MouseMove, 30, 200, 5
+				MouseMove, windowX+30, windowY+200, 5
 				sendinput {WheelUp}
 				Sleep, 50
 			}
-			WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
 			pBMLog := Gdip_BitmapFromScreen(windowX+30 "|" windowY+180 "|30|400")
 
 			default:
-			MouseMove, 30, 200, 5
+			WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
+			MouseMove, windowX+30, windowY+200, 5
 			sendinput {WheelDown}
 			Sleep, 500 ; wait for scroll to finish
-			WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
 			pBMScreen := Gdip_BitmapFromScreen(windowX+30 "|" windowY+180 "|30|400")
 			if (Gdip_ImageSearch(pBMScreen, pBMLog, , , , , , 50) = 1) { ; end of quest log
 				Gdip_DisposeImage(pBMLog), Gdip_DisposeImage(pBMScreen)
@@ -16108,20 +16157,20 @@ nm_PolarQuestProg(){
 	Sleep, 500
 
 	if(Qfound[1]=0){
-		MouseMove, 350, 100
 		;locate exact bottom of quest title bar coordinates
 		;titlebar = 30 pixels high
 		;quest objective bar spacing = 10 pixels
 		;quest objective bar height = 40 pixels
-		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
-		xi := 0
-		yi := Qfound[3]
-		ww := 306
-		wh := windowHeight
+		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
+		MouseMove, windowX+350, windowY+100
+		xi := windowX
+		yi := windowY+Qfound[3]
+		ww := windowX+306
+		wh := windowY+windowHeight
 		fileName:="questbargap.png"
 		IfExist, %A_ScriptDir%\nm_image_assets\
 		{
-			ImageSearch, FoundX, FoundY, %xi%, %yi%, %ww%, %wh%, *5 %A_ScriptDir%\nm_image_assets\%fileName%
+			ImageSearch, FoundX, FoundY, xi, yi, ww, wh, *5 %A_ScriptDir%\nm_image_assets\%fileName%
 			if (ErrorLevel = 2) {
 				nm_setStatus("Error", "Image file " filename " was not found in:`n" A_ScriptDir "\nm_image_assets\" fileName)
 				Sleep, 5000
@@ -16130,23 +16179,23 @@ nm_PolarQuestProg(){
 		} else {
 			MsgBox Folder location cannot be found:`n%A_ScriptDir%\nm_image_assets\
 		}
-		PolarStart:=[ErrorLevel, FoundX, FoundY]
+		PolarStart:=[ErrorLevel, FoundX-windowX, FoundY-windowY]
 		;determine quest bar sizes and spacing
 		if(QuestBarGapSize=0 || QuestBarSize=0 || QuestBarInset=0) {
 			Loop, 3 {
-				xi := 0
-				yi := PolarStart[3]+15
-				ww := 306
-				wh := PolarStart[3]+100
-				ImageSearch, FoundX, FoundY, %xi%, %yi%, %ww%, %wh%, *5 nm_image_assets\questbargap.png
+				xi := windowX
+				yi := windowY+PolarStart[3]+15
+				ww := windowX+306
+				wh := windowY+PolarStart[3]+100
+				ImageSearch, FoundX, FoundY, xi, yi, ww, wh, *5 nm_image_assets\questbargap.png
 				if(ErrorLevel=0) {
-					QuestBarSize:=FoundY-PolarStart[3]
+					QuestBarSize:=FoundY-windowY-PolarStart[3]
 					QuestBarGapSize:=3
 					QuestBarInset:=3
 					NextY:=FoundY+1
 					NextX:=FoundX+1
 					loop 20 {
-						ImageSearch, FoundX, FoundY, %FoundX%, %NextY%, %ww%, %wh%, *5 nm_image_assets\questbargap.png
+						ImageSearch, FoundX, FoundY, FoundX, NextY, ww, wh, *5 nm_image_assets\questbargap.png
 						if(ErrorLevel=0) {
 							NextY:=FoundY+1
 							QuestBarGapSize:=QuestBarGapSize+1
@@ -16154,9 +16203,9 @@ nm_PolarQuestProg(){
 							break
 						}
 					}
-					wh := PolarStart[3]+200
+					wh := windowY+PolarStart[3]+200
 					loop 20 {
-						ImageSearch, FoundX, FoundY, %NextX%, %yi%, %ww%, %wh%, *5 nm_image_assets\questbarinset.png
+						ImageSearch, FoundX, FoundY, NextX, yi, ww, wh, *5 nm_image_assets\questbarinset.png
 						if(ErrorLevel=0) {
 							NextX:=FoundX+1
 							QuestBarInset:=QuestBarInset+1
@@ -16167,7 +16216,7 @@ nm_PolarQuestProg(){
 					break
 					;msgbox QuestBarSize=%QuestBarSize%`nQuestBarGapSize=%QuestBarGapSize%`nQuestBarInset=%QuestBarInset%
 				} else {
-					MouseMove, 30, 225
+					MouseMove, windowX+30, windowY+225
 					Sleep, 50
 					send, {WheelDown 1}
 					Sleep, 50
@@ -16176,24 +16225,23 @@ nm_PolarQuestProg(){
 				}
 			}
 		}
-		;MouseMove, Qstart[2], Qstart[3], 5
 		;determine Quest name
-		xi := 0
-		yi := PolarStart[3]-30
-		ww := 306
-		wh := PolarStart[3]
+		xi := windowX
+		yi := windowY+PolarStart[3]-30
+		ww := windowX+306
+		wh := windowY+PolarStart[3]
 		for key, value in PolarBear {
 			filename:=(key . ".png")
-			ImageSearch, FoundX, FoundY, %xi%, %yi%, %ww%, %wh%, *10 nm_image_assets\%fileName%
+			ImageSearch, FoundX, FoundY, xi, yi, ww, wh, *10 nm_image_assets\%fileName%
 			if(ErrorLevel=0) {
 				PolarQuest:=key
 				questSteps:=PolarBear[key].length()
 				;make sure full quest is visible
 				loop 5 {
 					found:=0
-					NextY:=PolarStart[3]
+					NextY:=windowY+PolarStart[3]
 					loop %questSteps% {
-						ImageSearch, FoundX, FoundY, QuestBarInset, NextY, QuestBarInset+300, NextY+QuestBarGapSize, *5 nm_image_assets\questbargap.png
+						ImageSearch, FoundX, FoundY, windowX+QuestBarInset, NextY, windowX+QuestBarInset+300, NextY+QuestBarGapSize, *5 nm_image_assets\questbargap.png
 						if(ErrorLevel=0) {
 							NextY:=NextY+QuestBarSize
 							found:=found+1
@@ -16202,7 +16250,7 @@ nm_PolarQuestProg(){
 						}
 					}
 					if(found<questSteps) {
-						MouseMove, 30, 225
+						MouseMove, windowX+30, windowY+225
 						Sleep, 50
 						send, {WheelDown 1}
 						Sleep, 50
@@ -16225,7 +16273,7 @@ nm_PolarQuestProg(){
 		loop %num% {
 			action:=PolarBear[PolarQuest][A_Index][2]
 			where:=PolarBear[PolarQuest][A_Index][3]
-			PixelGetColor, questbarColor, QuestBarInset+10, QuestBarSize*(PolarBear[PolarQuest][A_Index][1]-1)+PolarStart[3]+QuestBarGapSize+1, RGB fast
+			PixelGetColor, questbarColor, windowX+QuestBarInset+10, windowY+QuestBarSize*(PolarBear[PolarQuest][A_Index][1]-1)+PolarStart[3]+QuestBarGapSize+5, RGB fast
 			if((questbarColor=Format("{:d}",0xF46C55)) || (questbarColor=Format("{:d}",0x6EFF60))) {
 				PolarQuestComplete:=0
 				completeness:="Incomplete"
@@ -16370,7 +16418,7 @@ nm_Feed(food){
 	nm_InventorySearch(food)
 	Loop, 10
 	{
-		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
+		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
 		pBMScreen := Gdip_BitmapFromScreen(windowX "|" windowY+150 "|306|" Max(480, windowHeight-120))
 
 		if (A_Index = 1)
@@ -16404,14 +16452,15 @@ nm_Feed(food){
 		}
 		Gdip_DisposeImage(pBMScreen)
 
-		MouseClickDrag, Left, 30, SubStr(pos, InStr(pos, ",")+1)+190, windowWidth//2, windowHeight//2-10*A_Index, 5
+		MouseClickDrag, Left, windowX+30, windowY+SubStr(pos, InStr(pos, ",")+1)+190, windowX+windowWidth//2, windowY+windowHeight//2-10*A_Index, 5
 		sleep, 500
 	}
 	Sleep, 250
 	;check if food is already visible
 	imgPos := nm_imgSearch("feeder.png",30)
 	If (imgPos[1]=0){
-		MouseMove, imgPos[2],imgPos[3]
+		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
+		MouseMove, windowX+imgPos[2], windowY+imgPos[3]
 		sleep 100
 		Click
 		sleep 100
@@ -16419,11 +16468,11 @@ nm_Feed(food){
 		sleep 1000
 		imgPos := nm_imgSearch("feed.png",30)
 		If (imgPos[1]=0){
-			MouseMove, imgPos[2],imgPos[3]
+			MouseMove, windowX+imgPos[2], windowY+imgPos[3]
 			Click
 			nm_setStatus("Completed", "Feed " food)
 		}
-		MouseMove, 350, 100
+		MouseMove, windowX+350, windowY+100
 	}
 	;close inventory
 	nm_OpenMenu()
@@ -16463,25 +16512,25 @@ nm_RileyQuestProg(){
 			break
 		}
 
-		WinActivate, Roblox ahk_exe RobloxPlayerBeta.exe
+		WinActivate, Roblox
 		switch A_Index
 		{
 			case 1:
-			MouseMove, 30, 200, 5
+			WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
+			MouseMove, windowX+30, windowY+200, 5
 			Loop, 50 ; scroll all the way up
 			{
-				MouseMove, 30, 200, 5
+				MouseMove, windowX+30, windowY+200, 5
 				sendinput {WheelUp}
 				Sleep, 50
 			}
-			WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
 			pBMLog := Gdip_BitmapFromScreen(windowX+30 "|" windowY+180 "|30|400")
 
 			default:
-			MouseMove, 30, 200, 5
+			WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
+			MouseMove, windowX+30, windowY+200, 5
 			sendinput {WheelDown}
 			Sleep, 500 ; wait for scroll to finish
-			WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
 			pBMScreen := Gdip_BitmapFromScreen(windowX+30 "|" windowY+180 "|30|400")
 			if (Gdip_ImageSearch(pBMScreen, pBMLog, , , , , , 50) = 1) { ; end of quest log
 				Gdip_DisposeImage(pBMLog), Gdip_DisposeImage(pBMScreen)
@@ -16493,20 +16542,20 @@ nm_RileyQuestProg(){
 	Sleep, 500
 
 	if(Qfound[1]=0){
-		MouseMove, 350, 100
 		;locate exact bottom of quest title bar coordinates
 		;titlebar = 30 pixels high
 		;quest objective bar spacing = 10 pixels
 		;quest objective bar height = 40 pixels
-		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
-		xi := 0
-		yi := Qfound[3]
-		ww := 306
-		wh := windowHeight
+		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
+		MouseMove, windowX+350, windowY+100
+		xi := windowX
+		yi := windowY+Qfound[3]
+		ww := windowX+306
+		wh := windowY+windowHeight
 		fileName:="questbargap.png"
 		IfExist, %A_ScriptDir%\nm_image_assets\
 		{
-			ImageSearch, FoundX, FoundY, %xi%, %yi%, %ww%, %wh%, *5 %A_ScriptDir%\nm_image_assets\%fileName%
+			ImageSearch, FoundX, FoundY, xi, yi, ww, wh, *5 %A_ScriptDir%\nm_image_assets\%fileName%
 			if (ErrorLevel = 2) {
 				nm_setStatus("Error", "Image file " filename " was not found in:`n" A_ScriptDir "\nm_image_assets\" fileName)
 				Sleep, 5000
@@ -16515,23 +16564,23 @@ nm_RileyQuestProg(){
 		} else {
 			MsgBox Folder location cannot be found:`n%A_ScriptDir%\nm_image_assets\
 		}
-		RileyStart:=[ErrorLevel, FoundX, FoundY]
+		RileyStart:=[ErrorLevel, FoundX-windowX, FoundY-windowY]
 		;determine quest bar sizes and spacing
 		if(QuestBarGapSize=0 || QuestBarSize=0 || QuestBarInset=0) {
 			Loop, 3 {
-				xi := 0
-				yi := RileyStart[3]+15
-				ww := 306
-				wh := RileyStart[3]+100
-				ImageSearch, FoundX, FoundY, %xi%, %yi%, %ww%, %wh%, *5 nm_image_assets\questbargap.png
+				xi := windowX
+				yi := windowY+RileyStart[3]+15
+				ww := windowX+306
+				wh := windowY+RileyStart[3]+100
+				ImageSearch, FoundX, FoundY, xi, yi, ww, wh, *5 nm_image_assets\questbargap.png
 				if(ErrorLevel=0) {
-					QuestBarSize:=FoundY-RileyStart[3]
+					QuestBarSize:=FoundY-windowY-RileyStart[3]
 					QuestBarGapSize:=3
 					QuestBarInset:=3
 					NextY:=FoundY+1
 					NextX:=FoundX+1
 					loop 20 {
-						ImageSearch, FoundX, FoundY, %FoundX%, %NextY%, %ww%, %wh%, *5 nm_image_assets\questbargap.png
+						ImageSearch, FoundX, FoundY, FoundX, NextY, ww, wh, *5 nm_image_assets\questbargap.png
 						if(ErrorLevel=0) {
 							NextY:=FoundY+1
 							QuestBarGapSize:=QuestBarGapSize+1
@@ -16539,9 +16588,9 @@ nm_RileyQuestProg(){
 							break
 						}
 					}
-					wh := RileyStart[3]+200
+					wh := windowY+RileyStart[3]+200
 					loop 20 {
-						ImageSearch, FoundX, FoundY, %NextX%, %yi%, %ww%, %wh%, *5 nm_image_assets\questbarinset.png
+						ImageSearch, FoundX, FoundY, NextX, yi, ww, wh, *5 nm_image_assets\questbarinset.png
 						if(ErrorLevel=0) {
 							NextX:=FoundX+1
 							QuestBarInset:=QuestBarInset+1
@@ -16552,7 +16601,7 @@ nm_RileyQuestProg(){
 					break
 					;msgbox QuestBarSize=%QuestBarSize%`nQuestBarGapSize=%QuestBarGapSize%`nQuestBarInset=%QuestBarInset%
 				} else {
-					MouseMove, 30, 225
+					MouseMove, windowX+30, windowY+225
 					Sleep, 50
 					send, {WheelDown 1}
 					Sleep, 50
@@ -16562,24 +16611,22 @@ nm_RileyQuestProg(){
 			}
 		}
 		;determine Quest name
-		xi := 0
-		yi := RileyStart[3]-30
-		ww := 306
-		wh := RileyStart[3]
-		missing:=1
+		xi := windowX
+		yi := windowY+RileyStart[3]-30
+		ww := windowX+306
+		wh := windowY+RileyStart[3]
 		for key, value in RileyBee {
 			filename:=(key . ".png")
-			ImageSearch, FoundX, FoundY, %xi%, %yi%, %ww%, %wh%, *100 nm_image_assets\%fileName%
+			ImageSearch, FoundX, FoundY, xi, yi, ww, wh, *100 nm_image_assets\%fileName%
 			if(ErrorLevel=0) {
 				RileyQuest:=key
 				questSteps:=RileyBee[key].length()
-				missing:=0
 				;make sure full quest is visible
 				loop 5 {
 					found:=0
-					NextY:=RileyStart[3]
+					NextY:=windowY+RileyStart[3]
 					loop %questSteps% {
-						ImageSearch, FoundX, FoundY, QuestBarInset, NextY, QuestBarInset+300, NextY+QuestBarGapSize, *5 nm_image_assets\questbargap.png
+						ImageSearch, FoundX, FoundY, windowX+QuestBarInset, NextY, windowX+QuestBarInset+300, NextY+QuestBarGapSize, *5 nm_image_assets\questbargap.png
 						if(ErrorLevel=0) {
 							NextY:=NextY+QuestBarSize
 							found:=found+1
@@ -16588,7 +16635,7 @@ nm_RileyQuestProg(){
 						}
 					}
 					if(found<questSteps) {
-						MouseMove, 30, 225
+						MouseMove, windowX+30, windowY+225
 						Sleep, 50
 						send, {WheelDown 1}
 						Sleep, 50
@@ -16615,7 +16662,7 @@ nm_RileyQuestProg(){
 		loop %num% {
 			action:=RileyBee[RileyQuest][A_Index][2]
 			where:=RileyBee[RileyQuest][A_Index][3]
-			PixelGetColor, questbarColor, QuestBarInset+10, QuestBarSize*(RileyBee[RileyQuest][A_Index][1]-1)+RileyStart[3]+QuestBarGapSize+1, RGB fast
+			PixelGetColor, questbarColor, windowX+QuestBarInset+10, windowY+QuestBarSize*(RileyBee[RileyQuest][A_Index][1]-1)+RileyStart[3]+QuestBarGapSize+5, RGB fast
 			if((questbarColor=Format("{:d}",0xF46C55)) || (questbarColor=Format("{:d}",0x6EFF60))) {
 				RileyQuestComplete:=0
 				completeness:="Incomplete"
@@ -16800,25 +16847,25 @@ nm_BuckoQuestProg(){
 			break
 		}
 
-		WinActivate, Roblox ahk_exe RobloxPlayerBeta.exe
+		WinActivate, Roblox
 		switch A_Index
 		{
 			case 1:
-			MouseMove, 30, 200, 5
+			WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
+			MouseMove, windowX+30, windowY+200, 5
 			Loop, 50 ; scroll all the way up
 			{
-				MouseMove, 30, 200, 5
+				MouseMove, windowX+30, windowY+200, 5
 				sendinput {WheelUp}
 				Sleep, 50
 			}
-			WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
 			pBMLog := Gdip_BitmapFromScreen(windowX+30 "|" windowY+180 "|30|400")
 
 			default:
-			MouseMove, 30, 200, 5
+			WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
+			MouseMove, windowX+30, windowY+200, 5
 			sendinput {WheelDown}
 			Sleep, 500 ; wait for scroll to finish
-			WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
 			pBMScreen := Gdip_BitmapFromScreen(windowX+30 "|" windowY+180 "|30|400")
 			if (Gdip_ImageSearch(pBMScreen, pBMLog, , , , , , 50) = 1) { ; end of quest log
 				Gdip_DisposeImage(pBMLog), Gdip_DisposeImage(pBMScreen)
@@ -16830,20 +16877,20 @@ nm_BuckoQuestProg(){
 	Sleep, 500
 
 	if(Qfound[1]=0){
-		MouseMove, 350, 100
 		;locate exact bottom of quest title bar coordinates
 		;titlebar = 30 pixels high
 		;quest objective bar spacing = 10 pixels
 		;quest objective bar height = 40 pixels
-		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
-		xi := 0
-		yi := Qfound[3]
-		ww := 306
-		wh := windowHeight
+		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
+		MouseMove, windowX+350, windowY+100
+		xi := windowX
+		yi := windowY+Qfound[3]
+		ww := windowX+306
+		wh := windowY+windowHeight
 		fileName:="questbargap.png"
 		IfExist, %A_ScriptDir%\nm_image_assets\
 		{
-			ImageSearch, FoundX, FoundY, %xi%, %yi%, %ww%, %wh%, *5 %A_ScriptDir%\nm_image_assets\%fileName%
+			ImageSearch, FoundX, FoundY, xi, yi, ww, wh, *5 %A_ScriptDir%\nm_image_assets\%fileName%
 			if (ErrorLevel = 2) {
 				nm_setStatus("Error", "Image file " filename " was not found in:`n" A_ScriptDir "\nm_image_assets\" fileName)
 				Sleep, 5000
@@ -16852,23 +16899,23 @@ nm_BuckoQuestProg(){
 		} else {
 			MsgBox Folder location cannot be found:`n%A_ScriptDir%\nm_image_assets\
 		}
-		BuckoStart:=[ErrorLevel, FoundX, FoundY]
+		BuckoStart:=[ErrorLevel, FoundX-windowX, FoundY-windowY]
 		;determine quest bar sizes and spacing
 		if(QuestBarGapSize=0 || QuestBarSize=0 || QuestBarInset=0) {
 			Loop, 3 {
-				xi := 0
-				yi := BuckoStart[3]+15
-				ww := 306
-				wh := BuckoStart[3]+100
-				ImageSearch, FoundX, FoundY, %xi%, %yi%, %ww%, %wh%, *5 nm_image_assets\questbargap.png
+				xi := windowX
+				yi := windowY+BuckoStart[3]+15
+				ww := windowX+306
+				wh := windowY+BuckoStart[3]+100
+				ImageSearch, FoundX, FoundY, xi, yi, ww, wh, *5 nm_image_assets\questbargap.png
 				if(ErrorLevel=0) {
-					QuestBarSize:=FoundY-BuckoStart[3]
+					QuestBarSize:=FoundY-windowY-BuckoStart[3]
 					QuestBarGapSize:=3
 					QuestBarInset:=3
 					NextY:=FoundY+1
 					NextX:=FoundX+1
 					loop 20 {
-						ImageSearch, FoundX, FoundY, %FoundX%, %NextY%, %ww%, %wh%, *5 nm_image_assets\questbargap.png
+						ImageSearch, FoundX, FoundY, FoundX, NextY, ww, wh, *5 nm_image_assets\questbargap.png
 						if(ErrorLevel=0) {
 							NextY:=FoundY+1
 							QuestBarGapSize:=QuestBarGapSize+1
@@ -16876,9 +16923,9 @@ nm_BuckoQuestProg(){
 							break
 						}
 					}
-					wh := BuckoStart[3]+200
+					wh := windowY+BuckoStart[3]+200
 					loop 20 {
-						ImageSearch, FoundX, FoundY, %NextX%, %yi%, %ww%, %wh%, *5 nm_image_assets\questbarinset.png
+						ImageSearch, FoundX, FoundY, NextX, yi, ww, wh, *5 nm_image_assets\questbarinset.png
 						if(ErrorLevel=0) {
 							NextX:=FoundX+1
 							QuestBarInset:=QuestBarInset+1
@@ -16889,7 +16936,7 @@ nm_BuckoQuestProg(){
 					break
 					;msgbox QuestBarSize=%QuestBarSize%`nQuestBarGapSize=%QuestBarGapSize%`nQuestBarInset=%QuestBarInset%
 				} else {
-					MouseMove, 30, 225
+					MouseMove, windowX+30, windowY+225
 					Sleep, 50
 					send, {WheelDown 1}
 					Sleep, 50
@@ -16899,24 +16946,22 @@ nm_BuckoQuestProg(){
 			}
 		}
 		;determine Quest name
-		xi := 0
-		yi := BuckoStart[3]-30
-		ww := 306
-		wh := BuckoStart[3]
-		missing:=1
+		xi := windowX
+		yi := windowY+BuckoStart[3]-30
+		ww := windowX+306
+		wh := windowY+BuckoStart[3]
 		for key, value in BuckoBee {
 			filename:=(key . ".png")
-			ImageSearch, FoundX, FoundY, %xi%, %yi%, %ww%, %wh%, *100 nm_image_assets\%fileName%
+			ImageSearch, FoundX, FoundY, xi, yi, ww, wh, *100 nm_image_assets\%fileName%
 			if(ErrorLevel=0) {
 				BuckoQuest:=key
-				missing:=0
-				;make sure full quest is visible
 				questSteps:=BuckoBee[key].length()
+				;make sure full quest is visible
 				loop 5 {
 					found:=0
-					NextY:=BuckoStart[3]
+					NextY:=windowY+BuckoStart[3]
 					loop %questSteps% {
-						ImageSearch, FoundX, FoundY, QuestBarInset, NextY, QuestBarInset+300, NextY+QuestBarGapSize, *5 nm_image_assets\questbargap.png
+						ImageSearch, FoundX, FoundY, windowX+QuestBarInset, NextY, windowX+QuestBarInset+300, NextY+QuestBarGapSize, *5 nm_image_assets\questbargap.png
 						if(ErrorLevel=0) {
 							NextY:=NextY+QuestBarSize
 							found:=found+1
@@ -16925,7 +16970,7 @@ nm_BuckoQuestProg(){
 						}
 					}
 					if(found<questSteps) {
-						MouseMove, 30, 225
+						MouseMove, windowX+30, windowY+225
 						Sleep, 50
 						send, {WheelDown 1}
 						Sleep, 50
@@ -16952,7 +16997,7 @@ nm_BuckoQuestProg(){
 		loop %num% {
 			action:=BuckoBee[BuckoQuest][A_Index][2]
 			where:=BuckoBee[BuckoQuest][A_Index][3]
-			PixelGetColor, questbarColor, QuestBarInset+10, QuestBarSize*(BuckoBee[BuckoQuest][A_Index][1]-1)+BuckoStart[3]+QuestBarGapSize+1, RGB fast
+			PixelGetColor, questbarColor, windowX+QuestBarInset+10, windowY+QuestBarSize*(BuckoBee[BuckoQuest][A_Index][1]-1)+BuckoStart[3]+QuestBarGapSize+5, RGB fast
 			if((questbarColor=Format("{:d}",0xF46C55)) || (questbarColor=Format("{:d}",0x6EFF60))) {
 				BuckoQuestComplete:=0
 				completeness:="Incomplete"
@@ -17147,25 +17192,25 @@ nm_BlackQuestProg(){
 			break
 		}
 
-		WinActivate, Roblox ahk_exe RobloxPlayerBeta.exe
+		WinActivate, Roblox
 		switch A_Index
 		{
 			case 1:
-			MouseMove, 30, 200, 5
+			WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
+			MouseMove, windowX+30, windowY+200, 5
 			Loop, 50 ; scroll all the way up
 			{
-				MouseMove, 30, 200, 5
+				MouseMove, windowX+30, windowY+200, 5
 				sendinput {WheelUp}
 				Sleep, 50
 			}
-			WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
 			pBMLog := Gdip_BitmapFromScreen(windowX+30 "|" windowY+180 "|30|400")
 
 			default:
-			MouseMove, 30, 200, 5
+			WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
+			MouseMove, windowX+30, windowY+200, 5
 			sendinput {WheelDown}
 			Sleep, 500 ; wait for scroll to finish
-			WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
 			pBMScreen := Gdip_BitmapFromScreen(windowX+30 "|" windowY+180 "|30|400")
 			if (Gdip_ImageSearch(pBMScreen, pBMLog, , , , , , 50) = 1) { ; end of quest log
 				Gdip_DisposeImage(pBMLog), Gdip_DisposeImage(pBMScreen)
@@ -17177,20 +17222,20 @@ nm_BlackQuestProg(){
 	Sleep, 500
 
 	if(Qfound[1]=0){
-		MouseMove, 350, 100
 		;locate exact bottom of quest title bar coordinates
 		;titlebar = 30 pixels high
 		;quest objective bar spacing = 10 pixels
 		;quest objective bar height = 40 pixels
-		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
-		xi := 0
-		yi := Qfound[3]
-		ww := 306
-		wh := windowHeight
+		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
+		MouseMove, windowX+350, windowY+100
+		xi := windowX
+		yi := windowY+Qfound[3]
+		ww := windowX+306
+		wh := windowY+windowHeight
 		fileName:="questbargap.png"
 		IfExist, %A_ScriptDir%\nm_image_assets\
 		{
-			ImageSearch, FoundX, FoundY, %xi%, %yi%, %ww%, %wh%, *5 %A_ScriptDir%\nm_image_assets\%fileName%
+			ImageSearch, FoundX, FoundY, xi, yi, ww, wh, *5 %A_ScriptDir%\nm_image_assets\%fileName%
 			if (ErrorLevel = 2) {
 				nm_setStatus("Error", "Image file " filename " was not found in:`n" A_ScriptDir "\nm_image_assets\" fileName)
 				Sleep, 5000
@@ -17199,23 +17244,23 @@ nm_BlackQuestProg(){
 		} else {
 			MsgBox Folder location cannot be found:`n%A_ScriptDir%\nm_image_assets\
 		}
-		BlackStart:=[ErrorLevel, FoundX, FoundY]
+		BlackStart:=[ErrorLevel, FoundX-windowX, FoundY-windowY]
 		;determine quest bar sizes and spacing
 		if(QuestBarGapSize=0 || QuestBarSize=0 || QuestBarInset=0) {
 			Loop, 3 {
-				xi := 0
-				yi := BlackStart[3]+15
-				ww := 306
-				wh := BlackStart[3]+100
-				ImageSearch, FoundX, FoundY, %xi%, %yi%, %ww%, %wh%, *5 nm_image_assets\questbargap.png
+				xi := windowX
+				yi := windowY+BlackStart[3]+15
+				ww := windowX+306
+				wh := windowY+BlackStart[3]+100
+				ImageSearch, FoundX, FoundY, xi, yi, ww, wh, *5 nm_image_assets\questbargap.png
 				if(ErrorLevel=0) {
-					QuestBarSize:=FoundY-BlackStart[3]
+					QuestBarSize:=FoundY-windowY-BlackStart[3]
 					QuestBarGapSize:=3
 					QuestBarInset:=3
 					NextY:=FoundY+1
 					NextX:=FoundX+1
 					loop 20 {
-						ImageSearch, FoundX, FoundY, %FoundX%, %NextY%, %ww%, %wh%, *5 nm_image_assets\questbargap.png
+						ImageSearch, FoundX, FoundY, FoundX, NextY, ww, wh, *5 nm_image_assets\questbargap.png
 						if(ErrorLevel=0) {
 							NextY:=FoundY+1
 							QuestBarGapSize:=QuestBarGapSize+1
@@ -17223,9 +17268,9 @@ nm_BlackQuestProg(){
 							break
 						}
 					}
-					wh := BlackStart[3]+200
+					wh := windowY+BlackStart[3]+200
 					loop 20 {
-						ImageSearch, FoundX, FoundY, %NextX%, %yi%, %ww%, %wh%, *5 nm_image_assets\questbarinset.png
+						ImageSearch, FoundX, FoundY, NextX, yi, ww, wh, *5 nm_image_assets\questbarinset.png
 						if(ErrorLevel=0) {
 							NextX:=FoundX+1
 							QuestBarInset:=QuestBarInset+1
@@ -17236,7 +17281,7 @@ nm_BlackQuestProg(){
 					break
 					;msgbox QuestBarSize=%QuestBarSize%`nQuestBarGapSize=%QuestBarGapSize%`nQuestBarInset=%QuestBarInset%
 				} else {
-					MouseMove, 30, 225
+					MouseMove, windowX+30, windowY+225
 					Sleep, 50
 					send, {WheelDown 1}
 					Sleep, 50
@@ -17245,27 +17290,23 @@ nm_BlackQuestProg(){
 				}
 			}
 		}
-		;MouseMove, Blackstart[2], Blackstart[3], 5
-		;msgbox % Blackstart[2] Blackstart[3]
 		;determine Quest name
-		xi := 0
-		yi := BlackStart[3]-30
-		ww := 306
-		wh := BlackStart[3]
-		missing:=1
+		xi := windowX
+		yi := windowY+BlackStart[3]-30
+		ww := windowX+306
+		wh := windowY+BlackStart[3]
 		for key, value in BlackBear {
 			filename:=(key . ".png")
-			ImageSearch, FoundX, FoundY, %xi%, %yi%, %ww%, %wh%, *100 nm_image_assets\%fileName%
+			ImageSearch, FoundX, FoundY, xi, yi, ww, wh, *100 nm_image_assets\%fileName%
 			if(ErrorLevel=0) {
 				BlackQuest:=key
-				missing:=0
-				;make sure full quest is visible
 				questSteps:=BlackBear[key].length()
+				;make sure full quest is visible
 				loop 5 {
 					found:=0
-					NextY:=BlackStart[3]
+					NextY:=windowY+BlackStart[3]
 					loop %questSteps% {
-						ImageSearch, FoundX, FoundY, QuestBarInset, NextY, QuestBarInset+300, NextY+QuestBarGapSize, *5 nm_image_assets\questbargap.png
+						ImageSearch, FoundX, FoundY, windowX+QuestBarInset, NextY, windowX+QuestBarInset+300, NextY+QuestBarGapSize, *5 nm_image_assets\questbargap.png
 						if(ErrorLevel=0) {
 							NextY:=NextY+QuestBarSize
 							found:=found+1
@@ -17274,7 +17315,7 @@ nm_BlackQuestProg(){
 						}
 					}
 					if(found<questSteps) {
-						MouseMove, 30, 225
+						MouseMove, windowX+30, windowY+225
 						Sleep, 50
 						send, {WheelDown 1}
 						Sleep, 50
@@ -17298,7 +17339,7 @@ nm_BlackQuestProg(){
 		loop %num% {
 			action:=BlackBear[BlackQuest][A_Index][2]
 			where:=BlackBear[BlackQuest][A_Index][3]
-			PixelGetColor, questbarColor, QuestBarInset+10, QuestBarSize*(BlackBear[BlackQuest][A_Index][1]-1)+BlackStart[3]+QuestBarGapSize+1, RGB fast
+			PixelGetColor, questbarColor, windowX+QuestBarInset+10, windowY+QuestBarSize*(BlackBear[BlackQuest][A_Index][1]-1)+BlackStart[3]+QuestBarGapSize+5, RGB fast
 			if((questbarColor=Format("{:d}",0xF46C55)) || (questbarColor=Format("{:d}",0x6EFF60))) {
 				BlackQuestComplete:=0
 				completeness:="Incomplete"
@@ -17440,18 +17481,18 @@ nm_gotoQuestgiver(giver){
 				sleep, 2000
 				Loop, 500
 				{
-					WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
+					WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
 					pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//2-50 "|" windowY+2*windowHeight//3 "|100|" windowHeight//3)
 					if (Gdip_ImageSearch(pBMScreen, bitmaps["dialog"], pos, , , , , 10, , 3) = 0) {
 						Gdip_DisposeImage(pBMScreen)
 						break
 					}
 					Gdip_DisposeImage(pBMScreen)
-					MouseMove, windowWidth//2, 2*windowHeight//3+SubStr(pos, InStr(pos, ",")+1)-15
+					MouseMove, windowX+windowWidth//2, windowY+2*windowHeight//3+SubStr(pos, InStr(pos, ",")+1)-15
 					Click
 					sleep, 150
 				}
-				MouseMove, 350, 100
+				MouseMove, windowX+350, windowY+100
 			}
 		}
 
@@ -18967,7 +19008,8 @@ ba_GetNectarPercent(var){
 			: (var="satisfying") ? nectarColor:=0xA798B3
 			: (var="refreshing") ? nectarColor:=0x75B378
 			: (var="invigorating") ? nectarColor:=0x5159B3
-			PixelSearch, bx2, by2, 0, 30, 860, 150, %nectarColor%,0, Fast
+			WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
+			PixelSearch, bx2, by2, windowX, windowY+30, windowX+860, windowY+150, %nectarColor%,0, Fast
 			If (ErrorLevel=0) {
 				nexty:=by2+1
 				pixels:=1
@@ -19231,7 +19273,10 @@ ba_placePlanter(fieldName, planter, planterNum, atField:=0){
 		return 0
 	}
 	else
-		MouseMove, planterPos[1], planterPos[2]
+	{
+		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
+		MouseMove, windowX+planterPos[1], windowY+planterPos[2]
+	}
 
 	KeyWait, F14, T120 L ; wait for gotoPlanter finish
 	nm_endWalk()
@@ -19239,7 +19284,7 @@ ba_placePlanter(fieldName, planter, planterNum, atField:=0){
 	nm_setStatus("Placing", planterName)
 	Loop, 10
 	{
-		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
+		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
 		pBMScreen := Gdip_BitmapFromScreen(windowX "|" windowY+150 "|" windowWidth//2 "|" Max(480, windowHeight-120))
 
 		if (A_Index = 1)
@@ -19275,21 +19320,21 @@ ba_placePlanter(fieldName, planter, planterNum, atField:=0){
 		}
 		Gdip_DisposeImage(pBMScreen)
 
-		MouseClickDrag, Left, 30, SubStr(planterPos, InStr(planterPos, ",")+1)+190, windowWidth//2, windowHeight//2, 5
+		MouseClickDrag, Left, windowX+30, windowY+SubStr(planterPos, InStr(planterPos, ",")+1)+190, windowX+windowWidth//2, windowY+windowHeight//2, 5
 		sleep, 200
 	}
 	Loop, 50
 	{
-		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
+		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
 		loop 3 {
 			pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//2-250 "|" windowY+((6*windowHeight)//10 - 60) "|500|150")
 			if (Gdip_ImageSearch(pBMScreen, bitmaps["yes"], pos, , , , , 2, , 2) = 1) {
-				MouseMove, windowWidth//2-250+SubStr(pos, 1, InStr(pos, ",")-1), ((6*windowHeight)//10 - 60)+SubStr(pos, InStr(pos, ",")+1)
+				MouseMove, windowX+windowWidth//2-250+SubStr(pos, 1, InStr(pos, ",")-1), windowY+((6*windowHeight)//10 - 60)+SubStr(pos, InStr(pos, ",")+1)
 				sleep, 150
 				Click
 				sleep 100
 				Gdip_DisposeImage(pBMScreen)
-				MouseMove, 350, 100
+				MouseMove, windowX+350, windowY+100
 				break 2
 			}
 			Gdip_DisposeImage(pBMScreen)
@@ -19352,8 +19397,8 @@ ba_harvestPlanter(planterNum){
 	if (findPlanter = 0) {
 		;check for phantom planter
 		nm_setStatus("Checking", "Phantom Planter: " . planterName)
-		WinActivate, Roblox ahk_exe RobloxPlayerBeta.exe
-		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
+		WinActivate, Roblox
+		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
 
 		nm_OpenMenu("itemmenu")
 		planterPos := nm_InventorySearch(planterName, "up", 4)
@@ -19384,7 +19429,7 @@ ba_harvestPlanter(planterNum){
 
 		Loop, 50
 		{
-			WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
+			WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
 			pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//2-200 "|" windowY+36 "|200|120")
 			if (Gdip_ImageSearch(pBMScreen, bitmaps["e_button"], , , , , , 2, , 6) = 0) {
 				Gdip_DisposeImage(pBMScreen)
@@ -19399,16 +19444,16 @@ ba_harvestPlanter(planterNum){
 		}
 
 		Sleep, 50 ; wait for game to update frame
-		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "Roblox ahk_exe RobloxPlayerBeta.exe")
+		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
 		if (HarvestFullGrown = 1) {
 			loop 3 {
 				pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//2-250 "|" windowY+((6*windowHeight)//10 - 60) "|500|150")
 				if (Gdip_ImageSearch(pBMScreen, bitmaps["no"], pos, , , , , 2, , 3) = 1) {
-					MouseMove, windowWidth//2-250+SubStr(pos, 1, InStr(pos, ",")-1), ((6*windowHeight)//10 - 60)+SubStr(pos, InStr(pos, ",")+1)
+					MouseMove, windowX+windowWidth//2-250+SubStr(pos, 1, InStr(pos, ",")-1), windowY+((6*windowHeight)//10 - 60)+SubStr(pos, InStr(pos, ",")+1)
 					sleep, 150
 					Click
 					sleep 100
-					MouseMove, 350, 100
+					MouseMove, windowX+350, windowY+100
 					Gdip_DisposeImage(pBMScreen)
 					nm_PlanterTimeUpdate(FieldName)
 					return 1
@@ -19420,11 +19465,11 @@ ba_harvestPlanter(planterNum){
 			loop 3 {
 				pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//2-250 "|" windowY+((6*windowHeight)//10 - 60) "|500|150")
 				if (Gdip_ImageSearch(pBMScreen, bitmaps["yes"], pos, , , , , 2, , 2) = 1) {
-					MouseMove, windowWidth//2-250+SubStr(pos, 1, InStr(pos, ",")-1), ((6*windowHeight)//10 - 60)+SubStr(pos, InStr(pos, ",")+1)
+					MouseMove, windowX+windowWidth//2-250+SubStr(pos, 1, InStr(pos, ",")-1), windowY+((6*windowHeight)//10 - 60)+SubStr(pos, InStr(pos, ",")+1)
 					sleep, 150
 					Click
 					sleep 100
-					MouseMove, 350, 100
+					MouseMove, windowX+350, windowY+100
 					Gdip_DisposeImage(pBMScreen)
 					break
 				}
@@ -19713,17 +19758,18 @@ for k,v in ["Discord","Roblox","Donate"]
 Gui, Font, s8 cDefault Norm Tahoma
 nm_setStatus("Begin", "Macro")
 Sleep, 100
-if !WinExist("Roblox ahk_exe RobloxPlayerBeta.exe")
+if !GetRobloxHWND()
 	disconnectCheck()
-WinActivate, Roblox ahk_exe RobloxPlayerBeta.exe
+WinActivate, Roblox
 ;check UIPI
-PostMessage, 0x100, 0x7, 0, , Roblox ahk_exe RobloxPlayerBeta.exe
+PostMessage, 0x100, 0x7, 0, , % "ahk_id " GetRobloxHWND()
 if (ErrorLevel = 1)
 	msgbox, 0x1030, WARNING!!, % "Your Roblox window is run as admin, but the macro is not!`nThis means the macro will be unable to send any inputs to Roblox.`nYou must either reinstall Roblox without administrative rights, or run Natro Macro as admin!`n`nNOTE: It is recommended to stop the macro now, as this issue also causes hotkeys to not work while Roblox is active.", 60
-PostMessage, 0x101, 0x7, 0xC0000000, , Roblox ahk_exe RobloxPlayerBeta.exe
+PostMessage, 0x101, 0x7, 0xC0000000, , % "ahk_id " GetRobloxHWND()
 nm_setShiftLock(0)
 nm_OpenMenu()
-MouseMove, 350, 100
+WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " GetRobloxHWND())
+MouseMove, windowX+350, windowY+100
 Prev_DetectHiddenWindows := A_DetectHiddenWindows
 Prev_TitleMatchMode := A_TitleMatchMode
 DetectHiddenWindows, On
@@ -19928,7 +19974,7 @@ pause:
 if(state="startup")
 	return
 if(A_IsPaused) {
-	WinActivate, Roblox ahk_exe RobloxPlayerBeta.exe
+	WinActivate, Roblox
 	Prev_DetectHiddenWindows := A_DetectHiddenWindows
 	Prev_TitleMatchMode := A_TitleMatchMode
 	DetectHiddenWindows, On
@@ -20098,8 +20144,7 @@ nm_ForceReconnect(wParam){
 	Critical
 	global ReconnectDelay := wParam
 	nm_endWalk()
-	for p in ComObjGet("winmgmts:").ExecQuery("Select * from Win32_Process where Name like '%Roblox%'")
-		Process, Close, % p.ProcessID
+	CloseRoblox()
 	return 0
 }
 nm_sendHeartbeat(){
