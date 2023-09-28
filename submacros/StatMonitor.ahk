@@ -253,7 +253,7 @@ OnMessage(0x5557, "SetBackpack", 255)
 ; OBTAIN DATA
 ; detect OS version
 for objItem in ComObjGet("winmgmts:").ExecQuery("SELECT * FROM Win32_OperatingSystem")
-    os_version := StrReplace(objItem.Caption, "Microsoft ")
+    os_version := Trim(StrReplace(StrReplace(StrReplace(StrReplace(objItem.Caption, "Microsoft"), "Майкрософт"), "مايكروسوفت"), "微软"))
 	
 ; obtain natro version and other options (if exist)
 if (natro_version := A_Args[1])
