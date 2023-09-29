@@ -7191,7 +7191,8 @@ nm_ContributorsImage(page:=1){
 	static hCtrl, hBM1, hBM2, hBM3, hBM4, hBM5, hBM6, hBM7, hBM8, hBM9 ; 9 pages max
 		, colorArr := {"blue": [0xff83c6e2, 0xff2779d8, 0xff83c6e2]
 			, "gold": [0xfff0ca8f, 0xffd48d22, 0xfff0ca8f]
-			, "red": [0xffA82428, 0xffA82428, 0xffA82428]}
+			, "error-red": [0xffa82428, 0xffa82428, 0xffa82428]
+			, "pink": [0xffad32c3, 0xfff47fff, 0xffad32c3]}
 
 	if (hBM1 = "")
 	{
@@ -7228,7 +7229,7 @@ nm_ContributorsImage(page:=1){
 			contributors := StrSplit(wr.ResponseText, "`n", " `t")
 		}
 		catch
-			contributors := ["Error while loading,red", "contributors!,red", "", "Make sure you have,red", "a working internet,red", "connection and then,red", "reload the macro.,red"]
+			contributors := ["Error while loading,error-red", "contributors!,error-red", "", "Make sure you have,error-red", "a working internet,error-red", "connection and then,error-red", "reload the macro.,error-red"]
 
 		pBM := Gdip_CreateBitmap(244,212)
 		G := Gdip_GraphicsFromImage(pBM)
