@@ -3669,18 +3669,6 @@ nm_testButton(){ ;~~ lines 3464 and 3465 have the same change as 14156
 			ExitApp
 		}
 	}
-	GetRobloxHWND()
-	{
-		if (hwnd := WinExist(""""Roblox ahk_exe RobloxPlayerBeta.exe""""))
-			return hwnd
-		else if (WinExist(""""Roblox ahk_exe ApplicationFrameHost.exe""""))
-		{
-			ControlGet, hwnd, Hwnd, , ApplicationFrameInputSinkWindow1
-			return hwnd
-		}
-		else
-			return 0
-	}
 	ExitFunc()
 	{
 		global pToken
