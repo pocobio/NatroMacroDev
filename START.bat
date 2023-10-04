@@ -1,3 +1,4 @@
+<!-- : Begin batch script
 @echo off
 setlocal EnableDelayedExpansion
 cd %~dp0
@@ -11,12 +12,13 @@ if exist "submacros\AutoHotkeyU32.exe" (
 )
 
 :: ELSE try to find .zip in common directories, extract, and run the macro
-set cyan=[1;36m>nul
-set green=[1;32m>nul
-set purple=[1;35m>nul
-set red=[1;31m>nul
-set yellow=[1;33m>nul
-set reset=[0m>nul
+for /f "delims=#" %%E in ('"prompt #$E# & for %%E in (1) do rem"') do set "\e=%%E"
+set cyan=%\e%[96m
+set green=%\e%[92m
+set purple=%\e%[95m
+set red=%\e%[91m
+set yellow=%\e%[93m
+set reset=%\e%[0m
 
 for %%a in (".\..") do set "grandparent=%%~nxa"
 if defined grandparent (
@@ -30,7 +32,7 @@ if defined grandparent (
 				echo:
 				
 				echo %purple%Extracting %USERPROFILE%\%%a\!zip!...%reset%
-				call :UnZipFile "%USERPROFILE%\%%a" "%USERPROFILE%\%%a\!zip!" folder
+				for /f delims^=^ EOL^= %%g in ('cscript //nologo "%~f0?.wsf" "%USERPROFILE%\%%a" "%USERPROFILE%\%%a\!zip!"') do set "folder=%%g"
 				echo %purple%Extract complete^^!%reset%
 				echo:
 				
@@ -48,20 +50,24 @@ if defined grandparent (
 	) else (echo %red%Error: Could not determine .zip name of unextracted .zip^^!%reset%)
 ) else (echo %red%Error: Could not find Temp folder of unextracted .zip^^! ^(.bat has no grandparent^)%reset%)
 
-pause
+echo %red%Unable to automatically extract Natro Macro^^!%reset%
+echo %red% - If you have already extracted, make sure you are not missing any files.%reset%
+echo %red% - If you have not extracted, you may have to manually extract the zipped folder.%reset%
+echo %red%Join our Discord server for support: discord.gg/natromacro%reset%
+echo:
+<nul set /p "=%red%Press any key to exit...%reset%"
+pause >nul
+exit
 
-:: modified from https://stackoverflow.com/a/21709923
-:UnZipFile <ExtractTo> <newzipfile>
-set vbs="%temp%\_.vbs"
-if exist %vbs% del /f /q %vbs%
->%vbs%  echo Set fso = CreateObject("Scripting.FileSystemObject")
->>%vbs% echo set objShell = CreateObject("Shell.Application")
->>%vbs% echo set FilesInZip=objShell.NameSpace(%2).items
->>%vbs% echo for each folder in FilesInZip
->>%vbs% echo WScript.Echo folder
->>%vbs% echo next
->>%vbs% echo objShell.NameSpace(%1).CopyHere FilesInZip, 20
->>%vbs% echo Set fso = Nothing
->>%vbs% echo Set objShell = Nothing
-for /f delims^=^ EOL^= %%g in ('cscript //nologo %vbs%') do set "%3=%%g"
-if exist %vbs% del /f /q %vbs%
+----- Begin wsf script --->
+<job><script language="VBScript">
+set fso = CreateObject("Scripting.FileSystemObject")
+set objShell = CreateObject("Shell.Application")
+set FilesInZip = objShell.NameSpace(WScript.Arguments(1)).items
+for each folder in FilesInZip
+	WScript.Echo folder
+next
+objShell.NameSpace(WScript.Arguments(0)).CopyHere FilesInZip, 20
+set fso = Nothing
+set objShell = Nothing
+</script></job>
