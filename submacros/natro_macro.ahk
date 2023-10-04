@@ -2214,17 +2214,17 @@ hBM := Gdip_CreateHBITMAPFromBitmap(bitmaps["beesmas"])
 Gui, Add, Picture, +BackgroundTrans x122 y150 w20 h20 vBeesmasImage, % (beesmasActive ? "HBITMAP:*" . hBM : "")
 DllCall("DeleteObject", "ptr", hBM)
 Gdip_DisposeImage(bitmaps["beesmas"])
-Gui, Add, Checkbox, % "x156 y153 +BackgroundTrans gnm_saveCollect " (beesmasActive ? "vBeesmasGatherInterruptCheck Checked" BeesmasGatherInterruptCheck : "Disabled"), Allow Gather Interrupt
-Gui, Add, Checkbox, % "x15 y170 +BackgroundTrans gnm_saveCollect " (beesmasActive ? "vStockingsCheck Checked" StockingsCheck : "Disabled"), Stockings
-Gui, Add, Checkbox, % "x15 yp+17 +BackgroundTrans gnm_saveCollect " (beesmasActive ? "vWreathCheck Checked" WreathCheck : "Disabled"), Honey Wreath
-Gui, Add, Checkbox, % "x15 yp+17 +BackgroundTrans gnm_saveCollect " (beesmasActive ? "vFeastCheck Checked" FeastCheck : "Disabled"), Feast
-Gui, Add, Checkbox, % "x15 yp+17 +BackgroundTrans gnm_saveCollect " (beesmasActive ? "vRBPDelevelCheck Checked" RBPDelevelCheck : "Disabled"), Robo Party De-level
-Gui, Add, Checkbox, % "x108 y170 +BackgroundTrans gnm_saveCollect " (beesmasActive ? "vGingerbreadCheck Checked" GingerbreadCheck : "Disabled"), Gingerbread
-Gui, Add, Checkbox, % "x108 yp+17 +BackgroundTrans gnm_saveCollect " (beesmasActive ? "vSnowMachineCheck Checked" SnowMachineCheck : "Disabled"), Snow Machine
-Gui, Add, Checkbox, % "x108 yp+17 +BackgroundTrans gnm_saveCollect " (beesmasActive ? "vCandlesCheck Checked" CandlesCheck : "Disabled"), Candles
-Gui, Add, Checkbox, % "x201 y170 +BackgroundTrans gnm_saveCollect " (beesmasActive ? "vSamovarCheck Checked" SamovarCheck : "Disabled"), Samovar
-Gui, Add, Checkbox, % "x201 yp+17 +BackgroundTrans gnm_saveCollect " (beesmasActive ? "vLidArtCheck Checked" LidArtCheck : "Disabled"), Lid Art
-Gui, Add, Checkbox, % "x201 yp+17 +BackgroundTrans gnm_saveCollect " (beesmasActive ? "vGummyBeaconCheck Checked" GummyBeaconCheck : "Disabled"), Gummy Beacon
+Gui, Add, Checkbox, % "x156 y153 +BackgroundTrans gnm_saveCollect hwndhwndBeesmas1 " (beesmasActive ? "vBeesmasGatherInterruptCheck Checked" BeesmasGatherInterruptCheck : "Disabled"), Allow Gather Interrupt
+Gui, Add, Checkbox, % "x15 y170 +BackgroundTrans gnm_saveCollect hwndhwndBeesmas2 " (beesmasActive ? "vStockingsCheck Checked" StockingsCheck : "Disabled"), Stockings
+Gui, Add, Checkbox, % "x15 yp+17 +BackgroundTrans gnm_saveCollect hwndhwndBeesmas3 " (beesmasActive ? "vWreathCheck Checked" WreathCheck : "Disabled"), Honey Wreath
+Gui, Add, Checkbox, % "x15 yp+17 +BackgroundTrans gnm_saveCollect hwndhwndBeesmas4 " (beesmasActive ? "vFeastCheck Checked" FeastCheck : "Disabled"), Feast
+Gui, Add, Checkbox, % "x15 yp+17 +BackgroundTrans gnm_saveCollect hwndhwndBeesmas5 " (beesmasActive ? "vRBPDelevelCheck Checked" RBPDelevelCheck : "Disabled"), Robo Party De-level
+Gui, Add, Checkbox, % "x108 y170 +BackgroundTrans gnm_saveCollect hwndhwndBeesmas6 " (beesmasActive ? "vGingerbreadCheck Checked" GingerbreadCheck : "Disabled"), Gingerbread
+Gui, Add, Checkbox, % "x108 yp+17 +BackgroundTrans gnm_saveCollect hwndhwndBeesmas7 " (beesmasActive ? "vSnowMachineCheck Checked" SnowMachineCheck : "Disabled"), Snow Machine
+Gui, Add, Checkbox, % "x108 yp+17 +BackgroundTrans gnm_saveCollect hwndhwndBeesmas8 " (beesmasActive ? "vCandlesCheck Checked" CandlesCheck : "Disabled"), Candles
+Gui, Add, Checkbox, % "x201 y170 +BackgroundTrans gnm_saveCollect hwndhwndBeesmas9 " (beesmasActive ? "vSamovarCheck Checked" SamovarCheck : "Disabled"), Samovar
+Gui, Add, Checkbox, % "x201 yp+17 +BackgroundTrans gnm_saveCollect hwndhwndBeesmas10 " (beesmasActive ? "vLidArtCheck Checked" LidArtCheck : "Disabled"), Lid Art
+Gui, Add, Checkbox, % "x201 yp+17 +BackgroundTrans gnm_saveCollect hwndhwndBeesmas11 " (beesmasActive ? "vGummyBeaconCheck Checked" GummyBeaconCheck : "Disabled"), Gummy Beacon
 
 ;KILL
 ;bugrun
@@ -7398,7 +7398,8 @@ nm_ContributorsPageButton(hwnd){
 }
 nm_CollectKillButton(hCtrl){
 	global
-	static CollectControls := ["CollectGroupBox","DispensersGroupBox","BeesmasGroupBox","BeesmasImage","ClockCheck","MondoBuffCheck","MondoAction","AntPassCheck","AntPassAction","RoboPassCheck","HoneystormCheck","HoneyDisCheck","TreatDisCheck","BlueberryDisCheck","StrawberryDisCheck","CoconutDisCheck","RoyalJellyDisCheck","GlueDisCheck","BeesmasGatherInterruptCheck","StockingsCheck","WreathCheck","FeastCheck","RBPDelevelCheck","GingerbreadCheck","SnowMachineCheck","CandlesCheck","SamovarCheck","LidArtCheck","GummyBeaconCheck"]
+	static CollectControls := ["CollectGroupBox","DispensersGroupBox","BeesmasGroupBox","BeesmasImage","ClockCheck","MondoBuffCheck","MondoAction","AntPassCheck","AntPassAction","RoboPassCheck","HoneystormCheck","HoneyDisCheck","TreatDisCheck","BlueberryDisCheck","StrawberryDisCheck","CoconutDisCheck","RoyalJellyDisCheck","GlueDisCheck"]
+	, BeesmasControls := ["hwndBeesmas1","hwndBeesmas2","hwndBeesmas3","hwndBeesmas4","hwndBeesmas5","hwndBeesmas6","hwndBeesmas7","hwndBeesmas8","hwndBeesmas9","hwndBeesmas10","hwndBeesmas11"]
 	, KillControls := ["BugRunGroupBox","BugRunCheck","MonsterRespawnTime","TextMonsterRespawnPercent","TextMonsterRespawn","MonsterRespawnTimeHelp","BugrunInterruptCheck","TextLoot","TextKill","TextLineBugRun1","TextLineBugRun2","BugrunLadybugsLoot","BugrunRhinoBeetlesLoot","BugrunSpiderLoot","BugrunMantisLoot","BugrunScorpionsLoot","BugrunWerewolfLoot","BugrunLadybugsCheck","BugrunRhinoBeetlesCheck","BugrunSpiderCheck","BugrunMantisCheck","BugrunScorpionsCheck","BugrunWerewolfCheck","StingersGroupBox","StingerCheck","StingerDailyBonusCheck","TextFields","StingerCloverCheck","StingerSpiderCheck","StingerCactusCheck","StingerRoseCheck","StingerMountainTopCheck","StingerPepperCheck","BossesGroupBox","TunnelBearCheck","KingBeetleCheck","CocoCrabCheck","StumpSnailCheck","CommandoCheck","TunnelBearBabyCheck","KingBeetleBabyCheck","BabyLovePicture1","BabyLovePicture2","KingBeetleAmuletMode","ShellAmuletMode","KingBeetleAmuPicture","ShellAmuPicture","KingBeetleAmuletModeText","ShellAmuletModeText","ChickLevelTextLabel","ChickLevelText","ChickLevel","SnailHPText","SnailHealthEdit","SnailHealthText","ChickHPText","ChickHealthEdit","ChickHealthText","SnailTimeText","SnailTimeUpDown","ChickTimeText","ChickTimeUpDown","BossConfigHelp","TextLineBosses1","TextLineBosses2","TextLineBosses3","TextBosses1","TextBosses2","TextBosses3"]
 
 	p := (hCtrl = hKill)
@@ -7412,6 +7413,8 @@ nm_CollectKillButton(hCtrl){
 		{
 			for k,v in CollectControls
 				GuiControl, %c%, %v%
+			for k,v in BeesmasControls
+				GuiControl, %c%, % %v%
 		}
 
 		if (((i = 1) && (p = 0)) || ((i = 2) && (p = 1))) ; hide/show all kill controls
