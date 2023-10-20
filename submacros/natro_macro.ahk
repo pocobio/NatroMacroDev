@@ -1879,15 +1879,18 @@ nm_AutoUpdateGUI()
 	GuiControl, update:Focus, UpdateButton
 	Prev_DetectHiddenWindows := A_DetectHiddenWindows
 	DetectHiddenWindows Off
+	nm_DismissLabel(1)
 	SetTimer, nm_DismissLabel, -1000
 	WinWaitClose, ahk_id %hUpdateGUI%, , 125
 	DetectHiddenWindows %Prev_DetectHiddenWindows%
 	Gui, update:Destroy
 }
-nm_DismissLabel()
+nm_DismissLabel(init:=0)
 {
 	static countdown:=120
-	if (--countdown = 0)
+	if (init = 1)
+		countdown := 120
+	if (--countdown <= 0)
 		Gui, update:Destroy
 	else
 	{
