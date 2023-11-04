@@ -7220,7 +7220,7 @@ nm_WebhookGUI(){
 	return (WGUIPID := exec.ProcessID)
 }
 nm_AutoStartManager(){
-	global hTaskName, hDelay, hStatusLabel, hStatusVal, hStatusText, hNTLabel, hNTVal, hASLabel, hASVal, hRLLabel, hRLVal, hAutoStartCheck, hDelayDuration, hDelayText
+	global hDelay, hStatusLabel, hStatusVal, hStatusText, hNTLabel, hNTVal, hASLabel, hASVal, hAutoStartCheck, hDelayDuration, hDelayText
 
 	Gui, +OwnDialogs
 	if A_IsAdmin
