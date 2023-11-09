@@ -143,7 +143,7 @@ settings["ReportChannelID"] := {"enum": 4, "type": "str", "section": "Status", "
 settings["discordUID"] := {"enum": 5, "type": "str", "section": "Status", "regex": "i)^&?\d{17,20}$"}
 settings["commandPrefix"] := {"enum": 6, "type": "str", "section": "Status", "regex": "i)^\S{1,3}$"}
 settings["MoveMethod"] := {"enum": 7, "type": "str", "section": "Settings", "regex": "i)^(cannon|walk)$"}
-settings["SprinklerType"] := {"enum": 8, "type": "str", "section": "Settings", "regex": "i)^(none|basic|silver|gold|diamond|supreme)$"}
+settings["SprinklerType"] := {"enum": 8, "type": "str", "section": "Settings", "regex": "i)^(none|basic|silver|golden|diamond|supreme)$"}
 settings["ConvertBalloon"] := {"enum": 9, "type": "str", "section": "Settings", "regex": "i)^(always|never|every)$"}
 settings["PrivServer"] := {"enum": 10, "type": "str", "section": "Settings", "regex": "i)^(((http(s)?):\/\/)?((www|web)\.)?roblox\.com\/games\/1537690962\/?([^\/]*)\?privateServerLinkCode=.{32}(\&[^\/]*)*|<blank>)$"}
 settings["FieldName1"] := {"enum": 11, "type": "str", "section": "Gather", "regex": "i)^(Bamboo|Blue Flower|Cactus|Clover|Coconut|Dandelion|Mountain Top|Mushroom|Pepper|Pine Tree|Pineapple|Pumpkin|Rose|Spider|Strawberry|Stump|Sunflower)$"}
