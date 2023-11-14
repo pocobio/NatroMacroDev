@@ -4,8 +4,8 @@ setlocal EnableDelayedExpansion
 cd %~dp0
 
 :: IF script and executable exist, run the macro
-if exist "submacros\AutoHotkeyU32.exe" (
-	if exist "submacros\natro_macro.ahk" (
+if exist "submacros\natro_macro.ahk" (
+	if exist "submacros\AutoHotkeyU32.exe" (
 		if not [%~3]==[] (
 			set /a "delay=%~3" 2>nul
 			echo Starting Natro Macro in !delay! seconds.
@@ -14,7 +14,7 @@ if exist "submacros\AutoHotkeyU32.exe" (
 		)
 		start "" "%~dp0submacros\AutoHotkeyU32.exe" "%~dp0submacros\natro_macro.ahk" %*
 		exit
-	)
+	) else (set "exe_missing=1")
 )
 
 :: ELSE try to find .zip in common directories, extract, and run the macro
@@ -25,6 +25,21 @@ set purple=%\e%[95m
 set red=%\e%[91m
 set yellow=%\e%[93m
 set reset=%\e%[0m
+
+if "%exe_missing%" == "1" (
+	echo %red%Could not find submacros\AutoHotkeyU32.exe^^!%reset%
+	echo %red%This is most likely due to a third-party antivirus deleting the file:%reset%
+	echo %red% 1. Disable any third-party antivirus software ^(or add the Natro Macro as an exception^)%reset%
+	echo %red% 2. Re-extract the macro and check that AutoHotkeyU32.exe exists in 'submacros' folder%reset%
+	echo %red% 3. Run START.bat%reset%
+	echo:
+	echo %red%Note: Both Natro Macro and AutoHotkey are safe and work fine with Microsoft Defender^^!%reset%
+	echo %red%Join our Discord server for support: discord.gg/natromacro%reset%
+	echo:
+	<nul set /p "=%red%Press any key to exit . . . %reset%"
+	pause >nul
+	exit
+)
 
 for %%a in (".\..") do set "grandparent=%%~nxa"
 if not [!grandparent!] == [] (
@@ -60,7 +75,7 @@ if not [!grandparent!] == [] (
 ) else (echo %red%Error: Could not find Temp folder of unextracted .zip^^! ^(.bat has no grandparent^)%reset%)
 
 echo %red%Unable to automatically extract Natro Macro^^!%reset%
-echo %red% - If you have already extracted, make sure you are not missing any files.%reset%
+echo %red% - If you have already extracted, you are missing important files, please re-extract.%reset%
 echo %red% - If you have not extracted, you may have to manually extract the zipped folder.%reset%
 echo %red%Join our Discord server for support: discord.gg/natromacro%reset%
 echo:
