@@ -1921,9 +1921,9 @@ Gui, Add, Picture, % "+BackgroundTrans x" 494-VersionWidth-48 " y263 w21 h16 vIm
 Gdip_DisposeImage(pBM), DllCall("DeleteObject", "ptr", hBM)
 ;control buttons
 Gui, Font, s8 cDefault Norm, Tahoma
-Gui, Add, Button, x5 y260 w65 h20 -Wrap vStartButton gstart Disabled, % " Start (" StartHotkey ")"
-Gui, Add, Button, x75 y260 w65 h20 -Wrap vPauseButton gpause Disabled, % " Pause (" PauseHotkey ")"
-Gui, Add, Button, x145 y260 w65 h20 -Wrap vStopButton gstop Disabled, % " Stop (" StopHotkey ")"
+Gui, Add, Button, x5 y260 w65 h20 -Wrap vStartButton gnm_StartButton Disabled, % " Start (" StartHotkey ")"
+Gui, Add, Button, x75 y260 w65 h20 -Wrap vPauseButton gnm_PauseButton Disabled, % " Pause (" PauseHotkey ")"
+Gui, Add, Button, x145 y260 w65 h20 -Wrap vStopButton gnm_StopButton Disabled, % " Stop (" StopHotkey ")"
 ;add tabs
 Gui, Add, Tab, x0 y-1 w500 h240 -Wrap hwndhTab vTab gnm_TabSelect, % "Gather|Collect/Kill|Boost|Quest|Planters|Status|Settings|Misc|Credits" ((BuffDetectReset = 1) ? "|Advanced" : "")
 SendMessage, 0x1331, 0, 20, , ahk_id %hTab% ; set minimum tab width
@@ -3344,6 +3344,21 @@ nm_Start(){
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; GUI FUNCTIONS
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+nm_StartButton(hButton){
+	MouseGetPos, , , , hCtrl, 2
+	if (hCtrl = hButton)
+		Gosub, start
+}
+nm_PauseButton(hButton){
+	MouseGetPos, , , , hCtrl, 2
+	if (hCtrl = hButton)
+		Gosub, pause
+}
+nm_StopButton(hButton){
+	MouseGetPos, , , , hCtrl, 2
+	if (hCtrl = hButton)
+		Gosub, stop
+}
 nm_LockTabs(lock:=1){
 	static tabs := ["Gather","Collect","Boost","Quest","Planters","Status","Settings","Misc"]
 	global bitmaps
@@ -20137,7 +20152,7 @@ if(A_IsPaused) {
 	IniWrite, %TotalRuntime%, settings\nm_config.ini, Status, TotalRuntime
 	DetectHiddenWindows, %Prev_DetectHiddenWindows%
 	SetTitleMatchMode, %Prev_TitleMatchMode%
-	nm_setStatus("Paused", "Press F2 to Continue")
+	nm_setStatus("Paused", "Press " PauseHotkey " to Continue")
 	nm_LockTabs(0)
 }
 Pause, Toggle, 1
