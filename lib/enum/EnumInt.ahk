@@ -239,6 +239,7 @@
 	, "BlenderTime1"
 	, "BlenderTime2"
 	, "BlenderTime3"
+	, "MondoSecs"
 	, "MemoryMatchNormalCheck"
 	, "MemoryMatchMegaCheck"
 	, "MemoryMatchExtremeCheck"

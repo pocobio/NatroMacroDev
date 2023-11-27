@@ -21006,7 +21006,7 @@ nm_UpdateGUIVar(var)
 			Num := SubStr(k, 0)
 			local BlenderData1, BlenderData2, BlenderData3, pos
 			GuiControlGet, BlenderData%Num%
-			GuiControl,, BlenderData%Num%, % StrReplace(BlenderData%Num%, SubStr(BlenderData%Num%, InStr(BlenderData%Num%, " ") + 1), "[" %k% "]")
+			GuiControl,, BlenderData%Num%, % StrReplace(BlenderData%Num%, SubStr(BlenderData%Num%, InStr(BlenderData%Num%, " ") + 1), "[" ((%k% = "Infinite") ? "∞" : %k%) "]")
 
 			case "BlenderAmount1", "BlenderAmount2", "BlenderAmount3":
 			Num := SubStr(k, 0)
