@@ -16,6 +16,7 @@
 			if ((Gdip_ImageSearch(pBMScreen, bitmaps["toppollen"], pos, , , , , 16) = 1)
 				&& (Gdip_ImageSearch(pBMScreen, bitmaps["toppollenfill"], , x := SubStr(pos, 1, (comma := InStr(pos, ",")) - 1), y := SubStr(pos, comma + 1), x + 41, y + 10, 16) = 0))
 			{
+				Gdip_DisposeImage(pBMScreen)
 				hRoblox := hwnd
 				return (offset := y - 14), (fail := 0)
 			}
