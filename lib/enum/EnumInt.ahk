@@ -245,4 +245,18 @@
 	, "MemoryMatchExtremeCheck"
 	, "LastMemoryMatchNormal"
 	, "LastMemoryMatchMega"
-	, "LastMemoryMatchExtreme"]
+	, "LastMemoryMatchExtreme"
+	, "MPlanterGatherA"
+	, "MPlanterGather1"
+	, "MPlanterGather2"
+	, "MPlanterGather3"
+	, "MPuffModeA"
+	, "MPuffMode1"
+	, "MPuffMode2"]
+arr2 := arr.Push("MPuffMode3" ; 256
+	, "MPlanterRelease1" ; 257
+	, "MPlanterRelease2"
+	, "MPlanterRelease3"
+	, "MPlanterSmoking1"
+	, "MPlanterSmoking2"
+	, "MPlanterSmoking3")

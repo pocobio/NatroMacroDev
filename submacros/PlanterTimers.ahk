@@ -227,6 +227,9 @@ Loop {
             }
         }
 
+        IniRead, MPlanterHold%i%, Settings/nm_config.ini, Planters, MPlanterHold%i%
+        IniRead, MPlanterSmoking%i%, Settings/nm_config.ini, Planters, MPlanterSmoking%i%
+        p%i%timer := PlanterHarvestTime%i%-nowUnix(), VarSetCapacity(p%i%timerstring,256), DllCall("GetDurationFormatEx","str","!x-sys-default-locale","uint",0,"ptr",0,"int64",p%i%timer*10000000,"wstr",(p%i%timer > 360000) ? "'No Planter'" : (p%i%timer > 0) ? (((p%i%timer >= 3600) ? "h'h' m" : "") . ((p%i%timer >= 60) ? "m'm' s" : "") . "s's'") : (MPlanterSmoking%i%) ? "'Smoking'" : (MPlanterHold%i%) ? "'Holding'" : "'Ready'","str",p%i%timerstring,"int",256)
         GuiControl, -Redraw, % hClear%i%
         GuiControl,, % hClear%i%, % ((PlanterName%i% = "None") ? "Add" : "Clear")
         GuiControl, +Redraw, % hClear%i%
@@ -421,6 +424,9 @@ ba_setPlanterData(hCtrl){
 				IniWrite, % "", settings\nm_config.ini, Planters, PlanterHarvestFull%A_Index%
 				IniWrite, 0, settings\nm_config.ini, Planters, PlanterGlitter%A_Index%
 				IniWrite, 0, settings\nm_config.ini, Planters, PlanterGlitterC%A_Index%
+				IniWrite, 0, settings\nm_config.ini, Planters, MPlanterHold%A_Index%
+				IniWrite, 0, settings\nm_config.ini, Planters, MPlanterRelease%A_Index%
+				IniWrite, 0, settings\nm_config.ini, Planters, MPlanterSmoking%A_Index%
 			}
 			break
 		}
@@ -516,6 +522,9 @@ ba_AddPlanter(){
 	IniWrite, % "", settings\nm_config.ini, Planters, PlanterHarvestFull%addindex%
 	IniWrite, 0, settings\nm_config.ini, Planters, PlanterGlitter%addindex%
 	IniWrite, 0, settings\nm_config.ini, Planters, PlanterGlitterC%addindex%
+	IniWrite, 0, settings\nm_config.ini, Planters, MPlanterHold%addindex%
+	IniWrite, 0, settings\nm_config.ini, Planters, MPlanterRelease%addindex%
+	IniWrite, 0, settings\nm_config.ini, Planters, MPlanterSmoking%addindex%
 }
 
 ba_setBlenderAmount(hCtrl){
