@@ -2318,7 +2318,7 @@ Gui, Add, Text, x75 yp w40 vMondoAction +Center +BackgroundTrans,%MondoAction%
 Gui, Add, Button, xp-12 yp-1 w12 h16 gnm_MondoAction hwndhMALeft Disabled, <
 Gui, Add, Button, xp+51 yp w12 h16 gnm_MondoAction hwndhMARight Disabled, >
 Gui, Add, Text, x40 yp+15 w110 vMondoPointText +left +BackgroundTrans, \___
-Gui, Add, Edit, x63 yp+3 w28 h18 number Limit3 +BackgroundTrans vMondoSecs gnm_SaveConfig Disabled, %MondoSecs%
+Gui, Add, Edit, x63 yp+3 w28 h18 number Limit3 +BackgroundTrans vMondoSecs gnm_saveCollect Disabled, %MondoSecs%
 Gui, Add, Text, x95 yp+2 vMondoSecsText, Secs
 Gui, Add, Checkbox, x10 yp+20 w35 +BackgroundTrans vAntPassCheck gnm_saveCollect Checked%AntPassCheck% Disabled, Ant
 Gui, Add, Text,x66 yp w49 vAntPassAction +Center +BackgroundTrans,%AntPassAction%
