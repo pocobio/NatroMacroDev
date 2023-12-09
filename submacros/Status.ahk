@@ -611,7 +611,7 @@ nm_status(status)
 
 nm_command(command)
 {
-	global commandPrefix, MacroState, planters, timers, settings, blender
+	global commandPrefix, MacroState, planters, timers, settings, blender, shrine
 	static ssmode := "All"
 	
 	id := command.id, params := []
@@ -1683,18 +1683,11 @@ nm_command(command)
 		
 		case "shrine":
 		IniRead, str, settings\nm_config.ini, Shrine
-
 		Loop, Parse, str, `n, `r%A_Space%%A_Tab%
 			if (p := InStr(A_LoopField, "="))
 			k := SubStr(A_LoopField, 1, p-1), %k% := SubStr(A_LoopField, p+1)
 
-		ShrineRot3 := ShrineRot
-		if (ShrineRot3 = 0)
-			ShrineRot3 := 2
-
-		ShrineRot2 := ShrineRot + 1
-		if (ShrineRot2 = 3)
-			ShrineRot2 := 1 ;improve wtvr tf this is
+		ShrineRotTemp := (ShrineRot + 1 = 3) ? 1 : ShrineRot + 1
 
 		switch % params[2]
 		{
@@ -1703,7 +1696,7 @@ nm_command(command)
 			{
 				n := params[3]
 				Iniwrite, 0, settings\nm_config.ini, Shrine, LastShrine
-				IniWrite, %A_Index%, settings\nm_config.ini, Shrine, ShrineRot
+				IniWrite, %n%, settings\nm_config.ini, Shrine, ShrineRot
 				discord.SendEmbed("Readied Slot " n "!", 5066239, , , , id)
 			}
 			else 
@@ -1714,12 +1707,19 @@ nm_command(command)
 			{
 				n := params[3]
 				IniWrite, None, settings\nm_config.ini, Shrine, ShrineItem%n%
-				IniWrite, 0, settings\nm_config.ini, Shrine, ShrineAmount%n%
-				IniWrite, Infinite, settings\nm_config.ini, Shrine, ShrineIndex%n%
-				IniWrite, 0, settings\nm_config.ini, Blender, LastShrine
+                IniWrite, 0, settings\nm_config.ini, Shrine, ShrineAmount%n%
+                Iniwrite, 1, settings\nm_config.ini, Shrine, ShrineIndex%n%
+				Iniwrite, 0, settings\nm_config.ini, Shrine, LastShrine
+				DetectHiddenWindows, On
+				SetTitleMatchMode, 2
+				if WinExist("natro_macro ahk_class AutoHotkey") {
+                    PostMessage, 0x5552, 230+n, 0 ; ShrineAmount
+                    PostMessage, 0x5553, 56+n, 10 ; ShrineIndex
+                    PostMessage, 0x5553, 54+n, 10 ; ShrineItem
+                }
 				discord.SendEmbed("Cleared Slot " n "!", 5066239, , , , id)
 			}
-			else
+			else	
 				discord.SendEmbed((StrLen(params[3]) = 0) ? "You must specify a slot to clear!" : ("Slot must be 1, 2, or 3!\nYou entered " params[3] "."), 16711731, , , , id)			
 
 			case default:
@@ -1739,7 +1739,7 @@ nm_command(command)
 					""color"": ""5066239"",
 					""fields"": [{
 						""name"": ""Current Donation"",
-						""value"": """ ShrineItem%ShrineRot3% """,
+						""value"": """ ShrineItem%ShrineRot% """,
 						""inline"": true
 					},
 					{
@@ -1771,10 +1771,10 @@ nm_command(command)
 			if ((params[3] = 1) || (params[3] = 2) || (params[3] = 3))
 			{
 				n := params[3]
-				IniWrite, 0, settings\nm_config.ini, Blender, BlenderCount%A_Index%
-				Iniwrite, 0, settings\nm_config.ini, Blender, BlenderTime%A_Index%
-				IniWrite, %A_Index%, settings\nm_config.ini, Blender, BlenderRot
-				IniWrite, 1, settings\nm_config.ini, Blender, BlenderEnd
+				IniWrite, 0, settings\nm_config.ini, Blender, BlenderCount%n%
+                Iniwrite, 0, settings\nm_config.ini, Blender, BlenderTime%n%
+                IniWrite, %n%, settings\nm_config.ini, Blender, BlenderRot
+                IniWrite, 1, settings\nm_config.ini, Blender, BlenderEnd
 				discord.SendEmbed("Readied Slot " n "!", 5066239, , , , id)
 			}
 			else 
@@ -1785,11 +1785,22 @@ nm_command(command)
 			{
 				n := params[3]
 				IniWrite, None, settings\nm_config.ini, Blender, BlenderItem%n%
-				IniWrite, 0, settings\nm_config.ini, Blender, BlenderAmount%n%
-				IniWrite, Infinite, settings\nm_config.ini, Blender, BlenderIndex%n%
-				IniWrite, 0, settings\nm_config.ini, Blender, BlenderTime%n%
-				IniWrite, 0, settings\nm_config.ini, Blender, BlenderCount%n%
+                IniWrite, 0, settings\nm_config.ini, Blender, BlenderAmount%n%
+                IniWrite, 0, settings\nm_config.ini, Blender, BlenderCount%n%
+                Iniwrite, 1, settings\nm_config.ini, Blender, BlenderIndex%n%
+                Iniwrite, 0, settings\nm_config.ini, Blender, BlenderTime%n%
+                IniWrite, %n%, settings\nm_config.ini, Blender, BlenderRot
+				DetectHiddenWindows, On
+				SetTitleMatchMode, 2
+				if WinExist("natro_macro ahk_class AutoHotkey") {
+					msgbox 
+                    PostMessage, 0x5552, 232+n, 0 ; BlenderAmount
+                    PostMessage, 0x5552, 238+n, 0 ; BlenderTime
+                    PostMessage, 0x5553, 58+n, 9 ; BlenderIndex
+                    PostMessage, 0x5553, 61+n, 9 ; BlenderItem
+                }
 				discord.SendEmbed("Cleared Slot " n "!", 5066239, , , , id)
+
 			}
 			else
 				discord.SendEmbed((StrLen(params[3]) = 0) ? "You must specify a slot to clear!" : ("Slot must be 1, 2, or 3!\nYou entered " params[3] "."), 16711731, , , , id)			
@@ -1809,7 +1820,7 @@ nm_command(command)
 			""embeds"": [{
 				""color"": ""5066239"",
 				""title"": ""Blender"",
-				""description"": ""The macro's currently rotating between the items shown below.\nYou can use these commands to edit the items:"",
+				""description"": ""The macro's currently rotating between the items shown below."",
 				""fields"": []
 			}
 			)"
