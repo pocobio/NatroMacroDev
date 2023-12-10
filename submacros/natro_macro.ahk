@@ -9770,6 +9770,25 @@ nm_Collect(){
 					if (Gdip_ImageSearch(BlenderSS, bitmaps[BlenderIMG], , , , , , 2, , 4) > 0) 
 					{
 						gdip_disposeimage(BlenderSS)  ; Dispose of the bitmap
+						sleep, 200
+						BlenderSS := Gdip_BitmapFromScreen(SearchX "|" SearchY "|553|400")
+						if (Gdip_ImageSearch(BlenderSS, bitmaps["NoItems"], , , , , , 2) > 0) {
+							BlenderItem%BlenderRot% := "None", BlenderAmount%BlenderRot% := 0, BlenderIndex%BlenderRot% := 1, BlenderTime%BlenderRot% := 0
+
+							IniWrite, None, settings\nm_config.ini, Blender, BlenderItem%BlenderRot%
+							IniWrite, 0, settings\nm_config.ini, Blender, BlenderAmount%BlenderRot%
+							Iniwrite, 1, settings\nm_config.ini, Blender, BlenderIndex%BlenderRot%
+							Iniwrite, 0, settings\nm_config.ini, Blender, BlenderTime%BlenderRot%
+
+							GuiControl,, % hBlenderClear%BlenderRot%, % ((BlenderItem%BlenderRot% = "None" || BlenderItem%BlenderRot% = "") ? "Add" : "Clear")
+							GuiControl,, BlenderData%BlenderRot%, % "(" BlenderAmount%BlenderRot% ") [" ((BlenderIndex%BlenderRot% = "Infinite") ? "∞" : BlenderIndex%BlenderRot%) "]"
+
+							GuiControl, , % hBlenderItem%BlenderRot%Picture, % ""
+							gdip_disposeimage(BlenderSS)
+							nm_BlenderRotation()
+							break
+						}
+						gdip_disposeimage(BlenderSS)
 						MouseMove, windowX+Windowwidth//2 + 80, windowY+WindowHeight//2 + 100 ;Open item menu
 						sleep, 150
 						click
