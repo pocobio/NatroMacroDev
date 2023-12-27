@@ -3162,7 +3162,7 @@ mp_PlantPlanter(PlanterIndex) {
 					{
 						Sleep, 50
 						Gdip_DisposeImage(pBMScreen)
-						pBMScreen := Gdip_BitmapFromScreen(windowX "|" windowY+offsetY+150 "|306|" Max(480, windowHeight-offsetY-150))
+						pBMScreen := Gdip_BitmapFromScreen(windowX "|" windowY+offsetY+150 "|" windowWidth//2 "|" Max(480, windowHeight-offsetY-150))
 					}
 				}
 			}
@@ -20305,7 +20305,7 @@ ba_placePlanter(fieldName, planter, planterNum, atField:=0){
 					{
 						Sleep, 50
 						Gdip_DisposeImage(pBMScreen)
-						pBMScreen := Gdip_BitmapFromScreen(windowX "|" windowY+offsetY+150 "|306|" Max(480, windowHeight-offsetY-150))
+						pBMScreen := Gdip_BitmapFromScreen(windowX "|" windowY+offsetY+150 "|" windowWidth//2 "|" Max(480, windowHeight-offsetY-150))
 					}
 				}
 			}
