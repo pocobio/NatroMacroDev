@@ -3168,7 +3168,7 @@ mp_PlantPlanter(PlanterIndex) {
 			}
 		}
 
-		if ((Gdip_ImageSearch(pBMScreen, bitmaps[MPlanterName], planterPos, , , 306, , 10, , 5) = 0) || (Gdip_ImageSearch(pBMScreen, bitmaps["yes"], , WindowWidth//3-30, , , , 2, , 2) = 1)) {
+		if ((Gdip_ImageSearch(pBMScreen, bitmaps[MPlanterName], planterPos, , , 306, , 10, , 5) = 0) || (Gdip_ImageSearch(pBMScreen, bitmaps["yes"], , windowWidth//2-250, , , , 2, , 2) = 1)) {
 			Gdip_DisposeImage(pBMScreen)
 			break
 		}
@@ -3181,9 +3181,9 @@ mp_PlantPlanter(PlanterIndex) {
 	{
 		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " hwnd)
 		loop 3 {
-			pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//3-30 "|" windowY+((5*windowHeight)//10 - 52) "|500|150")
+			pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//2-250 "|" windowY+windowHeight//2-52 "|500|150")
 			if (Gdip_ImageSearch(pBMScreen, bitmaps["yes"], pos, , , , , 2, , 2) = 1) {
-				MouseMove, windowX+windowWidth//3-30+SubStr(pos, 1, InStr(pos, ",")-1), windowY+((5*windowHeight)//10 - 52)+SubStr(pos, InStr(pos, ",")+1)
+				MouseMove, windowX+windowWidth//2-250+SubStr(pos, 1, InStr(pos, ",")-1), windowY+windowHeight//2-52+SubStr(pos, InStr(pos, ",")+1)
 				sleep, 150
 				Click
 				sleep 100
@@ -3441,9 +3441,9 @@ mp_HarvestPlanter(PlanterIndex) {
 		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " hwnd)
 		if (PlanterHarvestFull%PlanterIndex% == "Full") {
 			loop 3 {
-				pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//3-30 "|" windowY+((5*windowHeight)//10 - 52) "|500|150")
+				pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//2-250 "|" windowY+windowHeight//2-52 "|500|150")
 				if (Gdip_ImageSearch(pBMScreen, bitmaps["no"], pos, , , , , 2, , 3) = 1) {
-					MouseMove, windowX+windowWidth//3-30+SubStr(pos, 1, InStr(pos, ",")-1), windowY+((5*windowHeight)//10 - 52)+SubStr(pos, InStr(pos, ",")+1)
+					MouseMove, windowX+windowWidth//2-250+SubStr(pos, 1, InStr(pos, ",")-1), windowY+windowHeight//2-52+SubStr(pos, InStr(pos, ",")+1)
 					sleep, 150
 					Click
 					sleep 100
@@ -3458,9 +3458,9 @@ mp_HarvestPlanter(PlanterIndex) {
 		}
 		else {
 			loop 3 {
-				pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//3-30 "|" windowY+((5*windowHeight)//10 - 52) "|500|150")
+				pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//2-250 "|" windowY+windowHeight//2-52 "|500|150")
 				if (Gdip_ImageSearch(pBMScreen, bitmaps["yes"], pos, , , , , 2, , 2) = 1) {
-					MouseMove, windowX+windowWidth//3-30+SubStr(pos, 1, InStr(pos, ",")-1), windowY+((5*windowHeight)//10 - 52)+SubStr(pos, InStr(pos, ",")+1)
+					MouseMove, windowX+windowWidth//2-250+SubStr(pos, 1, InStr(pos, ",")-1), windowY+windowHeight//2-52+SubStr(pos, InStr(pos, ",")+1)
 					sleep, 150
 					Click
 					sleep 100
@@ -9041,9 +9041,9 @@ nm_Reset(checkAll:=1, wait:=2000, convert:=1, force:=0){
 		MouseMove, windowX+350, windowY+offsetY+100
 		;check to make sure you are not in a yes/no prompt
 		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " hwnd)
-		pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//3-30 "|" windowY+((5*windowHeight)//10 - 52) "|500|150")
+		pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//2-250 "|" windowY+windowHeight//2-52 "|500|150")
 		if (Gdip_ImageSearch(pBMScreen, bitmaps["no"], pos, , , , , 2, , 3) = 1) {
-			MouseMove, windowX+windowWidth//3-30+SubStr(pos, 1, InStr(pos, ",")-1), windowY+((5*windowHeight)//10 - 52)+SubStr(pos, InStr(pos, ",")+1)
+			MouseMove, windowX+windowWidth//2-250+SubStr(pos, 1, InStr(pos, ",")-1), windowY+windowHeight//2-52+SubStr(pos, InStr(pos, ",")+1)
 			Click
 			MouseMove, windowX+350, windowY+offsetY+100
 		}
@@ -9211,29 +9211,29 @@ nm_AmuletPrompt(decision:=0){
 	else
 		WinActivate, Roblox
 
-	pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//3-30 "|" windowY "|500|" windowHeight)
+	pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//2-250 "|" windowY "|500|" windowHeight)
 
 	if (Gdip_ImageSearch(pBMScreen, bitmaps["keep"], pos, , , , , 2, , 2) = 1)
 	{
 		switch % decision
 		{
 			case "keep",1:
-			MouseMove, windowX+windowWidth//3-30+SubStr(pos, 1, InStr(pos, ",")-1)+10, windowY+SubStr(pos, InStr(pos, ",")+1)+10, 5
+			MouseMove, windowX+windowWidth//2-250+SubStr(pos, 1, InStr(pos, ",")-1)+10, windowY+SubStr(pos, InStr(pos, ",")+1)+10, 5
 			Click
 			Gdip_DisposeImage(pBMScreen)
 			nm_setShiftLock(Prev_ShiftLock)
 			return 1
 
 			case "replace",2:
-			MouseMove, windowX+windowWidth//3-30+SubStr(pos, 1, InStr(pos, ",")-1)+190, windowY+SubStr(pos, InStr(pos, ",")+1)+10, 5
+			MouseMove, windowX+windowWidth//2-250+SubStr(pos, 1, InStr(pos, ",")-1)+190, windowY+SubStr(pos, InStr(pos, ",")+1)+10, 5
 			Click
 			Gdip_DisposeImage(pBMScreen)
 			Loop, 25
 			{
-				pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//3-30 "|" windowY "|500|" windowHeight)
+				pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//2-250 "|" windowY "|500|" windowHeight)
 				if (Gdip_ImageSearch(pBMScreen, bitmaps["yes"], pos, , , , , 2, , 2) = 1)
 				{
-					MouseMove, windowX+windowWidth//3-30+SubStr(pos, 1, InStr(pos, ",")-1), windowY+SubStr(pos, InStr(pos, ",")+1), 5
+					MouseMove, windowX+windowWidth//2-250+SubStr(pos, 1, InStr(pos, ",")-1), windowY+SubStr(pos, InStr(pos, ",")+1), 5
 					Click
 					Gdip_DisposeImage(pBMScreen)
 					break
@@ -14334,11 +14334,11 @@ nm_BasicEggHatcher()
 		Loop, 10
 		{
 			Sleep, 100
-			pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//3-30""|"" windowY+offsetY+((5*windowHeight)//10-52) ""|500|150"")
+			pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//2-250""|"" windowY+offsetY+windowHeight//2-52 ""|500|150"")
 			if (Gdip_ImageSearch(pBMScreen, bitmaps[""yes""], pos, , , , , 2, , 2) = 1)
 			{
 				Gdip_DisposeImage(pBMScreen)
-				Click % windowX+windowWidth//3-30+SubStr(pos, 1, InStr(pos, "","")-1) "" "" windowY+offsetY+((5*windowHeight)//10-52)+SubStr(pos, InStr(pos, "","")+1)
+				Click % windowX+windowWidth//2-250+SubStr(pos, 1, InStr(pos, "","")-1) "" "" windowY+offsetY+windowHeight//2-52+SubStr(pos, InStr(pos, "","")+1)
 				break
 			}
 			Gdip_DisposeImage(pBMScreen)
@@ -20311,7 +20311,7 @@ ba_placePlanter(fieldName, planter, planterNum, atField:=0){
 			}
 		}
 
-		if ((Gdip_ImageSearch(pBMScreen, bitmaps[planterName], planterPos, , , 306, , 10, , 5) = 0) || (Gdip_ImageSearch(pBMScreen, bitmaps["yes"], , windowWidth//3-30, , , , 2, , 2) = 1)) {
+		if ((Gdip_ImageSearch(pBMScreen, bitmaps[planterName], planterPos, , , 306, , 10, , 5) = 0) || (Gdip_ImageSearch(pBMScreen, bitmaps["yes"], , windowWidth//2-250, , , , 2, , 2) = 1)) {
 			Gdip_DisposeImage(pBMScreen)
 			break
 		}
@@ -20324,9 +20324,9 @@ ba_placePlanter(fieldName, planter, planterNum, atField:=0){
 	{
 		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " hwnd)
 		loop 3 {
-			pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//3-30 "|" windowY+((5*windowHeight)//10 - 52) "|500|150")
+			pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//2-250 "|" windowY+windowHeight//2-52 "|500|150")
 			if (Gdip_ImageSearch(pBMScreen, bitmaps["yes"], pos, , , , , 2, , 2) = 1) {
-				MouseMove, windowX+windowWidth//3-30+SubStr(pos, 1, InStr(pos, ",")-1), windowY+((5*windowHeight)//10 - 52)+SubStr(pos, InStr(pos, ",")+1)
+				MouseMove, windowX+windowWidth//2-250+SubStr(pos, 1, InStr(pos, ",")-1), windowY+windowHeight//2-52+SubStr(pos, InStr(pos, ",")+1)
 				sleep, 150
 				Click
 				sleep 100
@@ -20447,9 +20447,9 @@ ba_harvestPlanter(planterNum){
 		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " hwnd)
 		if (HarvestFullGrown = 1) {
 			loop 3 {
-				pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//3-30 "|" windowY+((5*windowHeight)//10 - 52) "|500|150")
+				pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//2-250 "|" windowY+windowHeight//2-52 "|500|150")
 				if (Gdip_ImageSearch(pBMScreen, bitmaps["no"], pos, , , , , 2, , 3) = 1) {
-					MouseMove, windowX+windowWidth//3-30+SubStr(pos, 1, InStr(pos, ",")-1), windowY+((5*windowHeight)//10 - 52)+SubStr(pos, InStr(pos, ",")+1)
+					MouseMove, windowX+windowWidth//2-250+SubStr(pos, 1, InStr(pos, ",")-1), windowY+windowHeight//2-52+SubStr(pos, InStr(pos, ",")+1)
 					sleep, 150
 					Click
 					sleep 100
@@ -20463,9 +20463,9 @@ ba_harvestPlanter(planterNum){
 		}
 		else {
 			loop 3 {
-				pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//3-30 "|" windowY+((5*windowHeight)//10 - 52) "|500|150")
+				pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//2-250 "|" windowY+windowHeight//2-52 "|500|150")
 				if (Gdip_ImageSearch(pBMScreen, bitmaps["yes"], pos, , , , , 2, , 2) = 1) {
-					MouseMove, windowX+windowWidth//3-30+SubStr(pos, 1, InStr(pos, ",")-1), windowY+((5*windowHeight)//10 - 52)+SubStr(pos, InStr(pos, ",")+1)
+					MouseMove, windowX+windowWidth//2-250+SubStr(pos, 1, InStr(pos, ",")-1), windowY+windowHeight//2-52+SubStr(pos, InStr(pos, ",")+1)
 					sleep, 150
 					Click
 					sleep 100
