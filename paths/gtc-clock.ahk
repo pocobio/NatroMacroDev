@@ -10,19 +10,20 @@
 	send {" RotLeft " 2}
 	" nm_Walk(40, FwdKey) "
 	" nm_Walk(3, BackKey) "
-	" nm_Walk(6, RightKey) " ; 2.25
+	" nm_Walk(7, RightKey) " ; 2.25
 	send, {" FwdKey " down}
+	Walk(3)
 	send, {space down}
-	HyperSleep(300)
+	HyperSleep(100)
 	send, {space up}
-	HyperSleep(500)
+	Walk(5)
 	send, {" FwdKey " up}
 	" nm_Walk(5, LeftKey) "
 	" nm_Walk(4, FwdKey) "
 	" nm_Walk(4, RightKey) "
 	" nm_Walk(10, FwdKey) "
 	" nm_Walk(4, BackKey) "
-	" nm_Walk(2, LeftKey) "	
+	" nm_Walk(3, LeftKey) "	
 	send {" RotRight " 2}
 	)"
 }

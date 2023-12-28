@@ -19,13 +19,13 @@
 	send, {space up}
 	HyperSleep(500)
 	send {" RotRight " 2}
+	HyperSleep(1000)
 	send, {space down}
 	HyperSleep(300)
 	send, {space up}
-	HyperSleep(200)
+	Walk(6)
 	send, {" FwdKey " up}
-	" nm_Walk(3, FwdKey) "
-	" nm_Walk(8.5, RightKey) "
+	" nm_Walk(6, RightKey) "
 	" nm_Walk(7, FwdKey) "
 	" nm_Walk(6, LeftKey) "
 	" nm_Walk(3, RightKey) "
@@ -46,12 +46,13 @@ else
 	send {space 2}
 	HyperSleep(4050)
 	send {" BackKey " up}
-	HyperSleep(4000)
-	send {" RightKey " up}{space}{" RotRight " 2}
-	HyperSleep(200)
-	send {" RotRight " 2}
+	HyperSleep(1000)
+	send {" RightKey " up}
+	Sleep, 2200
+	send {" RotRight " 4}
+	" nm_Walk(14, LeftKey) "
 	" nm_Walk(4, FwdKey) "
+	" nm_Walk(3, BackKey) "
 	" nm_Walk(11, RightKey) "
-	" nm_Walk(2.5, BackKey) "
 	)"
 }
