@@ -9005,6 +9005,9 @@ nm_Reset(checkAll:=1, wait:=2000, convert:=1, force:=0){
 		}
 		DisconnectCheck()
 		WinActivate, Roblox
+		nm_setShiftLock(0)
+		nm_OpenMenu()
+		
 		hwnd := GetRobloxHWND()
 		offsetY := GetYOffset(hwnd)
 		;check that performance stats is disabled
