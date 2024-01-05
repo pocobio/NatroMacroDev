@@ -18511,252 +18511,257 @@ nm_BrownQuestProg(){
 
 	hwnd := GetRobloxHWND()
 	offsetY := GetYOffset(hwnd)
-	;search for brown quest
-	Loop, 70
-	{
-		Qfound:=nm_imgSearch("brown_bear.png",50,"quest")
-		if (Qfound[1]=0) {
-			if (A_Index > 1)
-				Gdip_DisposeImage(pBMLog)
-			break
-		}
-
-		Qfound:=nm_imgSearch("brown_bear2.png",50,"quest")
-		if (Qfound[1]=0) {
-			if (A_Index > 1)
-				Gdip_DisposeImage(pBMLog)
-			break
-		}
-
-		WinActivate, Roblox
-		switch A_Index
+	;2 scrolls
+	Loop, 3 {
+		;search for brown quest
+		Loop, 70
 		{
-			case 1:
-			WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " hwnd)
-			MouseMove, windowX+30, windowY+offsetY+200, 5
-			Loop, 50 ; scroll all the way up
-			{
-				MouseMove, windowX+30, windowY+offsetY+200, 5
-				sendinput {WheelUp}
-				Sleep, 50
-			}
-			pBMLog := Gdip_BitmapFromScreen(windowX+30 "|" windowY+offsetY+180 "|30|400")
-
-			default:
-			WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " hwnd)
-			MouseMove, windowX+30, windowY+offsetY+200, 5
-			sendinput {WheelDown}
-			Sleep, 500 ; wait for scroll to finish
-			pBMScreen := Gdip_BitmapFromScreen(windowX+30 "|" windowY+offsetY+180 "|30|400")
-			if (Gdip_ImageSearch(pBMScreen, pBMLog, , , , , , 50) = 1) { ; end of quest log
-				Gdip_DisposeImage(pBMLog), Gdip_DisposeImage(pBMScreen)
+			Qfound:=nm_imgSearch("brown_bear.png",50,"quest")
+			if (Qfound[1]=0) {
+				if (A_Index > 1)
+					Gdip_DisposeImage(pBMLog)
 				break
 			}
-			Gdip_DisposeImage(pBMLog), pBMLog := Gdip_CloneBitmap(pBMScreen), Gdip_DisposeImage(pBMScreen)
-		}
-	}
-	Sleep, 500
 
-	if(Qfound[1]=0){
-		;locate exact bottom of quest title bar coordinates
-		;titlebar = 30 pixels high
-		;quest objective bar spacing = 10 pixels
-		;quest objective bar height = 40 pixels
-		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " hwnd)
-		MouseMove, windowX+350, windowY+offsetY+100
-		xi := windowX
-		yi := windowY+Qfound[3]
-		ww := windowX+306
-		wh := windowY+windowHeight
-		fileName:="questbargap.png"
-		IfExist, %A_WorkingDir%\nm_image_assets\
-		{
-			ImageSearch, FoundX, FoundY, xi, yi, ww, wh, *5 %A_WorkingDir%\nm_image_assets\%fileName%
-			if (ErrorLevel = 2) {
-				nm_setStatus("Error", "Image file " filename " was not found in:`n" A_WorkingDir "\nm_image_assets\" fileName)
-				Sleep, 5000
-				Process, Close, % DllCall("GetCurrentProcessId")
+			Qfound:=nm_imgSearch("brown_bear2.png",50,"quest")
+			if (Qfound[1]=0) {
+				if (A_Index > 1)
+					Gdip_DisposeImage(pBMLog)
+				break
 			}
-		} else {
-			MsgBox Folder location cannot be found:`n%A_WorkingDir%\nm_image_assets\
-		}
-		BrownStart:=[ErrorLevel, FoundX-windowX, FoundY-windowY]
-		;determine quest bar sizes and spacing
-		if(QuestBarGapSize=0 || QuestBarSize=0 || QuestBarInset=0) {
-			Loop, 3 {
-				xi := windowX
-				yi := windowY+BrownStart[3]+15
-				ww := windowX+306
-				wh := windowY+BrownStart[3]+100
-				ImageSearch, FoundX, FoundY, xi, yi, ww, wh, *5 nm_image_assets\questbargap.png
-				if(ErrorLevel=0) {
-					QuestBarSize:=FoundY-windowY-BrownStart[3]
-					QuestBarGapSize:=3
-					QuestBarInset:=3
-					NextY:=FoundY+1
-					NextX:=FoundX+1
-					loop 20 {
-						ImageSearch, FoundX, FoundY, FoundX, NextY, ww, wh, *5 nm_image_assets\questbargap.png
-						if(ErrorLevel=0) {
-							NextY:=FoundY+1
-							QuestBarGapSize:=QuestBarGapSize+1
-						} else {
-							break
-						}
-					}
-					wh := windowY+BrownStart[3]+200
-					loop 20 {
-						ImageSearch, FoundX, FoundY, NextX, yi, ww, wh, *5 nm_image_assets\questbarinset.png
-						if(ErrorLevel=0) {
-							NextX:=FoundX+1
-							QuestBarInset:=QuestBarInset+1
-						} else {
-							break
-						}
-					}
+
+			WinActivate, Roblox
+			switch A_Index
+			{
+				case 1:
+				WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " hwnd)
+				MouseMove, windowX+30, windowY+offsetY+200, 5
+				Loop, 50 ; scroll all the way up
+				{
+					MouseMove, windowX+30, windowY+offsetY+200, 5
+					sendinput {WheelUp}
+					Sleep, 50
+				}
+				pBMLog := Gdip_BitmapFromScreen(windowX+30 "|" windowY+offsetY+180 "|30|400")
+
+				default:
+				WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " hwnd)
+				MouseMove, windowX+30, windowY+offsetY+200, 5
+				sendinput {WheelDown}
+				Sleep, 500 ; wait for scroll to finish
+				pBMScreen := Gdip_BitmapFromScreen(windowX+30 "|" windowY+offsetY+180 "|30|400")
+				if (Gdip_ImageSearch(pBMScreen, pBMLog, , , , , , 50) = 1) { ; end of quest log
+					Gdip_DisposeImage(pBMLog), Gdip_DisposeImage(pBMScreen)
 					break
-					;msgbox QuestBarSize=%QuestBarSize%`nQuestBarGapSize=%QuestBarGapSize%`nQuestBarInset=%QuestBarInset%
+				}
+				Gdip_DisposeImage(pBMLog), pBMLog := Gdip_CloneBitmap(pBMScreen), Gdip_DisposeImage(pBMScreen)
+			}
+		}
+		Sleep, 500
+
+		if(Qfound[1]=0){
+			;locate exact bottom of quest title bar coordinates
+			;titlebar = 30 pixels high
+			;quest objective bar spacing = 10 pixels
+			;quest objective bar height = 40 pixels
+			WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " hwnd)
+			MouseMove, windowX+350, windowY+offsetY+100
+			xi := windowX
+			yi := windowY+Qfound[3]
+			ww := windowX+306
+			wh := windowY+windowHeight
+			fileName:="questbargap.png"
+			IfExist, %A_WorkingDir%\nm_image_assets\
+			{
+				ImageSearch, FoundX, FoundY, xi, yi, ww, wh, *5 %A_WorkingDir%\nm_image_assets\%fileName%
+				if (ErrorLevel = 2) {
+					nm_setStatus("Error", "Image file " filename " was not found in:`n" A_WorkingDir "\nm_image_assets\" fileName)
+					Sleep, 5000
+					Process, Close, % DllCall("GetCurrentProcessId")
+				}
+			} else {
+				MsgBox Folder location cannot be found:`n%A_WorkingDir%\nm_image_assets\
+			}
+			BrownStart:=[ErrorLevel, FoundX-windowX, FoundY-windowY]
+			;determine quest bar sizes and spacing
+			if(QuestBarGapSize=0 || QuestBarSize=0 || QuestBarInset=0) {
+				Loop, 3 {
+					xi := windowX
+					yi := windowY+BrownStart[3]+15
+					ww := windowX+306
+					wh := windowY+BrownStart[3]+100
+					ImageSearch, FoundX, FoundY, xi, yi, ww, wh, *5 nm_image_assets\questbargap.png
+					if(ErrorLevel=0) {
+						QuestBarSize:=FoundY-windowY-BrownStart[3]
+						QuestBarGapSize:=3
+						QuestBarInset:=3
+						NextY:=FoundY+1
+						NextX:=FoundX+1
+						loop 20 {
+							ImageSearch, FoundX, FoundY, FoundX, NextY, ww, wh, *5 nm_image_assets\questbargap.png
+							if(ErrorLevel=0) {
+								NextY:=FoundY+1
+								QuestBarGapSize:=QuestBarGapSize+1
+							} else {
+								break
+							}
+						}
+						wh := windowY+BrownStart[3]+200
+						loop 20 {
+							ImageSearch, FoundX, FoundY, NextX, yi, ww, wh, *5 nm_image_assets\questbarinset.png
+							if(ErrorLevel=0) {
+								NextX:=FoundX+1
+								QuestBarInset:=QuestBarInset+1
+							} else {
+								break
+							}
+						}
+						break
+						;msgbox QuestBarSize=%QuestBarSize%`nQuestBarGapSize=%QuestBarGapSize%`nQuestBarInset=%QuestBarInset%
+					} else {
+						MouseMove, windowX+30, windowY+offsetY+225
+						Sleep, 50
+						send, {WheelDown 1}
+						Sleep, 50
+						BrownStart[3]-=150
+						Sleep, 500
+					}
+				}
+			}
+			;determine Quest objecives
+			static objectiveList := {"dandelion": "Dand", "sunflower": "Sunf", "mushroom": "Mush", "blueflower": "Bluf", "clover": "Clove"
+				, "strawberry": "Straw", "spider": "Spide", "bamboo": "Bamb", "pineapple": "Pinap", "stump": "Stump"
+				, "cactus": "Cact", "pumpkin": "Pump", "pinetree": "Pine"
+				, "rose": "Rose", "mountaintop": "Mount", "pepper": "Pepp", "coconut": "Coco"
+				, "redpollen": "Red", "bluepollen": "Blue", "whitepollen": "White"}
+			objectives := []
+
+			WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " hwnd)
+			while ((objectives.Length() < 4) && (A_Index <= 5)) { ; maximum 4 objectives
+				objectivePos := objectives.Length() * QuestBarSize, objectiveSize := 0
+				pBMScreen := Gdip_BitmapFromScreen(windowX "|" windowY+BrownStart[3]+QuestBarGapSize+objectivePos "|304|" QuestBarSize-QuestBarGapSize)
+
+				if (Gdip_ImageSearch(pBMScreen, bitmaps["questbarinset"], , , , 6, , 5) = 1) {
+					for i,size in [16,15,14,18,17] { ; in approximate order of probability
+						if (Gdip_ImageSearch(pBMScreen, bitmaps["s" size "collect"], , 6, , , , 30) = 1) {
+							objectiveSize := size
+							break
+						}
+					}
+
+					if (objectiveSize = 0)
+						objectives.Push("unknown")
+					else {
+						for k in objectiveList {
+							for i,v in objectives ; if objective already exists, cannot be duplicated
+								if (k = v)
+									continue 2
+							if (bitmaps.HasKey("s" objectiveSize k) && (Gdip_ImageSearch(pBMScreen, bitmaps["s" objectiveSize k], , 6, , , , 30) = 1))
+								objectives.Push(k)
+						}
+					}
 				} else {
+					;//todo: replace this with proper questlog endpoint detection (similar to inventory) to determine if quest is cut off or not, instead of next quest title (which may not exist)
+					if ((Gdip_ImageSearch(pBMScreen, bitmaps["questbartitle"], , , , 6, , 5) = 1) || (Gdip_ImageSearch(pBMScreen, bitmaps["questbartitlebeesmas"], , , , 6, , 5) = 1)) {
+						Gdip_DisposeImage(pBMScreen)
+						break ; end of quest reached confirmed, since there is a quest below
+					}
+
+					;//todo: detect if scrollbar is already at end before scrolling, or how much has scrolled instead of fixed 150. every quest needs this, should be in rewrite
+					
+					; otherwise, scroll up
+					Gdip_DisposeImage(pBMScreen)
 					MouseMove, windowX+30, windowY+offsetY+225
 					Sleep, 50
 					send, {WheelDown 1}
-					Sleep, 50
-					BrownStart[3]-=150
 					Sleep, 500
+					continue 2
 				}
+
+				Gdip_DisposeImage(pBMScreen)
 			}
+			break
 		}
-		;determine Quest objecives
-		static objectiveList := {"dandelion": "Dand", "sunflower": "Sunf", "mushroom": "Mush", "blueflower": "Bluf", "clover": "Clove"
-			, "strawberry": "Straw", "spider": "Spide", "bamboo": "Bamb", "pineapple": "Pinap", "stump": "Stump"
-			, "cactus": "Cact", "pumpkin": "Pump", "pinetree": "Pine"
-			, "rose": "Rose", "mountaintop": "Mount", "pepper": "Pepp", "coconut": "Coco"
-			, "redpollen": "Red", "bluepollen": "Blue", "whitepollen": "White"}
-		objectives := []
+	}
 
-		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " hwnd)
-		while ((objectives.Length() < 4) && (A_Index <= 6)) { ; maximum 4 objectives, possible +2 scroll
-			objectivePos := objectives.Length() * QuestBarSize, objectiveSize := 0
-			pBMScreen := Gdip_BitmapFromScreen(windowX "|" windowY+BrownStart[3]+QuestBarGapSize+objectivePos "|304|" QuestBarSize-QuestBarGapSize)
-
-			if (Gdip_ImageSearch(pBMScreen, bitmaps["questbarinset"], , , , 6, , 5) = 1) {
-				for i,size in [16,15,14,18,17] { ; in approximate order of probability
-					if (Gdip_ImageSearch(pBMScreen, bitmaps["s" size "collect"], , 6, , , , 30) = 1) {
-						objectiveSize := size
-						break
-					}
-				}
-
-				if (objectiveSize = 0)
-					objectives.Push("unknown")
-				else {
-					for k in objectiveList {
-						for i,v in objectives ; if objective already exists, cannot be duplicated
-							if (k = v)
-								continue 2
-						if (bitmaps.HasKey("s" objectiveSize k) && (Gdip_ImageSearch(pBMScreen, bitmaps["s" objectiveSize k], , 6, , , , 30) = 1))
-							objectives.Push(k)
-					}
-				}
+	;Update Brown quest progress in GUI
+	;also set next steps
+	QuestGatherField:="None"
+	QuestGatherFieldSlot:=0
+	newLine:="|"
+	brownProgress:=""
+	BrownQuest:=(objectives.Length() = 1) ? "Solo" : ""
+	for i,obj in objectives {
+		action:="Collect"
+		; decide field (where)
+		;//todo: make this into a function for use in other quest functions
+		switch obj {
+			case "redpollen":
+			if(HiveBees>=35){
+				where:="Pepper"
+			} else if(HiveBees>=15){
+				where:="Rose"
+			} else if (HiveBees>=5) {
+				where:="Strawberry"
 			} else {
-				;//todo: replace this with proper questlog endpoint detection (similar to inventory) to determine if quest is cut off or not, instead of next quest title (which may not exist)
-				if ((Gdip_ImageSearch(pBMScreen, bitmaps["questbartitle"], , , , 6, , 5) = 1) || (Gdip_ImageSearch(pBMScreen, bitmaps["questbartitlebeesmas"], , , , 6, , 5) = 1)) {
-					Gdip_DisposeImage(pBMScreen)
-					break ; end of quest reached confirmed, since there is a quest below
-				}
-
-				;//todo: detect if scrollbar is already at end before scrolling, or how much has scrolled instead of fixed 150. every quest needs this, should be in rewrite
-				
-				; otherwise, scroll up 
-				MouseMove, windowX+30, windowY+offsetY+225
-				Sleep, 50
-				send, {WheelDown 1}
-				Sleep, 50
-				BrownStart[3]-=150
-				Sleep, 500
+				where:="Mushroom"
 			}
 
-			Gdip_DisposeImage(pBMScreen)
-		}
-		;Update Brown quest progress in GUI
-		;also set next steps
-		QuestGatherField:="None"
-		QuestGatherFieldSlot:=0
-		newLine:="|"
-		brownProgress:=""
-		BrownQuest:=(objectives.Length() = 1) ? "Solo" : ""
-		for i,objective in objectives {
-			action:="Collect"
-			; decide field (where)
-			;//todo: make this into a function for use in other quest functions
-			switch objective {
-				case "redpollen":
-				if(HiveBees>=35){
-					where:="Pepper"
-				} else if(HiveBees>=15){
-					where:="Rose"
-				} else if (HiveBees>=5) {
-					where:="Strawberry"
-				} else {
-					where:="Mushroom"
-				}
-
-				case "bluepollen":
-				if(HiveBees>=15){
-					where:="Pine Tree"
-				} else if (HiveBees>=5) {
-					where:="Bamboo"
-				} else {
-					where:="Blue Flower"
-				}
-
-				case "whitepollen":
-				if (HiveBees>=10) {
-					where:="Pineapple"
-				} else if (HiveBees>=5) {
-					where:="Spider"
-				} else {
-					where:="Sunflower"
-				}
-
-				case "blueflower":
-				where:="Blue Flower"
-
-				case "pinetree":
+			case "bluepollen":
+			if(HiveBees>=15){
 				where:="Pine Tree"
-
-				case "mountaintop":
-				where:="Mountain Top"
-
-				default:
-				where:=Format("{:T}", objective) ; title case, capitalise first letter
-			}
-
-			PixelGetColor, questbarColor, windowX+QuestBarInset+10, windowY+QuestBarSize*(i-1)+BrownStart[3]+QuestBarGapSize+5, RGB fast
-			if((questbarColor=Format("{:d}",0xF46C55)) || (questbarColor=Format("{:d}",0x6EFF60))) {
-				BrownQuestComplete:=0
-				completeness:="Incomplete"
-				if(QuestGatherField="None") {
-					QuestGatherField:=where
-					QuestGatherFieldSlot:=i
-				}
-			}
-			;border color, white (titlebar), black (text)
-			else if((questbarColor!=Format("{:d}",0x96C3DE)) && (questbarColor!=Format("{:d}",0xE5F0F7)) && (questbarColor!=Format("{:d}",0x1B2A35))) {
-				completeness:="Complete"
+			} else if (HiveBees>=5) {
+				where:="Bamboo"
 			} else {
-				completeness:="Unknown"
+				where:="Blue Flower"
 			}
-			BrownQuest .= "-" . objectiveList[objective]
-			brownProgress .= newline . action . " " . where . ": " . completeness
-		}
-		brownProgress := (BrownQuest := LTrim(BrownQuest, "-")) . brownProgress
 
-		IniWrite, %brownProgress%, settings\nm_config.ini, Quests, BrownQuestProgress
-		GuiControl,,BrownQuestProgress, % StrReplace(brownProgress, "|", "`n")
-		if(QuestGatherField="None") {
-			BrownQuestComplete:=1
+			case "whitepollen":
+			if (HiveBees>=10) {
+				where:="Pineapple"
+			} else if (HiveBees>=5) {
+				where:="Spider"
+			} else {
+				where:="Sunflower"
+			}
+
+			case "blueflower":
+			where:="Blue Flower"
+
+			case "pinetree":
+			where:="Pine Tree"
+
+			case "mountaintop":
+			where:="Mountain Top"
+
+			default:
+			where:=Format("{:T}", obj) ; title case, capitalise first letter
 		}
+
+		PixelGetColor, questbarColor, windowX+QuestBarInset+10, windowY+QuestBarSize*(i-1)+BrownStart[3]+QuestBarGapSize+5, RGB fast
+		if((questbarColor=Format("{:d}",0xF46C55)) || (questbarColor=Format("{:d}",0x6EFF60))) {
+			BrownQuestComplete:=0
+			completeness:="Incomplete"
+			if(QuestGatherField="None") {
+				QuestGatherField:=where
+				QuestGatherFieldSlot:=i
+			}
+		}
+		;border color, white (titlebar), black (text)
+		else if((questbarColor!=Format("{:d}",0x96C3DE)) && (questbarColor!=Format("{:d}",0xE5F0F7)) && (questbarColor!=Format("{:d}",0x1B2A35))) {
+			completeness:="Complete"
+		} else {
+			completeness:="Unknown"
+		}
+		BrownQuest .= "-" . objectiveList[obj]
+		brownProgress .= newline . action . " " . where . ": " . completeness
+	}
+	brownProgress := (BrownQuest := LTrim(BrownQuest, "-")) . brownProgress
+
+	IniWrite, %brownProgress%, settings\nm_config.ini, Quests, BrownQuestProgress
+	GuiControl,,BrownQuestProgress, % StrReplace(brownProgress, "|", "`n")
+	if(QuestGatherField="None") {
+		BrownQuestComplete:=1
 	}
 }
 nm_BrownQuest(){
