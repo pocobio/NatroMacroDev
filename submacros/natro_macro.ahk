@@ -9132,7 +9132,7 @@ nm_Reset(checkAll:=1, wait:=2000, convert:=1, force:=0){
 			MouseMove, windowX+350, windowY+offsetY+100
 		}
 		;check to make sure you are not in blender screen
-		BlenderSS := Gdip_BitmapFromScreen(WindowX+Windowwidth//2 - 277 "|" windowY+WindowHeight//2 - 243 "|553|400")
+		BlenderSS := Gdip_BitmapFromScreen(WindowX+Windowwidth//2 - 280 "|" windowY+WindowHeight//2 - 245 "|553|400")
 		if (Gdip_ImageSearch(BlenderSS, bitmaps["CloseGUI"], , , , , , 5) > 0) {
 			MouseMove, WindowX+Windowwidth//2 - 250, windowY+WindowHeight//2 - 210
 			sleep, 150 
@@ -9585,7 +9585,7 @@ nm_toAnyBooster(){
 				Sleep, (2000+KeyDelay)
 
 				WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " (hwnd := GetRobloxHWND()))
-				MouseMove, WindowX+Windowwidth//2, WindowY+WindowHeight//1.35 - 5
+				MouseMove, WindowX+Windowwidth//2, WindowY+WindowHeight//1.35 - 5 ;dialog
 				sleep, 150
 				Click
 				sleep, 300
@@ -9597,16 +9597,14 @@ nm_toAnyBooster(){
 					
 					if (Gdip_ImageSearch(pBMScreen, Shrine[DonationIMG], , , , , , 2, , 4) > 0) {
 						sleep, 200
-						if (Gdip_ImageSearch(pBMScreen, Shrine["Plus"], pos,,,,, 5) > 0)
-							MouseMove, SubStr(pos, 1, InStr(pos, ",")-1)+windowX+windowWidth//2-250, SubStr(pos, InStr(pos, ",")+1)+WindowY+windowHeight//2-100
+						MouseMove, windowX+windowWidth//2+60, WindowY+windowHeight//2+160 ; add more of x item
 						sleep, 150
 						While (A_index < ShrineAmount%ShrineRot%) {
 							Click
 							sleep, 35
 						}
 						sleep, 300
-						if (Gdip_ImageSearch(pBMScreen, Shrine["Donate"], pos,,,,, 5) > 0)
-							MouseMove, SubStr(pos, 1, InStr(pos, ",")-1)+windowX+windowWidth//2-250, SubStr(pos, InStr(pos, ",")+1)+WindowY+windowHeight//2-100
+						MouseMove, windowX+windowWidth//2-70, WindowY+windowHeight//2+130 ; donate button
 						Gdip_DisposeBitmap(pBMScreen)
 						sleep, 150
 						Click
@@ -9669,8 +9667,7 @@ nm_toAnyBooster(){
 		
 						break 2
 					} else {
-						if (Gdip_ImageSearch(pBMScreen, Shrine["LeftArrow"], pos,,,,, 5) > 0)
-							MouseMove, SubStr(pos, 1, InStr(pos, ",")-1)+windowX+windowWidth//2-250, SubStr(pos, InStr(pos, ",")+1)+WindowY+windowHeight//2-100
+						MouseMove, windowX+windowWidth//2+30, WindowY+windowHeight//2-25
 						sleep 150
 						click
 						Gdip_DisposeImage(pBMScreen)
@@ -9839,10 +9836,10 @@ nm_Collect(){
 				sendinput {%SC_E% up}
 				Sleep, 500
 
-				SearchX := windowX+Windowwidth//2 - 277, SearchY := windowY+WindowHeight//2 - 243, BlenderSS := Gdip_BitmapFromScreen(SearchX "|" SearchY "|553|400")
+				SearchX := windowX+Windowwidth//2 - 280, SearchY := windowY+WindowHeight//2 - 245, BlenderSS := Gdip_BitmapFromScreen(SearchX "|" SearchY "|553|400")
 
 				if (Gdip_ImageSearch(BlenderSS, bitmaps["CancelCraft"], , , , , , 2, , 7) > 0) {
-					MouseMove, windowX+WindowWidth//2 + 230, windowY+WindowHeight//2 + 90 ; click cancel button
+					MouseMove, windowX+WindowWidth//2 + 230, windowY+WindowHeight//2 + 115 ; click cancel button
 					sleep, 150
 					Click
 				}
@@ -9857,13 +9854,13 @@ nm_Collect(){
 				} else if (BlenderEnd && Gdip_ImageSearch(BlenderSS, bitmaps["EndCraftR"], , , , , , 3, , 6) > 0) {
 					Iniwrite, 0, settings\nm_config.ini, Blender, BlenderEnd
 					BlenderEnd := 0
-					MouseMove, windowX+WindowWidth//2 - 60, windowY+WindowHeight//2 + 120 ; close red craft button
+					MouseMove, windowX+WindowWidth//2 - 120, windowY+WindowHeight//2 + 100 ; close red craft button
 					sleep, 150
 					Click
 				}
 
 				if (Gdip_ImageSearch(BlenderSS, bitmaps["EndCraftG"], , , , , , 4, , 6) > 0) {
-					MouseMove, windowX+WindowWidth//2 - 60, windowY+WindowHeight//2 + 120 ; close green craft button
+					MouseMove, windowX+WindowWidth//2 - 120, windowY+WindowHeight//2 + 100 ; close green craft button
 					sleep, 150
 					Click
 				}
@@ -9898,11 +9895,11 @@ nm_Collect(){
 							break
 						}
 						gdip_disposeimage(BlenderSS)
-						MouseMove, windowX+Windowwidth//2 + 80, windowY+WindowHeight//2 + 100 ;Open item menu
+						MouseMove, windowX+Widowwidth//2 - 15, windowY+WindowHeight//2 + 110 ;Open item menu
 						sleep, 150
 						click
 						sleep, 150
-						MouseMove, windowX+WindowWidth//2 - 60, windowY+WindowHeight//2 + 120 ;Add more of x item
+						MouseMove, windowX+WindowWidth//2 - 60, windowY+WindowHeight//2 + 130 ;Add more of x item
 						sleep, 150
 						While (A_Index < BlenderAmount%BlenderRot%) {
 							Click
@@ -9943,7 +9940,7 @@ nm_Collect(){
 							IniWrite, % BlenderIndex%BlenderRot%, settings\nm_config.ini, blender, BlenderIndex%BlenderRot%
 						}
 						sleep, 100
-						MouseMove, windowX+Windowwidth//2 + 80, windowY+WindowHeight//2 + 100 ;Click Confirm
+						MouseMove, windowX+Windowwidth//2 + 70, windowY+WindowHeight//2 + 110 ;Click Confirm
 						sleep, 150
 						Click
 						sleep, 100
@@ -9953,7 +9950,7 @@ nm_Collect(){
 						break 2
 					} else {
 						sleep, 50
-						MouseMove, windowX+WindowWidth//2 + 230, windowY+WindowHeight//2 + 140 ;not found go next item
+						MouseMove, windowX+WindowWidth//2 + 230, windowY+WindowHeight//2 + 115 ;not found go next item
 						sleep, 150
 						Click
 						sleep, 100
