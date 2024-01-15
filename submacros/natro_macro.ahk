@@ -10074,9 +10074,16 @@ nm_Collect(){
 				Sleep, 500
 				send {%SC_1%}
 				MoveSpeedFactor := round(18/MoveSpeedNum, 2)
-				nm_Move(2000*MoveSpeedFactor, BackKey)
-				nm_Move(500*MoveSpeedFactor, RightKey)
-				nm_Move(100*MoveSpeedFactor, FwdKey)
+				movement := "
+				(LTrim Join`r`n
+				" nm_Walk(9, BackKey) "
+				" nm_Walk(3, RightKey, FwdKey) "
+				" nm_Walk(1, FwdKey) "
+				)"
+				nm_createWalk(movement)
+				KeyWait, F14, D T5 L
+				KeyWait, F14, T30 L
+				nm_endWalk()
 				click, down
 				loop 300 {
 					if (Mod(A_Index, 10) = 1) {
