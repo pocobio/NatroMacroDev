@@ -5691,7 +5691,7 @@ nm_StickerStackCheck(){
 }
 nm_StickerStackItem(hCtrl){
 	global StickerStackItem, hSSILeft, hSSIRight
-	static val := ["Tickets", "Sticker"], l := val.Length()
+	static val := ["Tickets", "Sticker", "Sticker+Tickets"], l := val.Length()
 	
 	if (StickerStackItem = "Tickets")
 	{
@@ -5703,7 +5703,7 @@ nm_StickerStackItem(hCtrl){
 			return
 	}
 	else
-		i := 2
+		i := (StickerStackItem = "Sticker") ? 2 : 3
 	
 	GuiControl, , StickerStackItem, % (StickerStackItem := val[(hCtrl = hSSIRight) ? (Mod(i, l) + 1) : (Mod(l + i - 2, l) + 1)])
 	IniWrite, %StickerStackItem%, settings\nm_config.ini, Boost, StickerStackItem
@@ -10000,14 +10000,22 @@ nm_toAnyBooster(){
 				}
 
 				; check if sticker is available to donate
-				if ((StickerStackItem = "Sticker") && (Gdip_ImageSearch(pBMScreen, bitmaps["nosticker"], , , , , , 20) = 0)) {
+				if (InStr(StickerStackItem, "Sticker") && (Gdip_ImageSearch(pBMScreen, bitmaps["nosticker"], , , , , , 20) = 0)) {
 					nm_setStatus("Stacking", "Sticker")
 					MouseMove, windowX+windowWidth//2-230, windowY+4*windowHeight//10+40 ; select sticker
 					if (StickerStackMode = 0)
 						StickerStackTimer += 10
-				} else {
+				} else if InStr(StickerStackItem, "Tickets") {
 					nm_setStatus("Stacking", "Tickets")
 					MouseMove, windowX+windowWidth//2+180, windowY+4*windowHeight//10-78 ; select tickets
+				} else { ; StickerStackItem = "Sticker", and nosticker was found or error
+					nm_setStatus("Error", "No Stickers left to stack!`nSticker Stack has been disabled.")
+					StickerStackCheck := 0
+					Sleep, 500
+					sendinput {%SC_E% down}
+					Sleep, 100
+					sendinput {%SC_E% up}
+					break
 				}
 				Sleep, 100
 				Click
@@ -10029,6 +10037,8 @@ nm_toAnyBooster(){
 					}
 					Gdip_DisposeImage(pBMScreen)
 				}
+				Sleep, 1000
+				nm_SetStatus("Collected", "Sticker Stack")
 				break
 			}
 		}
@@ -21562,7 +21572,7 @@ loop, 3 {
 	}
 }
 ;Sticker Warning
-if ((StickerStackCheck = 1) && (StickerStackItem = "Sticker")) { ;Warns user about stickers
+if ((StickerStackCheck = 1) && InStr(StickerStackItem, "Sticker")) { ;Warns user about stickers
 	msgbox, 0x1040, Sticker Stack ,% "You have enabled the Sticker option for Sticker Stack!`nConsider trading all of your valuable stickers to alternative account, to ensure that you do not lose any valuable stickers.", 30
 }
 

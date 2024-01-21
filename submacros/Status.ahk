@@ -228,7 +228,7 @@ settings["BlenderIndex3"] := {"enum": 61, "type": "str", "section": "Blender", "
 settings["BlenderItem1"] := {"enum": 62, "type": "str", "section": "Blender", "regex": "i)^(blueextract|redextract|glue|Oil|enzymes|gumdrops|tropicaldrink|mooncharms|glitter|starjelly|purplepotion|softwax|hardwax|swirledwax|causticwax|fielddice|smoothdice|loadeddice|supersmoothie|Turpentine|None)$"}
 settings["BlenderItem2"] := {"enum": 63, "type": "str", "section": "Blender", "regex": "i)^(blueextract|redextract|glue|oil|enzymes|gumdrops|tropicaldrink|mooncharms|glitter|starjelly|purplepotion|softwax|hardwax|swirledwax|causticwax|fielddice|smoothdice|loadeddice|supersmoothie|Turpentine|None)$"}
 settings["BlenderItem3"] := {"enum": 64, "type": "str", "section": "Blender", "regex": "i)^(blueextract|redextract|glue|oil|enzymes|gumdrops|tropicaldrink|mooncharms|glitter|starjelly|purplepotion|softwax|hardwax|swirledwax|causticwax|fielddice|smoothdice|loadeddice|supersmoothie|Turpentine|None)$"}
-settings["StickerStackItem"] := {"enum": 65, "type": "str", "section": "Boost", "regex": "i)^(tickets|sticker)$"}
+settings["StickerStackItem"] := {"enum": 65, "type": "str", "section": "Boost", "regex": "i)^(tickets|sticker|sticker\+tickets)$"}
 settings["StickerPrinterEgg"] := {"enum": 66, "type": "str", "section": "Boost", "regex": "i)^(Basic|Gold)$"}
 
 ;settings["discordMode"] := {"enum": 1, "type": "int", "section": "Status", "regex": "i)^(0|1|2)$"} dangerous
