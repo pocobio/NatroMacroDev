@@ -2658,7 +2658,7 @@ Gui, Add, Button, xp-12 yp-1 w12 h16 gnm_StickerStackMode hwndhSSMLeft Disabled,
 Gui, Add, Button, xp+96 yp w12 h16 gnm_StickerStackMode hwndhSSMRight Disabled, >
 Gui, Add, UpDown, % "xp-18 yp h16 -16 Range900-86400 vStickerStackTimer gnm_StickerStackTimer Disabled Hidden" (StickerStackMode = 0), %StickerStackTimer%
 Gui, Add, Button, xp+32 yp+1 w12 h14 gnm_StickerStackModeHelp vStickerStackModeHelp Disabled, ?
-Gui, Add, Checkbox, x305 yp+17 vStickerPrinterCheck gnm_StickerPrinterCheck Checked%StickerPrinterCheck%, Sticker Printer
+Gui, Add, Checkbox, x305 yp+17 vStickerPrinterCheck gnm_StickerPrinterCheck Checked%StickerPrinterCheck% Disabled, Sticker Printer
 Gui, Add, Text, xp+6 yp+14 +BackgroundTrans, \__
 Gui, Add, Text, x+0 yp+4 w36 +Center +BackgroundTrans, Egg:
 Gui, Add, Text, x+12 yp w55 vStickerPrinterEgg +Center +BackgroundTrans, %StickerPrinterEgg%
@@ -7318,9 +7318,21 @@ nm_StickerPrinterCheck(){
 }
 nm_StickerPrinterEgg(hCtrl){
 	global StickerPrinterEgg, hSPELeft, hSPERight
-	static val := ["Basic", "Gold"], l := val.Length()
+	static val := ["Basic", "Silver", "Gold", "Diamond", "Mythic"], l := val.Length()
 
-	i := (StickerPrinterEgg = "Basic") ? 1 : 2
+	switch % StickerPrinterEgg
+	{
+		case "Basic":
+		i := 1
+		case "Silver":
+		i := 2
+		case "Gold":
+		i := 3
+		case "Diamond":
+		i := 4
+		default:
+		i := 5
+	}
 
 	GuiControl, , StickerPrinterEgg, % (StickerPrinterEgg := val[(hCtrl = hSPERight) ? (Mod(i, l) + 1) : (Mod(l + i - 2, l) + 1)])
 	IniWrite, %StickerPrinterEgg%, settings\nm_config.ini, Boost, StickerPrinterEgg
@@ -9777,9 +9789,23 @@ nm_toAnyBooster(){
 					break
 				}
 				Gdip_DisposeImage(pBMScreen)
-				MouseMove, (StickerPrinterEgg="Basic") ? windowX+windowWidth//2-90 : windowX+windowWidth//2+28, windowY+4*windowHeight//10-20
+				pos := {"Basic": -95, "Silver": -40, "Gold": 15, "Diamond": 70, "Mythic": 125}
+				MouseMove, windowX+windowWidth//2+pos[StickerPrinterEgg], windowY+4*windowHeight//10-20
 				Sleep, 200
 				Click
+				Sleep, 200
+				pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//2+150 "|" windowY+4*windowHeight//10+160 "|100|60")
+				if (Gdip_ImageSearch(pBMScreen, bitmaps["stickerprinterConfirm"], , , , , , 10) != 1) {
+					Gdip_DisposeImage(pBMScreen)
+					nm_setStatus("Error", "No Eggs left in inventory!`nSticker Printer has been disabled.")
+					StickerPrinterCheck := 0
+					Sleep, 500
+					sendinput {%SC_E% down}
+					Sleep, 100
+					sendinput {%SC_E% up}
+					break
+				}
+				Gdip_DisposeImage(pBMScreen)
 				MouseMove, windowX+windowWidth//2+225, windowY+4*windowHeight//10+195
 				Sleep, 200
 				Click
@@ -9806,8 +9832,10 @@ nm_toAnyBooster(){
 				break
 			}
 		}
-		LastStickerPrinter:=nowUnix()
-		IniWrite, %LastStickerPrinter%, settings\nm_config.ini, Boost, LastStickerPrinter
+		if (StickerPrinterCheck = 1) {
+			LastStickerPrinter:=nowUnix()
+			IniWrite, %LastStickerPrinter%, settings\nm_config.ini, Boost, LastStickerPrinter
+		}
 	}
 	nm_ShrineRotation() ; make sure ShrineRot hasnt changed
 	if (ShrineCheck && (nowUnix()-LastShrine)>3600) { ;1 hour
@@ -10042,11 +10070,13 @@ nm_toAnyBooster(){
 				break
 			}
 		}
-		LastStickerStack:=nowUnix()
-		IniWrite, %LastStickerStack%, settings\nm_config.ini, Boost, LastStickerStack
-		if (StickerStackMode = 0) {
-			GuiControl, , StickerStackTimer, %StickerStackTimer%
-			IniWrite, %StickerStackTimer%, settings\nm_config.ini, Boost, StickerStackTimer
+		if (StickerStackCheck = 1) {
+			LastStickerStack:=nowUnix()
+			IniWrite, %LastStickerStack%, settings\nm_config.ini, Boost, LastStickerStack
+			if (StickerStackMode = 0) {
+				GuiControl, , StickerStackTimer, %StickerStackTimer%
+				IniWrite, %StickerStackTimer%, settings\nm_config.ini, Boost, StickerStackTimer
+			}
 		}
 	}
 }
