@@ -225,9 +225,9 @@ settings["ShrineIndex2"] := {"enum": 58, "type": "str", "section": "Shrine", "re
 settings["BlenderIndex1"] := {"enum": 59, "type": "str", "section": "Blender", "regex": "i)^(Infinite|\d{1,3})$"}
 settings["BlenderIndex2"] := {"enum": 60, "type": "str", "section": "Blender", "regex": "i)^(Infinite|\d{1,3})$"}
 settings["BlenderIndex3"] := {"enum": 61, "type": "str", "section": "Blender", "regex": "i)^(Infinite|\d{1,3})$"}
-settings["BlenderItem1"] := {"enum": 62, "type": "str", "section": "Blender", "regex": "i)^(blueextract|redextract|glue|Oil|enzymes|gumdrops|tropicaldrink|mooncharms|glitter|starjelly|purplepotion|softwax|hardwax|swirledwax|causticwax|fielddice|smoothdice|loadeddice|supersmoothie|Turpentine|None)$"}
-settings["BlenderItem2"] := {"enum": 63, "type": "str", "section": "Blender", "regex": "i)^(blueextract|redextract|glue|oil|enzymes|gumdrops|tropicaldrink|mooncharms|glitter|starjelly|purplepotion|softwax|hardwax|swirledwax|causticwax|fielddice|smoothdice|loadeddice|supersmoothie|Turpentine|None)$"}
-settings["BlenderItem3"] := {"enum": 64, "type": "str", "section": "Blender", "regex": "i)^(blueextract|redextract|glue|oil|enzymes|gumdrops|tropicaldrink|mooncharms|glitter|starjelly|purplepotion|softwax|hardwax|swirledwax|causticwax|fielddice|smoothdice|loadeddice|supersmoothie|Turpentine|None)$"}
+settings["BlenderItem1"] := {"enum": 62, "type": "str", "section": "Blender", "regex": "i)^(blueextract|redextract|glue|Oil|enzymes|gumdrops|tropicaldrink|mooncharms|glitter|starjelly|purplepotion|antpass|cloudvial|softwax|hardwax|swirledwax|causticwax|fielddice|smoothdice|loadeddice|Turpentine|None)$"}
+settings["BlenderItem2"] := {"enum": 63, "type": "str", "section": "Blender", "regex": "i)^(blueextract|redextract|glue|oil|enzymes|gumdrops|tropicaldrink|mooncharms|glitter|starjelly|purplepotion|antpass|cloudvial|softwax|hardwax|swirledwax|causticwax|fielddice|smoothdice|loadeddice|Turpentine|None)$"}
+settings["BlenderItem3"] := {"enum": 64, "type": "str", "section": "Blender", "regex": "i)^(blueextract|redextract|glue|oil|enzymes|gumdrops|tropicaldrink|mooncharms|glitter|starjelly|purplepotion|antpass|cloudvial|softwax|hardwax|swirledwax|causticwax|fielddice|smoothdice|loadeddice|Turpentine|None)$"}
 settings["StickerStackItem"] := {"enum": 65, "type": "str", "section": "Boost", "regex": "i)^(tickets|sticker|sticker\+tickets)$"}
 settings["StickerPrinterEgg"] := {"enum": 66, "type": "str", "section": "Boost", "regex": "i)^(Basic|Silver|Gold|Diamond|Mythic)$"}
 
