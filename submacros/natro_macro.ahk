@@ -10043,7 +10043,7 @@ nm_toAnyBooster(){
 						StickerStackTimer += 10
 				} else if InStr(StickerStackItem, "Tickets") {
 					nm_setStatus("Stacking", "Tickets")
-					MouseMove, windowX+windowWidth//2+180, windowY+4*windowHeight//10-78 ; select tickets
+					MouseMove, windowX+windowWidth//2+105, windowY+4*windowHeight//10-78 ; select tickets
 				} else { ; StickerStackItem = "Sticker", and nosticker was found or error
 					nm_setStatus("Error", "No Stickers left to stack!`nSticker Stack has been disabled.")
 					StickerStackCheck := 0
@@ -10070,6 +10070,15 @@ nm_toAnyBooster(){
 					} else if (i > 0) {
 						Gdip_DisposeImage(pBMScreen)
 						break
+					} else if (A_Index = 16) {
+						Gdip_DisposeImage(pBMScreen)
+						nm_setStatus("Error", "No Tickets left to use!`nSticker Stack has been disabled.")
+						StickerStackCheck := 0
+						Sleep, 500
+						sendinput {%SC_E% down}
+						Sleep, 100
+						sendinput {%SC_E% up}
+						break 2
 					}
 					Gdip_DisposeImage(pBMScreen)
 				}
