@@ -5754,7 +5754,7 @@ nm_StickerStackModeText(){
 	}
 }
 nm_StickerStackItemHelp(){
-	msgbox, 0x40000, Sticker Stack Item, Choose the item you prefer to use for activating the Sticker Stack!`n`n'Tickets' is the default option: it will use the 25 Tickets option to activate the boost.`n`n'Sticker' is an option if you want to stack your Stickers. It will always use your first sticker if there is one, otherwise it falls back to using Tickets. If you don't want this, remember to disable Sticker Stack before you run out of Stickers, e.g. with Remote Control.
+	msgbox, 0x40000, Sticker Stack Item, Choose the item you prefer to use for activating the Sticker Stack!`n`n'Tickets' is the default option: it will use the 25 Tickets option to activate the boost.`n`n'Sticker' is an option if you want to stack your Stickers. It will always use your first Sticker if there is one, otherwise it will stop using the Sticker Stack.`n`n'Sticker+Tickets' is an option that uses all of your Stickers first, then uses your Tickets once you have run out of Stickers.
 }
 nm_StickerStackModeHelp(){
 	msgbox, 0x40000, Sticker Stack Timer, Choose how long you want to wait between each Sticker Stack boost!`n`n'Detect' is the default option: it will detect the time each boost lasts and will go back to activate the Sticker Stack when it's over.`n`nThe other option is a custom timer, you can set it to any value between 15 minutes and 24 hours, the macro will activate Sticker Stack at this time interval.`n`nNOTE: If you change from a custom timer to 'Detect', the macro will still use your custom timer for the time until your next visit to the Sticker Stack.
