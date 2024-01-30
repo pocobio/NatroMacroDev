@@ -10048,7 +10048,7 @@ nm_StickerStack(){
 					}
 					Gdip_DisposeImage(pBMScreen)
 				}
-				Sleep, 1000
+				Sleep, 2000
 				nm_SetStatus("Collected", "Sticker Stack")
 				break
 			}
