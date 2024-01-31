@@ -347,7 +347,7 @@ config["Settings"] := {"GuiTheme":"MacLion3"
 	, "MoveMethod":"Cannon"
 	, "SprinklerType":"Supreme"
 	, "MultiReset":0
-	, "ConvertBalloon":"Always"
+	, "ConvertBalloon":"Gather"
 	, "ConvertMins":30
 	, "LastConvertBalloon":1
 	, "GatherDoubleReset":1
@@ -7269,9 +7269,9 @@ nm_SprinklerType(hCtrl){
 }
 nm_ConvertBalloon(hCtrl){
 	global ConvertBalloon, hCBLeft, hCBRight
-	static val := ["Never", "Every", "Always"], l := val.Length()
+	static val := ["Never", "Every", "Always", "Gather"], l := val.Length()
 
-	i := (ConvertBalloon = "Never") ? 1 : (ConvertBalloon = "Every") ? 2 : 3
+	i := (ConvertBalloon = "Never") ? 1 : (ConvertBalloon = "Every") ? 2 : (ConvertBalloon = "Always") ? 3 : 4
 
 	GuiControl, , ConvertBalloon, % (ConvertBalloon := val[(hCtrl = hCBRight) ? (Mod(i, l) + 1) : (Mod(l + i - 2, l) + 1)])
 	GuiControl, % (ConvertBalloon = "Every") ? "Enable" : "Disable", ConvertMins
@@ -13706,7 +13706,7 @@ nm_GoGather(){
 	global BackpackPercentFiltered
 	global MicroConverterKey
 	global PackFilterArray
-	global WhirligigKey, PFieldBoosted, GlitterKey, GatherFieldBoosted, GatherFieldBoostedStart, LastGlitter, PMondoGuidComplete, LastGuid, PMondoGuid, PFieldGuidExtend, PFieldGuidExtendMins, PFieldBoostExtend, PPopStarExtend, HasPopStar, PopStarActive, FieldGuidDetected, CurrentAction, PreviousAction
+	global WhirligigKey, PFieldBoosted, GlitterKey, GatherFieldBoosted, GatherFieldBoostedStart, LastGlitter, PMondoGuidComplete, LastGuid, PMondoGuid, PFieldGuidExtend, PFieldGuidExtendMins, PFieldBoostExtend, PPopStarExtend, HasPopStar, PopStarActive, FieldGuidDetected, CurrentAction, PreviousAction, ConvertGatherFlag
 	global LastWhirligig
 	global BoostChaserCheck, LastBlueBoost, LastRedBoost, LastMountainBoost, FieldBooster3, FieldBooster2, FieldBooster1, FieldDefault, LastMicroConverter, HiveConfirmed, LastWreath, WreathCheck
 	global BlueFlowerBoosterCheck, BambooBoosterCheck, PineTreeBoosterCheck, DandelionBoosterCheck, SunflowerBoosterCheck, CloverBoosterCheck, SpiderBoosterCheck, PineappleBoosterCheck, CactusBoosterCheck, PumpkinBoosterCheck, MushroomBoosterCheck, StrawberryBoosterCheck, RoseBoosterCheck
@@ -14065,15 +14065,18 @@ nm_GoGather(){
 	nm_autoFieldBoost(FieldName)
 	nm_fieldBoostGlitter()
 	nm_PlanterTimeUpdate(FieldName)
-	;set sprinkler
 	VarSetCapacity(field_limit,256),DllCall("GetDurationFormatEx","str","!x-sys-default-locale","uint",0,"ptr",0,"int64",FieldUntilMins*60*10000000,"wstr","mm:ss","str",field_limit,"int",256)
+	ConvertGatherFlag := 1
 	if(fieldOverrideReason="None") {
 		nm_setStatus("Gathering", FieldName (GatherFieldBoosted ? " - Boosted" : "") "`nLimit " field_limit " - " FieldPattern " - " FieldPatternSize " - " FieldSprinklerLoc " " FieldSprinklerDist)
 	} else if(fieldOverrideReason="Quest") {
+		if ((RotateQuest = "Polar") || (RotateQuest = "Black"))
+			ConvertGatherFlag := 0
 		nm_setStatus("Gathering", RotateQuest . " " . fieldOverrideReason . " - " . FieldName "`nLimit " field_limit " - " FieldPattern " - " FieldPatternSize " - " FieldSprinklerLoc " " FieldSprinklerDist)
 	} else {
 		nm_setStatus("Gathering", fieldOverrideReason . " - " . FieldName "`nLimit " field_limit " - " FieldPattern " - " FieldPatternSize " - " FieldSprinklerLoc " " FieldSprinklerDist)
 	}
+	;set sprinkler
 	nm_setSprinkler(FieldName, FieldSprinklerLoc, FieldSprinklerDist)
 	;rotate
 	if (FieldRotateDirection != "None") {
@@ -15643,7 +15646,7 @@ nm_endWalk() ; this function ends the walk script
 	; if issues, we can check if closed, else kill and force keys up
 }
 nm_convert(){
-	global KeyDelay, RotRight, ZoomOut, SC_E, AFBrollingDice, AFBuseGlitter, AFBuseBooster, CurrentField, HiveConfirmed, EnzymesKey, LastEnzymes, ConvertStartTime, TotalConvertTime, SessionConvertTime, BackpackPercent, BackpackPercentFiltered, PFieldBoosted, GatherFieldBoosted, GameFrozenCounter, CurrentAction, PreviousAction, PFieldBoosted, GatherFieldBoosted, GatherFieldBoostedStart, LastGlitter, GlitterKey, LastConvertBalloon, ConvertBalloon, ConvertMins, HiveBees,state, ConvertDelay, bitmaps
+	global KeyDelay, RotRight, ZoomOut, SC_E, AFBrollingDice, AFBuseGlitter, AFBuseBooster, CurrentField, HiveConfirmed, EnzymesKey, LastEnzymes, ConvertStartTime, TotalConvertTime, SessionConvertTime, BackpackPercent, BackpackPercentFiltered, PFieldBoosted, GatherFieldBoosted, GameFrozenCounter, CurrentAction, PreviousAction, PFieldBoosted, GatherFieldBoosted, GatherFieldBoostedStart, LastGlitter, GlitterKey, LastConvertBalloon, ConvertBalloon, ConvertMins, HiveBees,state, ConvertDelay, ConvertGatherFlag, bitmaps
 
 	hwnd := GetRobloxHWND()
 	offsetY := GetYOffset(hwnd)
@@ -15701,7 +15704,8 @@ nm_convert(){
 		nm_setStatus("Converting", "Backpack Emptied`nTime: " duration)
 	}
 	;empty balloon
-	if((ConvertBalloon="always") || (ConvertBalloon="Every" && (nowUnix() - LastConvertBalloon)>(ConvertMins*60))) {
+	if((ConvertBalloon="always") || (ConvertBalloon="Every" && (nowUnix() - LastConvertBalloon)>(ConvertMins*60)) || (ConvertBalloon="Gather" && (ConvertGatherFlag=1 || (nowUnix() - LastConvertBalloon)>1800))) {
+		ConvertGatherFlag := 0
 		;balloon check
 		strikes:=0
 		while ((strikes <= 5) && (A_Index <= 50)) {
@@ -21716,6 +21720,7 @@ global RileyLadybugs:=0
 global RileyScorpions:=0
 global RileyAll:=0
 global GatherFieldBoostedStart:=nowUnix()-3600
+global ConvertGatherFlag:=0
 global LastNatroSoBroke:=1
 GuiControlGet, CurrentField
 ;set ActiveHotkeys[]
