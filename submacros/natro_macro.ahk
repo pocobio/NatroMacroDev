@@ -13726,7 +13726,11 @@ nm_Mondo(){
 								count := 0
 							if(Mod(A_Index, 4)=0) { ; 1 second
 								nm_autoFieldBoost(CurrentField)
-								if(youDied || VBState=1 || AFBrollingDice || AFBuseGlitter || AFBuseBooster)
+								if(VBState=1 || AFBrollingDice || AFBuseGlitter || AFBuseBooster) {
+									repeat := 0
+									break
+								}
+								if(youDied)
 									break
 								FormatTime, utc_min, %A_NowUTC%, m
 								if(utc_min>14) {
