@@ -13780,7 +13780,7 @@ nm_Mondo(){
 							if(!DisableToolUse)
 								click, down
 							DllCall("GetSystemTimeAsFileTime","int64p",s)
-							n := s, f := s+400000000 ; 45 seconds loot timeout
+							n := s, f := s+450000000 ; 45 seconds loot timeout
 							while ((n < f) && (A_Index <= 12)) {
 								nm_loot(16, 5, Mod(A_Index, 2) = 1 ? afc : tc)
 								DllCall("GetSystemTimeAsFileTime","int64p",n)
