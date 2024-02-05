@@ -276,4 +276,7 @@ arr2 := arr.Push("MPuffMode3" ; 250
 	, "StickerStackHive"
 	, "StickerStackCub"
 	, "QuestBoostCheck"
-	, "MConvertFullBagHarvest")
+	, "MConvertFullBagHarvest"
+	, "PlanterHarvestNow1"
+	, "PlanterHarvestNow2"
+	, "PlanterHarvestNow3")

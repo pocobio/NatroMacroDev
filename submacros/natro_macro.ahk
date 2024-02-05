@@ -734,9 +734,6 @@ config["Planters"] := {"LastComfortingField":"None"
 	, "MPlanterHold1":0
 	, "MPlanterHold2":0
 	, "MPlanterHold3":0
-	, "MPlanterRelease1":0
-	, "MPlanterRelease2":0
-	, "MPlanterRelease3":0
 	, "MPlanterSmoking1":0
 	, "MPlanterSmoking2":0
 	, "MPlanterSmoking3":0
@@ -745,6 +742,9 @@ config["Planters"] := {"LastComfortingField":"None"
 	, "MPuffMode2":0
 	, "MPuffMode3":0
 	, "MConvertFullBagHarvest":0
+	, "PlanterHarvestNow1":0
+	, "PlanterHarvestNow2":0
+	, "PlanterHarvestNow3":0
 	, "LastPlanterGatherSlot":3
 	, "PlanterName1":"None"
 	, "PlanterName2":"None"
@@ -3105,15 +3105,15 @@ mp_Planter() {
 			If (!MSlot%A_Index%Cycle1Field)
 				Continue
 			IniRead, PlanterField%A_Index%, settings\nm_config.ini, planters, PlanterField%A_Index%
-			IniRead, MPlanterRelease%A_Index%, settings\nm_config.ini, planters, MPlanterRelease%A_Index%
+			IniRead, PlanterHarvestNow%A_Index%, settings\nm_config.ini, planters, PlanterHarvestNow%A_Index%
 			IniRead, MPlanterSmoking%A_Index%, settings\nm_config.ini, planters, MPlanterSmoking%A_Index%
 			; reset Release variable to 0 if planter slot empty
 			If (PlanterField%A_Index% = "None") {
-				MPlanterRelease%A_Index% := 0
-				IniWrite, % MPlanterRelease%A_Index%, settings\nm_config.ini, Planters, MPlanterRelease%A_Index%
+				PlanterHarvestNow%A_Index% := 0
+				IniWrite, % PlanterHarvestNow%A_Index%, settings\nm_config.ini, Planters, PlanterHarvestNow%A_Index%
 			}
-			; reset Hold and Smoking variables to 0 if planter slot empty, disable auto harvest no longer selected, or user has set to Release with remote control
-			If ((!MPuffModeA) || (!MPuffMode%A_Index%) || (PlanterField%A_Index% = "None")  || (MPlanterRelease%A_Index%)) {
+			; reset Hold and Smoking variables to 0 if planter slot empty, disable auto harvest no longer selected, or user has set to Harvest Now with remote control
+			If ((!MPuffModeA) || (!MPuffMode%A_Index%) || (PlanterField%A_Index% = "None")  || (PlanterHarvestNow%A_Index%)) {
 				MPlanterHold%A_Index% := 0
 				IniWrite, % MPlanterHold%A_Index%, settings\nm_config.ini, Planters, MPlanterHold%A_Index%
 				MPlanterSmoking%A_Index% := 0
@@ -3428,7 +3428,7 @@ mp_HarvestPlanter(PlanterIndex) {
 
 	nm_setStatus("Traveling", MPlanterName . " (" . MFieldName . ")")
 	nm_gotoPlanter(MFieldName)
-	if ((!MPuffModeA) || (!MPuffMode%PlanterIndex%) || (MPlanterRelease%PlanterIndex%))
+	if ((!MPuffModeA) || (!MPuffMode%PlanterIndex%) || (PlanterHarvestNow%PlanterIndex%))
 		nm_setStatus("Collecting", (MPlanterName . " (" . MFieldName . ")"))
 	else
 		nm_setStatus("Checking", (MPlanterName . " (" . MFieldName . ")"))
@@ -3448,8 +3448,8 @@ mp_HarvestPlanter(PlanterIndex) {
 			nm_setStatus("Found", MPlanterName . ". Clearing Data.")
 
 			;reset disable auto harvest values if phantom planter
-			MPlanterRelease%PlanterIndex% := 0
-			IniWrite, % MPlanterRelease%PlanterIndex%, settings\nm_config.ini, Planters, MPlanterRelease%PlanterIndex%
+			PlanterHarvestNow%PlanterIndex% := 0
+			IniWrite, % PlanterHarvestNow%PlanterIndex%, settings\nm_config.ini, Planters, PlanterHarvestNow%PlanterIndex%
 			MPlanterSmoking%PlanterIndex% := 0
 			IniWrite, % MPlanterSmoking%PlanterIndex%, settings\nm_config.ini, Planters, MPlanterSmoking%PlanterIndex%
 
@@ -3479,7 +3479,7 @@ mp_HarvestPlanter(PlanterIndex) {
 
 		return 1
 	}
-	else if ((MPuffModeA = 1) && (MPuffMode%PlanterIndex% = 1) && (MPlanterRelease%PlanterIndex% != 1)) {
+	else if ((MPuffModeA = 1) && (MPuffMode%PlanterIndex% = 1) && (PlanterHarvestNow%PlanterIndex% != 1)) {
 		; screenshot and set to hold instead of harvest, if auto harvest is disabled for the slot, and the user hasn't selected to release it by remote control
 		Sleep, 200 ; wait for game to update frame
 		nm_setStatus("Holding", (MPlanterName . " (" . MFieldName . ")"))
@@ -3513,7 +3513,7 @@ mp_HarvestPlanter(PlanterIndex) {
 
 		Sleep, 50 ; wait for game to update frame
 		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " hwnd)
-		if (PlanterHarvestFull%PlanterIndex% == "Full") {
+		if ((PlanterHarvestFull%PlanterIndex% == "Full") && !PlanterHarvestNow%PlanterIndex%) {
 			loop 3 {
 				pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//2-250 "|" windowY+windowHeight//2-52 "|500|150")
 				if (Gdip_ImageSearch(pBMScreen, bitmaps["no"], pos, , , , , 2, , 3) = 1) {
@@ -3540,6 +3540,8 @@ mp_HarvestPlanter(PlanterIndex) {
 					sleep 100
 					Gdip_DisposeImage(pBMScreen)
 					MouseMove, windowX+350, windowY+offsetY+100
+					If PlanterHarvestNow%PlanterIndex%
+						IniWrite, % 0, settings\nm_config.ini, Planters, PlanterHarvestNow%PlanterIndex%
 					break
 				}
 				Gdip_DisposeImage(pBMScreen)
@@ -3547,8 +3549,8 @@ mp_HarvestPlanter(PlanterIndex) {
 			}
 		}
 		
-		MPlanterRelease%PlanterIndex% := 0
-		IniWrite, % MPlanterRelease%PlanterIndex%, settings\nm_config.ini, Planters, MPlanterRelease%PlanterIndex%
+		PlanterHarvestNow%PlanterIndex% := 0
+		IniWrite, % PlanterHarvestNow%PlanterIndex%, settings\nm_config.ini, Planters, PlanterHarvestNow%PlanterIndex%
 		MPlanterSmoking%PlanterIndex% := 0
 		IniWrite, % MPlanterSmoking%PlanterIndex%, settings\nm_config.ini, Planters, MPlanterSmoking%PlanterIndex%
 
@@ -8443,7 +8445,7 @@ nm_MPlanterGatherHelp(){ ; gather in planter field information for manual plante
 	msgbox, 0x40000, Gather in planter field, DESCRIPTION:`n`nGather in planter field will enable you to gather only in the fields where planters are placed, instead of the fields selected in your gather tab. You can choose which planter slots you wish to gather in. If you choose more than one planter slot to gather in, the macro will rotate between each selected slot. If there are no slots available for planter gather (none selected, none with planters, or all 'holding' if 'disable auto harvest' mode is also selected), the macro will revert to gathering in the fields specified in the gather tab.
 }
 nm_MPuffModeHelp(){ ; disable auto harvest information for manual planters
-	msgbox, 0x40000, Disable auto harvest, DESCRIPTION:`n`nThis option is designed for users trying to grow smoking planters for puffshrooms. Enabling it for a planter slot will cause the macro NOT to harvest the planter. Instead, it will 'hold' the planter until you harvest and clear it either manually or through remote control. This allows you to check whether it is smoking before harvesting.`n`nTo use this feature:`n- Choose which slots to disable auto harvest for, depending on how many planters you wish to use for puffshrooms versus loot or nectar. `n- If you have set up a Discord webhook and would like a ping and screenshot of the planter when full grown, select Planter Progress in Natro Status tab > Change Discord Settings.`n- When ready, either: harvest manually in game, clear the planter in the Planter Timers pop-up (F5), and move to next cycle by pressing + in the planter tab, or do nothing if the planter is smoking and you wish to keep holding it.`n- If you turn off 'Disable Auto Harvest' or switch to Planters Plus mode, the macro will harvest any planters marked holding or smoking.`n`nAdvanced options:`nIf you have set up remote control, after receiving a ping you can also optionally set your planter to smoking to help you keep track, or release from hold and plant next using these commands:`n?planter smoking [1][2][3]`n?planter release [1][2][3]`nSee these planter commands and your planter status using ?planter`n`nSee our Discord server for more details on how to set up and use webhook or remote control!
+	msgbox, 0x40000, Disable auto harvest, DESCRIPTION:`n`nThis option is designed for users trying to grow smoking planters for puffshrooms. Enabling it for a planter slot will cause the macro NOT to harvest the planter. Instead, it will 'hold' the planter until you harvest and clear it either manually or through remote control. This allows you to check whether it is smoking before harvesting.`n`nTo use this feature:`n- Choose which slots to disable auto harvest for, depending on how many planters you wish to use for puffshrooms versus loot or nectar. `n- If you have set up a Discord webhook and would like a ping and screenshot of the planter when full grown, select Planter Progress in Natro Status tab > Change Discord Settings.`n- When ready, either: harvest manually in game, clear the planter in the Planter Timers pop-up (F5), and move to next cycle by pressing + in the planter tab, or do nothing if the planter is smoking and you wish to keep holding it.`n- If you turn off 'Disable Auto Harvest' or switch to Planters Plus mode, the macro will harvest any planters marked holding or smoking.`n`nAdvanced options:`nIf you have set up remote control, after receiving a ping you can also optionally set your planter to smoking to help you keep track, or release from hold and plant next using these commands:`n?planter smoking [1][2][3]`n?planter harvestnow [1][2][3]`nSee these planter commands and your planter status using ?planter`n`nSee our Discord server for more details on how to set up and use webhook or remote control!
 }
 nm_ReconnectTimeHelp(){
 	global ReconnectHour, ReconnectMin, ReconnectInterval
@@ -20359,7 +20361,6 @@ ba_planter(){
 	global SunflowerFieldCheck
 	global VBState
 	global MondoBuffCheck, PMondoGuid, LastGuid, MondoAction, LastMondoBuff
-	global MPlanterRelease1, MPlanterRelease2, MPlanterRelease3
 	global MPlanterHold1, MPlanterHold2, MPlanterHold3
 	global MPlanterSmoking1, MPlanterSmoking2, MPlanterSmoking3
 	loop, 3 {
@@ -20370,8 +20371,6 @@ ba_planter(){
 	IniRead, PlanterEstPercent%A_Index%, settings\nm_config.ini, Planters, PlanterEstPercent%A_Index%
 	;reset manual planter disable auto harvest variables to 0
 	if (PlanterMode = 2) {
-	MPlanterRelease%A_Index% := 0
-	IniWrite, % MPlanterRelease%A_Index%, settings\nm_config.ini, Planters, MPlanterRelease%A_Index%
 	MPlanterHold%A_Index% := 0
 	IniWrite, % MPlanterHold%A_Index%, settings\nm_config.ini, Planters, MPlanterHold%A_Index%
 	MPlanterSmoking%A_Index% := 0
@@ -21366,7 +21365,7 @@ ba_placePlanter(fieldName, planter, planterNum, atField:=0){
 	return 1
 }
 ba_harvestPlanter(planterNum){
-	global PlanterName1, PlanterName2, PlanterName3, PlanterField1, PlanterField2, PlanterField3, PlanterHarvestTime1, PlanterHarvestTime2, PlanterHarvestTime3, PlanterNectar1, PlanterNectar2, PlanterNectar3, PlanterEstPercent1, PlanterEstPercent2, PlanterEstPercent3, BackKey, RightKey, objective, TotalPlantersCollected, SessionPlantersCollected, HarvestFullGrown, ConvertFullBagHarvest, GatherPlanterLoot, BackpackPercent, bitmaps, SC_E, HiveBees
+	global PlanterName1, PlanterName2, PlanterName3, PlanterField1, PlanterField2, PlanterField3, PlanterHarvestTime1, PlanterHarvestTime2, PlanterHarvestTime3, PlanterNectar1, PlanterNectar2, PlanterNectar3, PlanterEstPercent1, PlanterEstPercent2, PlanterEstPercent3, BackKey, RightKey, objective, TotalPlantersCollected, SessionPlantersCollected, HarvestFullGrown, ConvertFullBagHarvest, GatherPlanterLoot, BackpackPercent, bitmaps, SC_E, HiveBees, PlanterHarvestNow1, PlanterHarvestNow2, PlanterHarvestNow3
 
 	if(CurrentAction!="Planters"){
 		PreviousAction:=CurrentAction
@@ -21438,7 +21437,7 @@ ba_harvestPlanter(planterNum){
 
 		Sleep, 50 ; wait for game to update frame
 		WinGetClientPos(windowX, windowY, windowWidth, windowHeight, "ahk_id " hwnd)
-		if (HarvestFullGrown = 1) {
+		if ((HarvestFullGrown = 1) && !PlanterHarvestNow%planterNum%) {
 			loop 3 {
 				pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//2-250 "|" windowY+windowHeight//2-52 "|500|150")
 				if (Gdip_ImageSearch(pBMScreen, bitmaps["no"], pos, , , , , 2, , 3) = 1) {
@@ -21464,6 +21463,8 @@ ba_harvestPlanter(planterNum){
 					sleep 100
 					MouseMove, windowX+350, windowY+offsetY+100
 					Gdip_DisposeImage(pBMScreen)
+					If PlanterHarvestNow%planterNum%
+						IniWrite, % 0, settings\nm_config.ini, Planters, PlanterHarvestNow%planterNum%
 					break
 				}
 				Gdip_DisposeImage(pBMScreen)
