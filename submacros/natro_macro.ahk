@@ -2853,8 +2853,8 @@ Loop, 3 {
 
 Gui, Add, Text, % "x366 y65 +BackgroundTrans Section +center vMCurrentCycle" (PlanterMode == 1 ? "" : " Hidden"), Current`nPlanter`nCycle
 Loop, 3 {
-	Gui, Add, Text, % ((A_Index = 1) ? "x415 y63" : "x415 ys+16") "w200 +BackgroundTrans Section" (PlanterMode == 1 ? "" : " Hidden"), % "Slot " A_Index ": " 
-	Gui, Add, Text, % ((A_Index = 1) ? "x469 y63" : "x469 ys") "w200 +BackgroundTrans Section vMSlot" A_Index "CycleText" (PlanterMode == 1 ? "" : " Hidden"), % PlanterManualCycle%A_Index%
+	Gui, Add, Text, % ((A_Index = 1) ? "x415 y63" : "x415 ys+16") "w200 +BackgroundTrans Section vmSlot" A_Index "CycleText" (PlanterMode == 1 ? "" : " Hidden"), % "Slot " A_Index ": " 
+	Gui, Add, Text, % ((A_Index = 1) ? "x469 y63" : "x469 ys") "w200 +BackgroundTrans Section vMSlot" A_Index "CycleNo" (PlanterMode == 1 ? "" : " Hidden"), % PlanterManualCycle%A_Index%
 	Gui, Add, Button, % "x455 ys w11 h14 +Center vMSlot" A_Index "Left gmp_Slot" A_Index "ChangeLeft Disabled" (PlanterMode == 1 ? "" : " Hidden"), <
 	Gui, Add, Button, % "x477 ys w11 h14 +Center vMSlot" A_Index "Right gmp_Slot" A_Index "ChangeRight Disabled" (PlanterMode == 1 ? "" : " Hidden"), >
 }
@@ -3047,7 +3047,7 @@ mp_UpdateCycles() {
 
 		GuiControl, % (PlanterManualCycle%i% != 1 ? "Enable" : "Disable"), MSlot%i%Left
 		GuiControl, % (PlanterManualCycle%i% < MSlot%i%MaxCycle ? "Enable" : "Disable"), MSlot%i%Right
-		GuiControl,, MSlot%i%CycleText, % PlanterManualCycle%i%
+		GuiControl,, MSlot%i%CycleNo, % PlanterManualCycle%i%
 	}
 }
 
@@ -20035,7 +20035,7 @@ ba_planterSwitch(){
 	global
 	static PlantersPlusControls := ["N1Priority","N2Priority","N3Priority","N4Priority","N5Priority","N1MinPercent","N2MinPercent","N3MinPercent","N4MinPercent","N5MinPercent","N1MinPercentUpDown","N2MinPercentUpDown","N3MinPercentUpDown","N4MinPercentUpDown","N5MinPercentUpDown","DandelionFieldCheck","SunflowerFieldCheck","MushroomFieldCheck","BlueFlowerFieldCheck","CloverFieldCheck","SpiderFieldCheck","StrawberryFieldCheck","BambooFieldCheck","PineappleFieldCheck","StumpFieldCheck","PumpkinFieldCheck","PineTreeFieldCheck","RoseFieldCheck","MountainTopFieldCheck","CactusFieldCheck","CoconutFieldCheck","PepperFieldCheck","Text1","Text2","Text3","Text4","Text5","TextLine1","TextLine2","TextLine3","TextLine4","TextLine5","TextLine6","TextLine7","TextZone1","TextZone2","TextZone3","TextZone4","TextZone5","TextZone6","NPreset","TextPresets","TextNp","TextMin","PlasticPlanterCheck","CandyPlanterCheck","BlueClayPlanterCheck","RedClayPlanterCheck","TackyPlanterCheck","PesticidePlanterCheck","HeatTreatedPlanterCheck","HydroponicPlanterCheck","PetalPlanterCheck","PlanterOfPlentyCheck","PaperPlanterCheck","TicketPlanterCheck","TextHarvest","HarvestFullGrown","gotoPlanterField","gatherFieldSipping","TextHours","TextMax","MaxAllowedPlanters","MaxAllowedPlantersText","TextAllowedPlanters","TextAllowedFields","TimersButton","AutomaticHarvestInterval","ConvertFullBagHarvest","GatherPlanterLoot","TextBox1"]
 	, PlantersPlusControlsH := ["hNPLeft","hNPRight","hNP1Left","hNP1Right","hNP2Left","hNP2Right","hNP3Left","hNP3Right","hNP4Left","hNP4Right","hNP5Left","hNP5Right"]
-	, ManualPlantersControls := ["MHeader1Text","MHeader2Text","MHeader3Text","MSlot1PlanterText","MSlot1FieldText","MSlot1SettingsText","MSlot1SeparatorLine","MSlot2PlanterText","MSlot2FieldText","MSlot2SettingsText","MSlot2SeparatorLine","MSlot3PlanterText","MSlot3FieldText","MSlot3SettingsText","MSectionSeparatorLine","MSliderSeparatorLine","MSlot1CycleText","MSlot1LocationText","MSlot1Left","MSlot1ChangeText","MSlot1Right","MSlot2CycleText","MSlot2LocationText","MSlot2Left","MSlot2ChangeText","MSlot2Right","MSlot3CycleText","MSlot3LocationText","MSlot3Left","MSlot3ChangeText","MSlot3Right","MCurrentCycle","MHarvestText","MHarvestInterval","MPageSeparatorLine","MPageLeft","MPageNumberText","MPageRight", "MPuffModeSeparatorLine", "MPuffModeHelp", "MPuffModeText", "MPuffModeA", "MPuffMode1", "MPuffMode2", "MPuffMode3", "MGatherSeparatorLine", "MPlanterGatherHelp", "MPlanterGatherText", "MPlanterGatherA", "MPlanterGather1", "MPlanterGather2", "MPlanterGather3", "MConvertFullBagHarvest"]
+	, ManualPlantersControls := ["MHeader1Text","MHeader2Text","MHeader3Text","MSlot1PlanterText","MSlot1FieldText","MSlot1SettingsText","MSlot1SeparatorLine","MSlot2PlanterText","MSlot2FieldText","MSlot2SettingsText","MSlot2SeparatorLine","MSlot3PlanterText","MSlot3FieldText","MSlot3SettingsText","MSectionSeparatorLine","MSliderSeparatorLine","MSlot1CycleText","MSlot1CycleNo","MSlot1LocationText","MSlot1Left","MSlot1ChangeText","MSlot1Right","MSlot2CycleText","MSlot2CycleNo","MSlot2LocationText","MSlot2Left","MSlot2ChangeText","MSlot2Right","MSlot3CycleText","MSlot3CycleNo","MSlot3LocationText","MSlot3Left","MSlot3ChangeText","MSlot3Right","MCurrentCycle","MHarvestText","MHarvestInterval","MPageSeparatorLine","MPageLeft","MPageNumberText","MPageRight", "MPuffModeSeparatorLine", "MPuffModeHelp", "MPuffModeText", "MPuffModeA", "MPuffMode1", "MPuffMode2", "MPuffMode3", "MGatherSeparatorLine", "MPlanterGatherHelp", "MPlanterGatherText", "MPlanterGatherA", "MPlanterGather1", "MPlanterGather2", "MPlanterGather3", "MConvertFullBagHarvest"]
 	, ManualPlantersControlsH := ["hMHILeft","hMHIRight"]
 	, ManualPlantersOptions := ["Planter","Field","Glitter","AutoFull"]
 	local i, c, k, v, Prev_DetectHiddenWindows, Prev_TitleMatchMode
