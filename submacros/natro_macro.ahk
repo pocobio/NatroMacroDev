@@ -20308,7 +20308,7 @@ start(*){
 	MainGui["StartButton"].Enabled := 0
 	Hotkey StartHotkey, "Off"
 	nm_setStatus("Begin", "Macro")
-	Sleep 100
+	local ForceStart := (A_Args.Has(1) && (A_Args[1] = 1))
 	;Auto Field Boost WARNING @ start
 	if(AutoFieldBoostActive){
 		if(AFBDiceEnable)
@@ -20325,7 +20325,7 @@ start(*){
 				futureGlitter:="ALL"
 		else
 			futureGlitter:="None"
-		if (A_Args.Has(1) && (A_Args[1] != 1)) {
+		if !ForceStart {
 			if (MsgBox(
 			(
 			"Automatic Field Boost is ACTIVATED.
@@ -20340,36 +20340,38 @@ start(*){
 				return
 		}
 	}
-	;Field drift compensation warning
-	Loop 3 {
-		;if gathering in a field with FDC on and without supreme set in settings, warn user
-		if (FDCWarn = 1 && (A_Args.Has(1) && (A_Args[1] != 1)) && FieldName%A_Index% != "None" && FieldName%A_Index% && FieldDriftCheck%A_Index% && SprinklerType != "Supreme") {
-			MsgBox
-			(
-			"You have Field Drift Compensation enabled for Gathering Field " A_Index ", however you do not have supreme saturator as your sprinkler type set in settings.
-			Please note that Field Drift Compensation requires you to own the Supreme saturator, as it searches for the blue pixel."
-			), "Field Drift Compensation", 0x1040 " T30"
-			if (MsgBox("Would you like to disable this warning for the future?", "Field Drift Compensation", 0x1124 " T30") = "Yes")
-				IniWrite (FDCWarn := 0), "settings\nm_config.ini", "Settings", "FDCWarn"
-			break
+	if !ForceStart {
+		;Field drift compensation warning
+		Loop 3 {
+			;if gathering in a field with FDC on and without supreme set in settings, warn user
+			if (FDCWarn = 1 && FieldName%A_Index% != "None" && FieldName%A_Index% && FieldDriftCheck%A_Index% && SprinklerType != "Supreme") {
+				MsgBox
+				(
+				"You have Field Drift Compensation enabled for Gathering Field " A_Index ", however you do not have supreme saturator as your sprinkler type set in settings.
+				Please note that Field Drift Compensation requires you to own the Supreme saturator, as it searches for the blue pixel."
+				), "Field Drift Compensation", 0x1040 " T30"
+				if (MsgBox("Would you like to disable this warning for the future?", "Field Drift Compensation", 0x1124 " T30") = "Yes")
+					IniWrite (FDCWarn := 0), "settings\nm_config.ini", "Settings", "FDCWarn"
+				break
+			}
 		}
-	}
-	;Sticker Warning
-	if ((StickerStackCheck = 1) && InStr(StickerStackItem, "Sticker")) { ;Warns user about stickers
-		msgbox
-		(
-		"You have enabled the Sticker option for Sticker Stack!
-		Consider trading all of your valuable stickers to alternative account, to ensure that you do not lose any valuable stickers."
-		(((StickerStackHive + StickerStackCub > 0) &&
-		(
-		"
+		;Sticker Warning
+		if ((StickerStackCheck = 1) && InStr(StickerStackItem, "Sticker")) { ;Warns user about stickers
+			msgbox
+			(
+			"You have enabled the Sticker option for Sticker Stack!
+			Consider trading all of your valuable stickers to alternative account, to ensure that you do not lose any valuable stickers."
+			(((StickerStackHive + StickerStackCub > 0) &&
+			(
+			"
 
-		EXTRA WARNING!!
-		You have enabled the donation of:" ((StickerStackHive = 1) ? "`n- Hive Skins" : "") ((StickerStackCub = 1) ? "`n- Cub Skins" : "") "
-		Make sure this is correct because the macro WILL use them!"
-		)
-		) || "")
-		), "Sticker Stack", 0x1040 " T30"
+			EXTRA WARNING!!
+			You have enabled the donation of:" ((StickerStackHive = 1) ? "`n- Hive Skins" : "") ((StickerStackCub = 1) ? "`n- Cub Skins" : "") "
+			Make sure this is correct because the macro WILL use them!"
+			)
+			) || "")
+			), "Sticker Stack", 0x1040 " T30"
+		}
 	}
 	ActivateRoblox()
 	disconnectCheck()
