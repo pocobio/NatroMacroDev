@@ -8616,15 +8616,19 @@ nm_Start(){
 #Include "nm_InventorySearch.ahk"
 ;interrupts
 nm_MondoInterrupt() => (utc_min := FormatTime(A_NowUTC, "m"), now := nowUnix(),
-	((MondoBuffCheck = 1) && ((utc_min<14 && (now-LastMondoBuff)>960 && (MondoAction="Buff" || MondoAction="Kill"))
-		|| (utc_min<12 && (now-LastGuid)<60 && PMondoGuid && MondoAction="Guid")
-		|| (utc_min<=8 && (now-LastMondoBuff)>960 && PMondoGuid && MondoAction="Tag"))
+	((MondoBuffCheck = 1) && (utc_min<14 && (now-LastMondoBuff)>960 && MondoAction="Kill")
+		|| (!nm_GatherBoostInterrupt()
+			&& ((utc_min<14 && (now-LastMondoBuff)>960 && MondoAction="Buff")
+			|| (utc_min<12 && (now-LastGuid)<60 && PMondoGuid && MondoAction="Guid")
+			|| (utc_min<=8 && (now-LastMondoBuff)>960 && PMondoGuid && MondoAction="Tag"))
+		)
 	)
 )
 nm_BeesmasInterrupt() {
 	global BeesmasGatherInterruptCheck
 	now := nowUnix()
-	return ((beesmasActive = 1) && (BeesmasGatherInterruptCheck = 1) && ((StockingsCheck && (now-LastStockings)>3600)
+	return ((beesmasActive = 1) && (BeesmasGatherInterruptCheck = 1)
+		&& ((StockingsCheck && (now-LastStockings)>3600)
 		|| (FeastCheck && (now-LastFeast)>5400)
 		|| (RBPDelevelCheck && (now-LastRBPDelevel)>10800)
 		|| (GingerbreadCheck && (now-LastGingerbread)>7200)
@@ -13508,8 +13512,6 @@ nm_Mondo(){
 	global VBState
 	;mondo buff
 	global MondoBuffCheck, PMondoGuid, LastGuid, MondoAction, LastMondoBuff, PMondoGuidComplete, GatherFieldBoostedStart, LastGlitter
-	if nm_GatherBoostInterrupt()
-		return
 	if(VBState=1)
 		return
 	if nm_MondoInterrupt(){
@@ -13716,18 +13718,18 @@ nm_GoGather(){
 		, BlackQuestCheck, BrownQuestCheck, BuckoQuestCheck, RileyQuestCheck, PolarQuestCheck
 		, BlackQuestComplete, BrownQuestComplete, BuckoQuestComplete, RileyQuestComplete, PolarQuestComplete
 
+	;VICIOUS BEE
+	if (VBState = 1)
+		return
+	;MONDO
+	if nm_MondoInterrupt()
+		return
 	if !(nm_GatherBoostInterrupt()){
 		;BUGS GatherInterruptCheck
 		if nm_BugrunInterrupt()
 			return
 		;BEESMAS GatherInterruptCheck
 		if nm_BeesmasInterrupt()
-			return
-		;MONDO
-		if nm_MondoInterrupt()
-			return
-		;VICIOUS BEE
-		if (VBState = 1)
 			return
 	}
 	utc_min := FormatTime(A_NowUTC, "m")
