@@ -10747,6 +10747,8 @@ nm_MemoryMatch(MemoryMatchGame) {
 }
 nm_SolveMemoryMatch(MemoryMatchGame:="", PriorityItemOAC:=0) { ; PriorityItem can be set to a numeric value to prioritize certain bitmap. It will ignore all other pairs until it finds and claims PriorityItem if PriorityItem>0.
 
+	global MemoryMatchItems
+	global MicroConverterMatchIgnoreCheck, SunflowerSeedMatchIgnoreCheck, JellyBeanMatchIgnoreCheck, RoyalJellyMatchIgnoreCheck, TicketMatchIgnoreCheck, CyanTrimMatchIgnoreCheck, OilMatchIgnoreCheck, StrawberryMatchIgnoreCheck, CoconutMatchIgnoreCheck, TropicalDrinkMatchIgnoreCheck, RedExtractMatchIgnoreCheck, MagicBeanMatchIgnoreCheck, PineappleMatchIgnoreCheck, StarJellyMatchIgnoreCheck, EnzymeMatchIgnoreCheck, BlueExtractMatchIgnoreCheck, GumdropMatchIgnoreCheck, FieldDiceMatchIgnoreCheck, MoonCharmMatchIgnoreCheck, BlueberryMatchIgnoreCheck, GlitterMatchIgnoreCheck, StingerMatchIgnoreCheck, TreatMatchIgnoreCheck, GlueMatchIgnoreCheck, CloudVialMatchIgnoreCheck, PineappleMatchIgnoreCheck
 	; initialize variables
 	GetRobloxClientPos()
 	middleX := windowX+(windowWidth//2)
@@ -10773,7 +10775,6 @@ nm_SolveMemoryMatch(MemoryMatchGame:="", PriorityItemOAC:=0) { ; PriorityItem ca
 	}
 
 	StoreItemOAC := [], StoreItemOAC.Default := "", StoreItemOAC.Length := 20
-	StoreItemValOAC := [], StoreItemValOAC.Default := 0, StoreItemValOAC.Length := 20
 
 	GridOAC:= [] ;Define MM Tile Coordinates
 	Loop 5 {
@@ -10805,6 +10806,7 @@ nm_SolveMemoryMatch(MemoryMatchGame:="", PriorityItemOAC:=0) { ; PriorityItem ca
 			Break
 		}
 	}
+
 	Gdip_DisposeImage(pBMScreen)
 
 	Loop Chances { ; Numer of available Chances.
@@ -10819,16 +10821,9 @@ nm_SolveMemoryMatch(MemoryMatchGame:="", PriorityItemOAC:=0) { ; PriorityItem ca
 						if (i = j)
 							continue ; Skip self-comparison
 
-						Item1 := StoreitemValOAC[i]
-						Item2 := StoreitemValOAC[j]
-
 						; Check if either variable is Null or Priority
-						if(StoreitemOAC[i] = 0 || StoreitemOAC[j] = 0 || StoreitemOAC[i] = "" || StoreitemOAC[j] = "" || (PriorityClaimedOAC=0 && PriorityItemOAC>0 && (Item1!=PriorityItemOAC || Item2!=PriorityItemOAC)))
+						if(StoreitemOAC[i] = 0 || StoreitemOAC[j] = 0 || StoreitemOAC[i] = "" || StoreitemOAC[j] = "")						
 							continue ; Skip the comparison if either Item is Null or Not Priority
-
-						; Check variables are Priority
-						if(Item1 = PriorityItemOAC && Item2 = PriorityItemOAC)
-							PriorityClaimedOAC:=1
 
 						; Check if variables have the same value
 						if (Gdip_ImageSearch(StoreitemOAC[i], StoreitemOAC[j], , , , , , 10, , 2)=1) {
@@ -10853,7 +10848,6 @@ nm_SolveMemoryMatch(MemoryMatchGame:="", PriorityItemOAC:=0) { ; PriorityItem ca
 				if(PairFoundOAC=0) {
 					; Compare all other tiles to click 1
 					j:=Tile
-					Item1 := StoreitemValOAC[j]
 
 					loop Tiles {
 						i:=A_index
@@ -10861,15 +10855,9 @@ nm_SolveMemoryMatch(MemoryMatchGame:="", PriorityItemOAC:=0) { ; PriorityItem ca
 						if (i = Tile)
 							continue ; Skip self-comparison
 
-						Item2 := StoreitemValOAC[i]
-
 						; Check if either variable is Null or Priority
-						if (StoreitemOAC[i] = 0 || StoreitemOAC[j] = 0 || StoreitemOAC[i] = "" || StoreitemOAC[j] = "" || (PriorityClaimedOAC=0 && PriorityItemOAC>0 && (Item1!=PriorityItemOAC || Item2!=PriorityItemOAC)))
+						if(StoreitemOAC[i] = 0 || StoreitemOAC[j] = 0 || StoreitemOAC[i] = "" || StoreitemOAC[j] = "")
 							continue ; Skip the comparison if either Item is Null or Not Priority
-
-						; Check Items are Priority
-						if(Item1 = PriorityItemOAC && Item2 = PriorityItemOAC)
-							PriorityClaimedOAC:=1
 
 						; Check if Items are the same.
 						if (Gdip_ImageSearch(StoreitemOAC[j], StoreitemOAC[i], , , , , , 10, , 2)=1) {
@@ -10929,13 +10917,18 @@ nm_SolveMemoryMatch(MemoryMatchGame:="", PriorityItemOAC:=0) { ; PriorityItem ca
 				;path:=A_ScriptDir "\..\MMScreenshots\"
 				;Gdip_SaveBitmapToFile(StoreItemOAC[Tile], path "image" Tile ".png")
 
-				Loop 25 {
-					bitmap:="MM" . A_Index
-					if (Gdip_ImageSearch(StoreItemOAC[Tile], bitmaps[bitmap], , , , , , 10, , 2) = 1) {
-						StoreItemValOAC[Tile]:=A_Index
-						Break
+				for item in MemoryMatchItems {
+  					if %item%MatchIgnoreCheck {
+						loop 2 {
+							bitmap:="MM" . item . A_index
+							if (Gdip_ImageSearch(StoreItemOAC[Tile], bitmaps[bitmap], , , , , , 10, , 2) = 1) {
+								Gdip_DisposeImage(StoreitemOAC[Tile]), StoreitemOAC[Tile]:=0	;Non Priority
+								Break 2
+							}
+						}
 					}
 				}
+
 			}
 
 			if(A_Index=1) {
