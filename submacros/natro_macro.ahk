@@ -10624,7 +10624,7 @@ nm_MemoryMatch(MemoryMatchGame) {
 
 	static cooldowns := Map("Normal",7200, "Mega",14400, "Extreme",28800, "Night",28800, "Winter",14400)
 
-	if !(%MemoryMatchGame%MemoryMatchCheck && (nowUnix()-Last%MemoryMatchGame%MemoryMatch)>cooldowns["MemoryMatchGame"])
+	if !(%MemoryMatchGame%MemoryMatchCheck && (nowUnix()-Last%MemoryMatchGame%MemoryMatch)>cooldowns[MemoryMatchGame])
 		return
 
 	loop 2 {
