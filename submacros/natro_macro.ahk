@@ -238,7 +238,7 @@ nm_importPaths()
 		"gtb", ["blue", "mountain", "red"], ; go to (field) booster
 		"gtc", ["clock", "antpass", "robopass", "honeydis", "treatdis", "blueberrydis", "strawberrydis", "coconutdis", "gluedis", "royaljellydis", "blender", "windshrine", ; go to collect (machine)
 				"stockings", "wreath", "feast", "gingerbread", "snowmachine", "candles", "samovar", "lidart", "gummybeacon", "rbpdelevel", ; beesmas
-				"honeylb", "honeystorm", "stickerstack", "stickerprinter", "normalmm", "megamm", "nightmm", "extrememm"], ; other
+				"honeylb", "honeystorm", "stickerstack", "stickerprinter", "normalmm", "megamm", "nightmm", "extrememm", "wintermm"], ; other
 		"gtf", ["bamboo", "blueflower", "cactus", "clover", "coconut", "dandelion", "mountaintop", "mushroom", "pepper", "pinetree", "pineapple", "pumpkin",
 				"rose", "spider", "strawberry", "stump", "sunflower"], ; go to field
 		"gtp", ["bamboo", "blueflower", "cactus", "clover", "coconut", "dandelion", "mountaintop", "mushroom", "pepper", "pinetree", "pineapple", "pumpkin",
@@ -8764,7 +8764,8 @@ nm_BeesmasInterrupt() {
 		|| (CandlesCheck && (now-LastCandles)>14400)
 		|| (SamovarCheck && (now-LastSamovar)>21600)
 		|| (LidArtCheck && (now-LastLidArt)>28800)
-		|| (GummyBeaconCheck && (now-LastGummyBeacon)>28800))
+		|| (GummyBeaconCheck && (now-LastGummyBeacon)>28800)
+		|| (WinterMemoryMatchCheck && (now-LastWinterMemoryMatch)>14400))
 	)
 }
 nm_BugrunInterrupt() {
@@ -9670,6 +9671,7 @@ nm_Collect(){
 		nm_LidArt()
 		nm_GummyBeacon()
 		nm_RBPDelevel()
+		nm_MemoryMatch("Winter")
 	}
 
 	;MEMORY MATCH
