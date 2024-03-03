@@ -8668,7 +8668,7 @@ nm_testButton(*){
 	{
 		if (Test%A_Index%Check = 1)
 		{
-			if (SubStr(Test%A_Index%Path, -4) = ".ahk")
+			if (IsSet(Test%A_Index%Path) && (SubStr(Test%A_Index%Path, -4) = ".ahk"))
 				file := FileOpen(Test%A_Index%Path, "r"), Test%A_Index% := file.Read(), file.Close()
 			else
 			{
