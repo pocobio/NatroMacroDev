@@ -147,6 +147,11 @@ timers.machines.values[8] := {varname: "CoconutDis", name: "Coconut Dispenser", 
 timers.machines.values[9] := {varname: "GlueDis", name: "Glue Dispenser", cooldown: 79200, regex: "i)^glue"}
 timers.machines.values[10] := {varname: "RoyalJellyDis", name: "Royal Jelly Dispenser", cooldown: 79200, regex: "i)^(rj|royaljelly)"}
 timers.machines.values[11] := {varname: "RoboPass", name: "Robo Pass", cooldown: 79200, regex: "i)^robo(pass)?"}
+timers.machines.values[12] := {varname: "StickerPrinter", name: "Sticker Printer", cooldown: 3600, regex: "i)^sticker(printer)?"}
+timers.machines.values[13] := {varname: "NormalMemoryMatch", name: "Normal Memory Match", cooldown: 7200, regex: "i)^normal(mm|memorymatch)?"}
+timers.machines.values[14] := {varname: "MegaMemoryMatch", name: "Mega Memory Match", cooldown: 14400, regex: "i)^mega(mm|memorymatch)?"}
+timers.machines.values[15] := {varname: "NightMemoryMatch", name: "Night Memory Match", cooldown: 28800, regex: "i)^night(mm|memorymatch)?"}
+timers.machines.values[16] := {varname: "ExtremeMemoryMatch", name: "Extreme Memory Match", cooldown: 28800, regex: "i)^extreme(mm|memorymatch)?"}
 timers.beesmas.values[1] := {varname: "Wreath", name: "Honey Wreath", cooldown: 1800, regex: "i)^(honey)?wreath"}
 timers.beesmas.values[2] := {varname: "Stockings", name: "Stockings", cooldown: 3600, regex: "i)^stocking(s)?"}
 timers.beesmas.values[3] := {varname: "Feast", name: "Beesmas Feast", cooldown: 5400, regex: "i)^(beesmas)?feast"}
@@ -156,6 +161,7 @@ timers.beesmas.values[6] := {varname: "Candles", name: "Candles", cooldown: 1440
 timers.beesmas.values[7] := {varname: "Samovar", name: "Samovar", cooldown: 21600, regex: "i)^samovar"}
 timers.beesmas.values[8] := {varname: "LidArt", name: "Lid Art", cooldown: 28800, regex: "i)^lid(art)?"}
 timers.beesmas.values[9] := {varname: "GummyBeacon", name: "Gummy Beacon", cooldown: 28800, regex: "i)^(gummy)?beacon"}
+timers.beesmas.values[10] := {varname: "WinterMemoryMatch", name: "Winter Memory Match", cooldown: 14400, regex: "i)^winter(mm|memorymatch)?"}
 
 hBitmapsSBT := Map()
 #Include "%A_ScriptDir%\..\nm_image_assets\gui\blendershrine_bitmaps.ahk"

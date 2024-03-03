@@ -616,7 +616,10 @@ nm_importConfig()
 		, "TreatMatchIgnoreCheck", 0
 		, "GlueMatchIgnoreCheck", 0
 		, "CloudVialMatchIgnoreCheck", 0
-		, "PineappleMatchIgnoreCheck", 0)
+		, "PineappleMatchIgnoreCheck", 0
+		, "StickerPrinterCheck", 0
+		, "LastStickerPrinter", 1
+		, "StickerPrinterEgg", "Basic")
 
 	config["Shrine"] := Map("ShrineCheck", 0
 		, "LastShrine", 1
@@ -721,10 +724,7 @@ nm_importConfig()
 		, "StickerStackMode", 0
 		, "StickerStackTimer", 900
 		, "StickerStackHive", 0
-		, "StickerStackCub", 0
-		, "StickerPrinterCheck", 0
-		, "LastStickerPrinter", 1
-		, "StickerPrinterEgg", "Basic")
+		, "StickerStackCub", 0)
 
 	config["Quests"] := Map("QuestGatherMins", 5
 		, "QuestGatherReturnBy", "Walk"
@@ -5417,7 +5417,7 @@ nm_StickerPrinterCheck(*){
 	global
 	StickerPrinterCheck := MainGui["StickerPrinterCheck"].Value
 	MainGui["SPELeft"].Enabled := MainGui["SPERight"].Enabled := (StickerPrinterCheck = 1)
-	IniWrite StickerPrinterCheck, "settings\nm_config.ini", "Boost", "StickerPrinterCheck"
+	IniWrite StickerPrinterCheck, "settings\nm_config.ini", "Collect", "StickerPrinterCheck"
 }
 nm_StickerPrinterEgg(GuiCtrl, *){
 	global StickerPrinterEgg
@@ -5438,7 +5438,7 @@ nm_StickerPrinterEgg(GuiCtrl, *){
 	}
 
 	MainGui["StickerPrinterEgg"].Text := StickerPrinterEgg := val[(GuiCtrl.Name = "SPERight") ? (Mod(i, l) + 1) : (Mod(l + i - 2, l) + 1)]
-	IniWrite StickerPrinterEgg, "settings\nm_config.ini", "Boost", "StickerPrinterEgg"
+	IniWrite StickerPrinterEgg, "settings\nm_config.ini", "Collect", "StickerPrinterEgg"
 }
 nm_BoostChaserCheck(*){
 	global BoostChaserCheck, AutoFieldBoostActive
@@ -11160,7 +11160,7 @@ nm_StickerPrinter(){
 		}
 		if (StickerPrinterCheck = 1) {
 			LastStickerPrinter:=nowUnix()
-			IniWrite LastStickerPrinter, "settings\nm_config.ini", "Boost", "LastStickerPrinter"
+			IniWrite LastStickerPrinter, "settings\nm_config.ini", "Collect", "LastStickerPrinter"
 		}
 	}
 }
