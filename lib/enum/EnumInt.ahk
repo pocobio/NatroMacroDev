@@ -345,4 +345,5 @@
 	, "TreatMatchIgnoreCheck"
 	, "GlueMatchIgnoreCheck"
 	, "CloudVialMatchIgnoreCheck"
-	, "PineappleMatchIgnoreCheck"]
+	, "PineappleMatchIgnoreCheck"
+	, "CoconutBoosterCheck"]
