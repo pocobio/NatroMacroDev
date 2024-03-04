@@ -11521,8 +11521,13 @@ nm_toBooster(location){
 
 	if (success = 1)
 	{
-		Last%location%Boost:=nowUnix()
-		IniWrite Last%location%Boost, "settings\nm_config.ini", "Collect", "Last" location "Boost"
+		If (location = "coconut") {
+			LastCoconutDis:=nowUnix()
+			IniWrite LastCoconutDis, "settings\nm_config.ini", "Collect", "LastCoconutDis"
+		} else {
+			Last%location%Boost:=nowUnix()
+			IniWrite Last%location%Boost, "settings\nm_config.ini", "Collect", "Last" location "Boost"
+		}
 		nm_Move(2000*round(18/MoveSpeedNum, 2), (location = "blue") ? RightKey : BackKey)
 
 		Loop 10
@@ -11540,8 +11545,13 @@ nm_toBooster(location){
 	}
 	else
 	{
-		Last%location%Boost:=((location="coconut") ? nowUnix()-7200 : nowUnix()-3000)
-		IniWrite Last%location%Boost, "settings\nm_config.ini", "Collect", "Last" location "Boost"
+		If (location = "coconut") {
+			LastCoconutDis:=nowUnix()-7200
+			IniWrite LastCoconutDis, "settings\nm_config.ini", "Collect", "LastCoconutDis"
+		} else {
+			Last%location%Boost:=nowUnix()-3000
+			IniWrite Last%location%Boost, "settings\nm_config.ini", "Collect", "Last" location "Boost"
+		}
 	}
 }
 
