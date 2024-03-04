@@ -186,6 +186,14 @@ nm_dayOrNight(){
 			PostMessage 0x5555, 3, 0
 		}
 	}
+	;return if pollen text is not visible (darkened background)
+	pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//2 "|" windowY "|60|100")
+	if (Gdip_ImageSearch(pBMScreen, bitmaps["toppollen"], , , , , , 8) != 1) {
+		Gdip_DisposeImage(pBMScreen)
+		return
+	}
+	Gdip_DisposeImage(pBMScreen)
+
 	try
 		result := ImageSearch(&FoundX, &FoundY, windowX, windowY + windowHeight//2, windowX + windowWidth, windowY + windowHeight, "*5 nm_image_assets\grassD.png")
 	catch
