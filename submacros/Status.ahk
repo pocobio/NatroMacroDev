@@ -2212,8 +2212,24 @@ class discord
 			, "TXT", "text/plain"
 			, "INI", "text/plain")
 
-		if FileExist(filepath)
+		if (attr := FileExist(filepath))
 		{
+			SplitPath filepath := RTrim(filepath, "\/"), &file:=""
+			if (file && InStr(attr, "D"))
+			{
+				; attempt to zip folder to temp
+				try
+				{
+					RunWait 'powershell.exe -WindowStyle Hidden -Command Compress-Archive -Path "' filepath '\*" -DestinationPath "$env:TEMP\' file '.zip" -CompressionLevel Fastest -Force', , "Hide"
+					if !FileExist(filepath := A_Temp "\" file ".zip")
+						throw
+				}
+				catch
+				{
+					this.SendEmbed('The folder ``' StrReplace(StrReplace(filepath, "\", "\\"), '"', '\"') '`` could not be zipped!`nThis function is only supported on Windows 10 or higher.', 16711731, , , , replyID)
+					return -3
+				}
+			}
 			size := FileGetSize(filepath)
 			if (size > 26214076)
 			{
@@ -2234,6 +2250,10 @@ class discord
 		params.Push(Map("name","files[0]","filename",file,"content-type",MimeTypes.Has(ext) ? MimeTypes[ext] : "application/octet-stream","file",filepath))
 		this.CreateFormData(&postdata, &contentType, params)
 		this.SendMessageAPI(postdata, contentType)
+
+		; delete any temp file created
+		if (SubStr(filepath, 1, StrLen(A_Temp)) = A_Temp)
+			try FileDelete filepath
 	}
 
 	static SendImage(pBitmap, imgname:="image.png", replyID:=0)
