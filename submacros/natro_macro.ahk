@@ -278,61 +278,6 @@ nm_importConfig()
 	global
 	local config := Map() ; store default values, these are loaded initially
 
-	config["Gui"] := Map("dayOrNight", "Day"
-		, "PlanterMode", 0
-		, "nPreset", "Blue"
-		, "MaxAllowedPlanters", 3
-		, "n1priority", "Comforting"
-		, "n2priority", "Motivating"
-		, "n3priority", "Satisfying"
-		, "n4priority", "Refreshing"
-		, "n5priority", "Invigorating"
-		, "n1minPercent", 70
-		, "n2minPercent", 80
-		, "n3minPercent", 80
-		, "n4minPercent", 80
-		, "n5minPercent", 40
-		, "HarvestInterval", 2
-		, "AutomaticHarvestInterval", 0
-		, "HarvestFullGrown", 0
-		, "GotoPlanterField", 0
-		, "GatherFieldSipping", 0
-		, "ConvertFullBagHarvest", 0
-		, "GatherPlanterLoot", 1
-		, "PlasticPlanterCheck", 1
-		, "CandyPlanterCheck", 1
-		, "BlueClayPlanterCheck", 1
-		, "RedClayPlanterCheck", 1
-		, "TackyPlanterCheck", 1
-		, "PesticidePlanterCheck", 1
-		, "HeatTreatedPlanterCheck", 0
-		, "HydroponicPlanterCheck", 0
-		, "PetalPlanterCheck", 0
-		, "PaperPlanterCheck", 0
-		, "TicketPlanterCheck", 0
-		, "PlanterOfPlentyCheck", 0
-		, "BambooFieldCheck", 0
-		, "BlueFlowerFieldCheck", 1
-		, "CactusFieldCheck", 1
-		, "CloverFieldCheck", 1
-		, "CoconutFieldCheck", 0
-		, "DandelionFieldCheck", 1
-		, "MountainTopFieldCheck", 0
-		, "MushroomFieldCheck", 0
-		, "PepperFieldCheck", 1
-		, "PineTreeFieldCheck", 1
-		, "PineappleFieldCheck", 1
-		, "PumpkinFieldCheck", 0
-		, "RoseFieldCheck", 1
-		, "SpiderFieldCheck", 1
-		, "StrawberryFieldCheck", 1
-		, "StumpFieldCheck", 0
-		, "SunflowerFieldCheck", 1
-		, "TimerGuiTransparency", 0
-		, "TimerX", 150
-		, "TimerY", 150
-		, "TimersOpen", 0)
-
 	config["Settings"] := Map("GuiTheme", "MacLion3"
 		, "AlwaysOnTop", 0
 		, "MoveSpeedNum", 28
@@ -802,7 +747,61 @@ nm_importConfig()
 		, "PlanterHarvestFull3", ""
 		, "PlanterManualCycle1", 1
 		, "PlanterManualCycle2", 1
-		, "PlanterManualCycle3", 1)
+		, "PlanterManualCycle3", 1
+		, "dayOrNight", "Day"
+		, "PlanterMode", 0
+		, "nPreset", "Blue"
+		, "MaxAllowedPlanters", 3
+		, "n1priority", "Comforting"
+		, "n2priority", "Motivating"
+		, "n3priority", "Satisfying"
+		, "n4priority", "Refreshing"
+		, "n5priority", "Invigorating"
+		, "n1minPercent", 70
+		, "n2minPercent", 80
+		, "n3minPercent", 80
+		, "n4minPercent", 80
+		, "n5minPercent", 40
+		, "HarvestInterval", 2
+		, "AutomaticHarvestInterval", 0
+		, "HarvestFullGrown", 0
+		, "GotoPlanterField", 0
+		, "GatherFieldSipping", 0
+		, "ConvertFullBagHarvest", 0
+		, "GatherPlanterLoot", 1
+		, "PlasticPlanterCheck", 1
+		, "CandyPlanterCheck", 1
+		, "BlueClayPlanterCheck", 1
+		, "RedClayPlanterCheck", 1
+		, "TackyPlanterCheck", 1
+		, "PesticidePlanterCheck", 1
+		, "HeatTreatedPlanterCheck", 0
+		, "HydroponicPlanterCheck", 0
+		, "PetalPlanterCheck", 0
+		, "PaperPlanterCheck", 0
+		, "TicketPlanterCheck", 0
+		, "PlanterOfPlentyCheck", 0
+		, "BambooFieldCheck", 0
+		, "BlueFlowerFieldCheck", 1
+		, "CactusFieldCheck", 1
+		, "CloverFieldCheck", 1
+		, "CoconutFieldCheck", 0
+		, "DandelionFieldCheck", 1
+		, "MountainTopFieldCheck", 0
+		, "MushroomFieldCheck", 0
+		, "PepperFieldCheck", 1
+		, "PineTreeFieldCheck", 1
+		, "PineappleFieldCheck", 1
+		, "PumpkinFieldCheck", 0
+		, "RoseFieldCheck", 1
+		, "SpiderFieldCheck", 1
+		, "StrawberryFieldCheck", 1
+		, "StumpFieldCheck", 0
+		, "SunflowerFieldCheck", 1
+		, "TimerGuiTransparency", 0
+		, "TimerX", 150
+		, "TimerY", 150
+		, "TimersOpen", 0)
 
 	local k, v, i, j
 	for k,v in config ; load the default values as globals, will be overwritten if a new value exists when reading
@@ -3035,18 +3034,18 @@ MainGui.Add("Text", "x147 y27 w108 h20 +Center +BackgroundTrans vTextAllowedPlan
 MainGui.Add("Text", "x255 y43 w100 h20 +Center +BackgroundTrans vTextAllowedFields" hidden, "Allowed Fields")
 MainGui.Add("Text", "x147 y42 w108 h1 0x7 vTextLine5" hidden)
 
-(GuiCtrl := MainGui.Add("CheckBox", "x152 y45 vPlasticPlanterCheck Disabled Checked" PlasticPlanterCheck hidden, "Plastic")).Section := "Gui", GuiCtrl.OnEvent("Click", nm_saveConfig)
-(GuiCtrl := MainGui.Add("CheckBox", "xp yp+14 vCandyPlanterCheck Disabled Checked" CandyPlanterCheck hidden, "Candy")).Section := "Gui", GuiCtrl.OnEvent("Click", nm_saveConfig)
-(GuiCtrl := MainGui.Add("CheckBox", "xp yp+14 vBlueClayPlanterCheck Disabled Checked" BlueClayPlanterCheck hidden, "Blue Clay")).Section := "Gui", GuiCtrl.OnEvent("Click", nm_saveConfig)
-(GuiCtrl := MainGui.Add("CheckBox", "xp yp+14 vRedClayPlanterCheck Disabled Checked" RedClayPlanterCheck hidden, "Red Clay")).Section := "Gui", GuiCtrl.OnEvent("Click", nm_saveConfig)
-(GuiCtrl := MainGui.Add("CheckBox", "xp yp+14 vTackyPlanterCheck Disabled Checked" TackyPlanterCheck hidden, "Tacky")).Section := "Gui", GuiCtrl.OnEvent("Click", nm_saveConfig)
-(GuiCtrl := MainGui.Add("CheckBox", "xp yp+14 vPesticidePlanterCheck Disabled Checked" PesticidePlanterCheck hidden, "Pesticide")).Section := "Gui", GuiCtrl.OnEvent("Click", nm_saveConfig)
-(GuiCtrl := MainGui.Add("CheckBox", "xp yp+14 vHeatTreatedPlanterCheck Disabled Checked" HeatTreatedPlanterCheck hidden, "Heat-Treated")).Section := "Gui", GuiCtrl.OnEvent("Click", nm_saveConfig)
-(GuiCtrl := MainGui.Add("CheckBox", "xp yp+14 vHydroponicPlanterCheck Disabled Checked" HydroponicPlanterCheck hidden, "Hydroponic")).Section := "Gui", GuiCtrl.OnEvent("Click", nm_saveConfig)
-(GuiCtrl := MainGui.Add("CheckBox", "xp yp+14 vPetalPlanterCheck Disabled Checked" PetalPlanterCheck hidden, "Petal")).Section := "Gui", GuiCtrl.OnEvent("Click", nm_saveConfig)
-(GuiCtrl := MainGui.Add("CheckBox", "xp yp+14 w100 h13 vPlanterOfPlentyCheck Disabled Checked" PlanterOfPlentyCheck hidden, "Planter of Plenty")).Section := "Gui", GuiCtrl.OnEvent("Click", nm_saveConfig)
-(GuiCtrl := MainGui.Add("CheckBox", "xp yp+14 vPaperPlanterCheck Disabled Checked" PaperPlanterCheck hidden, "Paper")).Section := "Gui", GuiCtrl.OnEvent("Click", nm_saveConfig)
-(GuiCtrl := MainGui.Add("CheckBox", "xp yp+14 vTicketPlanterCheck Disabled Checked" TicketPlanterCheck hidden, "Ticket")).Section := "Gui", GuiCtrl.OnEvent("Click", nm_saveConfig)
+(GuiCtrl := MainGui.Add("CheckBox", "x152 y45 vPlasticPlanterCheck Disabled Checked" PlasticPlanterCheck hidden, "Plastic")).Section := "Planters", GuiCtrl.OnEvent("Click", nm_saveConfig)
+(GuiCtrl := MainGui.Add("CheckBox", "xp yp+14 vCandyPlanterCheck Disabled Checked" CandyPlanterCheck hidden, "Candy")).Section := "Planters", GuiCtrl.OnEvent("Click", nm_saveConfig)
+(GuiCtrl := MainGui.Add("CheckBox", "xp yp+14 vBlueClayPlanterCheck Disabled Checked" BlueClayPlanterCheck hidden, "Blue Clay")).Section := "Planters", GuiCtrl.OnEvent("Click", nm_saveConfig)
+(GuiCtrl := MainGui.Add("CheckBox", "xp yp+14 vRedClayPlanterCheck Disabled Checked" RedClayPlanterCheck hidden, "Red Clay")).Section := "Planters", GuiCtrl.OnEvent("Click", nm_saveConfig)
+(GuiCtrl := MainGui.Add("CheckBox", "xp yp+14 vTackyPlanterCheck Disabled Checked" TackyPlanterCheck hidden, "Tacky")).Section := "Planters", GuiCtrl.OnEvent("Click", nm_saveConfig)
+(GuiCtrl := MainGui.Add("CheckBox", "xp yp+14 vPesticidePlanterCheck Disabled Checked" PesticidePlanterCheck hidden, "Pesticide")).Section := "Planters", GuiCtrl.OnEvent("Click", nm_saveConfig)
+(GuiCtrl := MainGui.Add("CheckBox", "xp yp+14 vHeatTreatedPlanterCheck Disabled Checked" HeatTreatedPlanterCheck hidden, "Heat-Treated")).Section := "Planters", GuiCtrl.OnEvent("Click", nm_saveConfig)
+(GuiCtrl := MainGui.Add("CheckBox", "xp yp+14 vHydroponicPlanterCheck Disabled Checked" HydroponicPlanterCheck hidden, "Hydroponic")).Section := "Planters", GuiCtrl.OnEvent("Click", nm_saveConfig)
+(GuiCtrl := MainGui.Add("CheckBox", "xp yp+14 vPetalPlanterCheck Disabled Checked" PetalPlanterCheck hidden, "Petal")).Section := "Planters", GuiCtrl.OnEvent("Click", nm_saveConfig)
+(GuiCtrl := MainGui.Add("CheckBox", "xp yp+14 w100 h13 vPlanterOfPlentyCheck Disabled Checked" PlanterOfPlentyCheck hidden, "Planter of Plenty")).Section := "Planters", GuiCtrl.OnEvent("Click", nm_saveConfig)
+(GuiCtrl := MainGui.Add("CheckBox", "xp yp+14 vPaperPlanterCheck Disabled Checked" PaperPlanterCheck hidden, "Paper")).Section := "Planters", GuiCtrl.OnEvent("Click", nm_saveConfig)
+(GuiCtrl := MainGui.Add("CheckBox", "xp yp+14 vTicketPlanterCheck Disabled Checked" TicketPlanterCheck hidden, "Ticket")).Section := "Planters", GuiCtrl.OnEvent("Click", nm_saveConfig)
 
 MainGui.Add("Text", "x155 y217 w80 h20 +BackgroundTrans vTextMax" hidden, "Max Planters")
 MainGui.Add("Text", "x222 y217 w24 vMaxAllowedPlantersText" hidden)
@@ -3063,27 +3062,27 @@ MainGui.Add("Text", "x375 y128 w100 h20 +Center +BackgroundTrans vTextZone5" hid
 MainGui.Add("Text", "x375 y153 w100 h20 +Center +BackgroundTrans vTextZone6" hidden, "-- 35 bee zone --")
 
 MainGui.SetFont("s8 cDefault Norm", "Tahoma")
-(GuiCtrl := MainGui.Add("CheckBox", "x258 y72 vDandelionFieldCheck Disabled Checked" DandelionFieldCheck hidden, "Dandelion (COM)")).Section := "Gui", GuiCtrl.OnEvent("Click", nm_saveConfig)
-(GuiCtrl := MainGui.Add("CheckBox", "xp y86 vSunflowerFieldCheck Disabled Checked" SunflowerFieldCheck hidden, "Sunflower (SAT)")).Section := "Gui", GuiCtrl.OnEvent("Click", nm_saveConfig)
-(GuiCtrl := MainGui.Add("CheckBox", "xp y100 vMushroomFieldCheck Disabled Checked" MushroomFieldCheck hidden, "Mushroom (MOT)")).Section := "Gui", GuiCtrl.OnEvent("Click", nm_saveConfig)
-(GuiCtrl := MainGui.Add("CheckBox", "xp y114 vBlueFlowerFieldCheck Disabled Checked" BlueFlowerFieldCheck hidden, "Blue Flower (REF)")).Section := "Gui", GuiCtrl.OnEvent("Click", nm_saveConfig)
-(GuiCtrl := MainGui.Add("CheckBox", "xp y128 vCloverFieldCheck Disabled Checked" CloverFieldCheck hidden, "Clover (INV)")).Section := "Gui", GuiCtrl.OnEvent("Click", nm_saveConfig)
-(GuiCtrl := MainGui.Add("CheckBox", "xp y153 vSpiderFieldCheck Disabled Checked" SpiderFieldCheck hidden, "Spider (MOT)")).Section := "Gui", GuiCtrl.OnEvent("Click", nm_saveConfig)
-(GuiCtrl := MainGui.Add("CheckBox", "xp y167 vStrawberryFieldCheck Disabled Checked" StrawberryFieldCheck hidden, "Strawberry (REF)")).Section := "Gui", GuiCtrl.OnEvent("Click", nm_saveConfig)
-(GuiCtrl := MainGui.Add("CheckBox", "xp y181 vBambooFieldCheck Disabled Checked" BambooFieldCheck hidden, "Bamboo (COM)")).Section := "Gui", GuiCtrl.OnEvent("Click", nm_saveConfig)
-(GuiCtrl := MainGui.Add("CheckBox", "xp y206 w93 h13 vPineappleFieldCheck Disabled Checked" PineappleFieldCheck hidden, "Pineapple (SAT)")).Section := "Gui", GuiCtrl.OnEvent("Click", nm_saveConfig)
-(GuiCtrl := MainGui.Add("CheckBox", "xp y220 vStumpFieldCheck Disabled Checked" StumpFieldCheck hidden, "Stump (MOT)")).Section := "Gui", GuiCtrl.OnEvent("Click", nm_saveConfig)
-(GuiCtrl := MainGui.Add("CheckBox", "xp+122 y72 vCactusFieldCheck Disabled Checked" CactusFieldCheck hidden, "Cactus (INV)")).Section := "Gui", GuiCtrl.OnEvent("Click", nm_saveConfig)
-(GuiCtrl := MainGui.Add("CheckBox", "xp y86 vPumpkinFieldCheck Disabled Checked" PumpkinFieldCheck hidden, "Pumpkin (SAT)")).Section := "Gui", GuiCtrl.OnEvent("Click", nm_saveConfig)
-(GuiCtrl := MainGui.Add("CheckBox", "xp y100 vPineTreeFieldCheck Disabled Checked" PineTreeFieldCheck hidden, "Pine Tree (COM)")).Section := "Gui", GuiCtrl.OnEvent("Click", nm_saveConfig)
-(GuiCtrl := MainGui.Add("CheckBox", "xp y114 vRoseFieldCheck Disabled Checked" RoseFieldCheck hidden, "Rose (MOT)")).Section := "Gui", GuiCtrl.OnEvent("Click", nm_saveConfig)
-(GuiCtrl := MainGui.Add("CheckBox", "xp y139 vMountainTopFieldCheck Disabled Checked" MountainTopFieldCheck hidden, "Mountain Top (INV)")).Section := "Gui", GuiCtrl.OnEvent("Click", nm_saveConfig)
-(GuiCtrl := MainGui.Add("CheckBox", "xp y164 vCoconutFieldCheck Disabled Checked" CoconutFieldCheck hidden, "Coconut (REF)")).Section := "Gui", GuiCtrl.OnEvent("Click", nm_saveConfig)
-(GuiCtrl := MainGui.Add("CheckBox", "xp y178 vPepperFieldCheck Disabled Checked" PepperFieldCheck hidden, "Pepper (INV)")).Section := "Gui", GuiCtrl.OnEvent("Click", nm_saveConfig)
+(GuiCtrl := MainGui.Add("CheckBox", "x258 y72 vDandelionFieldCheck Disabled Checked" DandelionFieldCheck hidden, "Dandelion (COM)")).Section := "Planters", GuiCtrl.OnEvent("Click", nm_saveConfig)
+(GuiCtrl := MainGui.Add("CheckBox", "xp y86 vSunflowerFieldCheck Disabled Checked" SunflowerFieldCheck hidden, "Sunflower (SAT)")).Section := "Planters", GuiCtrl.OnEvent("Click", nm_saveConfig)
+(GuiCtrl := MainGui.Add("CheckBox", "xp y100 vMushroomFieldCheck Disabled Checked" MushroomFieldCheck hidden, "Mushroom (MOT)")).Section := "Planters", GuiCtrl.OnEvent("Click", nm_saveConfig)
+(GuiCtrl := MainGui.Add("CheckBox", "xp y114 vBlueFlowerFieldCheck Disabled Checked" BlueFlowerFieldCheck hidden, "Blue Flower (REF)")).Section := "Planters", GuiCtrl.OnEvent("Click", nm_saveConfig)
+(GuiCtrl := MainGui.Add("CheckBox", "xp y128 vCloverFieldCheck Disabled Checked" CloverFieldCheck hidden, "Clover (INV)")).Section := "Planters", GuiCtrl.OnEvent("Click", nm_saveConfig)
+(GuiCtrl := MainGui.Add("CheckBox", "xp y153 vSpiderFieldCheck Disabled Checked" SpiderFieldCheck hidden, "Spider (MOT)")).Section := "Planters", GuiCtrl.OnEvent("Click", nm_saveConfig)
+(GuiCtrl := MainGui.Add("CheckBox", "xp y167 vStrawberryFieldCheck Disabled Checked" StrawberryFieldCheck hidden, "Strawberry (REF)")).Section := "Planters", GuiCtrl.OnEvent("Click", nm_saveConfig)
+(GuiCtrl := MainGui.Add("CheckBox", "xp y181 vBambooFieldCheck Disabled Checked" BambooFieldCheck hidden, "Bamboo (COM)")).Section := "Planters", GuiCtrl.OnEvent("Click", nm_saveConfig)
+(GuiCtrl := MainGui.Add("CheckBox", "xp y206 w93 h13 vPineappleFieldCheck Disabled Checked" PineappleFieldCheck hidden, "Pineapple (SAT)")).Section := "Planters", GuiCtrl.OnEvent("Click", nm_saveConfig)
+(GuiCtrl := MainGui.Add("CheckBox", "xp y220 vStumpFieldCheck Disabled Checked" StumpFieldCheck hidden, "Stump (MOT)")).Section := "Planters", GuiCtrl.OnEvent("Click", nm_saveConfig)
+(GuiCtrl := MainGui.Add("CheckBox", "xp+122 y72 vCactusFieldCheck Disabled Checked" CactusFieldCheck hidden, "Cactus (INV)")).Section := "Planters", GuiCtrl.OnEvent("Click", nm_saveConfig)
+(GuiCtrl := MainGui.Add("CheckBox", "xp y86 vPumpkinFieldCheck Disabled Checked" PumpkinFieldCheck hidden, "Pumpkin (SAT)")).Section := "Planters", GuiCtrl.OnEvent("Click", nm_saveConfig)
+(GuiCtrl := MainGui.Add("CheckBox", "xp y100 vPineTreeFieldCheck Disabled Checked" PineTreeFieldCheck hidden, "Pine Tree (COM)")).Section := "Planters", GuiCtrl.OnEvent("Click", nm_saveConfig)
+(GuiCtrl := MainGui.Add("CheckBox", "xp y114 vRoseFieldCheck Disabled Checked" RoseFieldCheck hidden, "Rose (MOT)")).Section := "Planters", GuiCtrl.OnEvent("Click", nm_saveConfig)
+(GuiCtrl := MainGui.Add("CheckBox", "xp y139 vMountainTopFieldCheck Disabled Checked" MountainTopFieldCheck hidden, "Mountain Top (INV)")).Section := "Planters", GuiCtrl.OnEvent("Click", nm_saveConfig)
+(GuiCtrl := MainGui.Add("CheckBox", "xp y164 vCoconutFieldCheck Disabled Checked" CoconutFieldCheck hidden, "Coconut (REF)")).Section := "Planters", GuiCtrl.OnEvent("Click", nm_saveConfig)
+(GuiCtrl := MainGui.Add("CheckBox", "xp y178 vPepperFieldCheck Disabled Checked" PepperFieldCheck hidden, "Pepper (INV)")).Section := "Planters", GuiCtrl.OnEvent("Click", nm_saveConfig)
 
 MainGui.Add("Text", "x354 y196 w144 h36 0x7 vTextBox1" hidden)
-(GuiCtrl := MainGui.Add("CheckBox", "x358 y200 w138 h13 vConvertFullBagHarvest Disabled Checked" ConvertFullBagHarvest hidden, "Convert Full Bag Harvest")).Section := "Gui", GuiCtrl.OnEvent("Click", nm_saveConfig)
-(GuiCtrl := MainGui.Add("CheckBox", "x358 y216 w138 h13 vGatherPlanterLoot Disabled Checked" GatherPlanterLoot hidden, "Gather Planter Loot")).Section := "Gui", GuiCtrl.OnEvent("Click", nm_saveConfig)
+(GuiCtrl := MainGui.Add("CheckBox", "x358 y200 w138 h13 vConvertFullBagHarvest Disabled Checked" ConvertFullBagHarvest hidden, "Convert Full Bag Harvest")).Section := "Planters", GuiCtrl.OnEvent("Click", nm_saveConfig)
+(GuiCtrl := MainGui.Add("CheckBox", "x358 y216 w138 h13 vGatherPlanterLoot Disabled Checked" GatherPlanterLoot hidden, "Gather Planter Loot")).Section := "Planters", GuiCtrl.OnEvent("Click", nm_saveConfig)
 SetLoadingProgress(38)
 
 ;Manual Planters
@@ -5857,7 +5856,7 @@ ba_planterSwitch(*){
 	MaxAllowedPlanters := MainGui["MaxAllowedPlanters"].Value
 	if ((PlanterMode = 2) && (MaxAllowedPlanters = 0)) {
 		MaxAllowedPlanters:=3
-		IniWrite MaxAllowedPlanters, "settings\nm_config.ini", "gui", "MaxAllowedPlanters"
+		IniWrite MaxAllowedPlanters, "settings\nm_config.ini", "Planters", "MaxAllowedPlanters"
 		MainGui["MaxAllowedPlanters"].Value := 3
 	}
 
@@ -5870,7 +5869,7 @@ ba_planterSwitch(*){
 		DetectHiddenWindows 0
 	}
 
-	IniWrite PlanterMode, "settings\nm_config.ini", "gui", "PlanterMode"
+	IniWrite PlanterMode, "settings\nm_config.ini", "Planters", "PlanterMode"
 	MainGui["PlanterMode"].Enabled := 1
 }
 ba_showPlanterTimers(*){
@@ -6196,7 +6195,7 @@ nm_NectarPreset(GuiCtrl, *){
 	i := (NPreset = "Custom") ? 1 : (NPreset = "Blue") ? 2 : (NPreset = "Red") ? 3 : 4
 
 	MainGui["NPreset"].Text := NPreset := val[(GuiCtrl.Name = "NPRight") ? (Mod(i, l) + 1) : (Mod(l + i - 2, l) + 1)]
-	IniWrite NPreset, "settings\nm_config.ini", "gui", "NPreset"
+	IniWrite NPreset, "settings\nm_config.ini", "Planters", "NPreset"
 
 	switch NPreset, 0
 	{
@@ -6360,7 +6359,7 @@ nm_NectarPriority(GuiCtrl?, *){
 			if (N%n%priority = N%A_Index%priority) {
 				MainGui["N" n "priority"].Text := N%n%priority := "None"
 				if IsSet(GuiCtrl)
-					IniWrite N%n%priority, "settings\nm_config.ini", "gui", "N" n "priority"
+					IniWrite N%n%priority, "settings\nm_config.ini", "Planters", "N" n "priority"
 			}
 		}
 		if (N%n%priority = "None") {
@@ -6372,7 +6371,7 @@ nm_NectarPriority(GuiCtrl?, *){
 				if (N%j%priority != "None") {
 					MainGui["N" j "priority"].Text := N%j%priority := "None"
 					if IsSet(GuiCtrl)
-						IniWrite N%j%priority, "settings\nm_config.ini", "gui", "N" j "priority"
+						IniWrite N%j%priority, "settings\nm_config.ini", "Planters", "N" j "priority"
 				}
 			}
 			break
@@ -6385,10 +6384,10 @@ nm_NectarPriority(GuiCtrl?, *){
 	}
 
 	if IsSet(GuiCtrl) {
-		IniWrite N%index%priority, "settings\nm_config.ini", "gui", "N" index "priority"
+		IniWrite N%index%priority, "settings\nm_config.ini", "Planters", "N" index "priority"
 		if (NPreset != "Custom") {
 			MainGui["NPreset"].Text := (NPreset := "Custom")
-			IniWrite NPreset, "settings\nm_config.ini", "gui", "NPreset"
+			IniWrite NPreset, "settings\nm_config.ini", "Planters", "NPreset"
 		}
 	}
 }
@@ -6396,10 +6395,10 @@ nm_NectarMinPercent(GuiCtrl, *){
 	global
 	local k
 	MainGui[k := StrReplace(GuiCtrl.Name, "UpDown")].Text := %k% := GuiCtrl.Value * 10
-	IniWrite %k%, "settings\nm_config.ini", "gui", k
+	IniWrite %k%, "settings\nm_config.ini", "Planters", k
 	if (NPreset != "Custom") {
 		MainGui["NPreset"].Text := NPreset := "Custom"
-		IniWrite NPreset, "settings\nm_config.ini", "gui", "NPreset"
+		IniWrite NPreset, "settings\nm_config.ini", "Planters", "NPreset"
 	}
 }
 ba_harvestInterval(*){
@@ -6554,55 +6553,55 @@ ba_saveConfig_(*){ ;//todo: needs replacing!
 	SunflowerFieldCheck := MainGui["SunflowerFieldCheck"].Value
 	PlanterMode := MainGui["PlanterMode"].Value
 	MaxAllowedPlanters := MainGui["MaxAllowedPlanters"].Value
-	IniWrite nPreset, "settings\nm_config.ini", "gui", "nPreset"
-	IniWrite n1priority, "settings\nm_config.ini", "gui", "n1priority"
-	IniWrite n2priority, "settings\nm_config.ini", "gui", "n2priority"
-	IniWrite n3priority, "settings\nm_config.ini", "gui", "n3priority"
-	IniWrite n4priority, "settings\nm_config.ini", "gui", "n4priority"
-	IniWrite n5priority, "settings\nm_config.ini", "gui", "n5priority"
-	IniWrite n1minPercent, "settings\nm_config.ini", "gui", "n1minPercent"
-	IniWrite n2minPercent, "settings\nm_config.ini", "gui", "n2minPercent"
-	IniWrite n3minPercent, "settings\nm_config.ini", "gui", "n3minPercent"
-	IniWrite n4minPercent, "settings\nm_config.ini", "gui", "n4minPercent"
-	IniWrite n5minPercent, "settings\nm_config.ini", "gui", "n5minPercent"
-	IniWrite PlasticPlanterCheck, "settings\nm_config.ini", "gui", "PlasticPlanterCheck"
-	IniWrite CandyPlanterCheck, "settings\nm_config.ini", "gui", "CandyPlanterCheck"
-	IniWrite BlueClayPlanterCheck, "settings\nm_config.ini", "gui", "BlueClayPlanterCheck"
-	IniWrite RedClayPlanterCheck, "settings\nm_config.ini", "gui", "RedClayPlanterCheck"
-	IniWrite TackyPlanterCheck, "settings\nm_config.ini", "gui", "TackyPlanterCheck"
-	IniWrite PesticidePlanterCheck, "settings\nm_config.ini", "gui", "PesticidePlanterCheck"
-	IniWrite HeatTreatedPlanterCheck, "settings\nm_config.ini", "gui", "HeatTreatedPlanterCheck"
-	IniWrite HydroponicPlanterCheck, "settings\nm_config.ini", "gui", "HydroponicPlanterCheck"
-	IniWrite PetalPlanterCheck, "settings\nm_config.ini", "gui", "PetalPlanterCheck"
-	IniWrite PaperPlanterCheck, "settings\nm_config.ini", "gui", "PaperPlanterCheck"
-	IniWrite TicketPlanterCheck, "settings\nm_config.ini", "gui", "TicketPlanterCheck"
-	IniWrite PlanterOfPlentyCheck, "settings\nm_config.ini", "gui", "PlanterOfPlentyCheck"
-	IniWrite BambooFieldCheck, "settings\nm_config.ini", "gui", "BambooFieldCheck"
-	IniWrite BlueFlowerFieldCheck, "settings\nm_config.ini", "gui", "BlueFlowerFieldCheck"
-	IniWrite CactusFieldCheck, "settings\nm_config.ini", "gui", "CactusFieldCheck"
-	IniWrite CloverFieldCheck, "settings\nm_config.ini", "gui", "CloverFieldCheck"
-	IniWrite CoconutFieldCheck, "settings\nm_config.ini", "gui", "CoconutFieldCheck"
-	IniWrite DandelionFieldCheck, "settings\nm_config.ini", "gui", "DandelionFieldCheck"
-	IniWrite MountainTopFieldCheck, "settings\nm_config.ini", "gui", "MountainTopFieldCheck"
-	IniWrite MushroomFieldCheck, "settings\nm_config.ini", "gui", "MushroomFieldCheck"
-	IniWrite PepperFieldCheck, "settings\nm_config.ini", "gui", "PepperFieldCheck"
-	IniWrite PineTreeFieldCheck, "settings\nm_config.ini", "gui", "PineTreeFieldCheck"
-	IniWrite PineappleFieldCheck, "settings\nm_config.ini", "gui", "PineappleFieldCheck"
-	IniWrite PumpkinFieldCheck, "settings\nm_config.ini", "gui", "PumpkinFieldCheck"
-	IniWrite RoseFieldCheck, "settings\nm_config.ini", "gui", "RoseFieldCheck"
-	IniWrite SpiderFieldCheck, "settings\nm_config.ini", "gui", "SpiderFieldCheck"
-	IniWrite StrawberryFieldCheck, "settings\nm_config.ini", "gui", "StrawberryFieldCheck"
-	IniWrite StumpFieldCheck, "settings\nm_config.ini", "gui", "StumpFieldCheck"
-	IniWrite SunflowerFieldCheck, "settings\nm_config.ini", "gui", "SunflowerFieldCheck"
-	IniWrite PlanterMode, "settings\nm_config.ini", "gui", "PlanterMode"
-	IniWrite MaxAllowedPlanters, "settings\nm_config.ini", "gui", "MaxAllowedPlanters"
-	IniWrite HarvestInterval, "settings\nm_config.ini", "gui", "HarvestInterval"
-	IniWrite AutomaticHarvestInterval, "settings\nm_config.ini", "gui", "AutomaticHarvestInterval"
-	IniWrite HarvestFullGrown, "settings\nm_config.ini", "gui", "HarvestFullGrown"
-	IniWrite GotoPlanterField, "settings\nm_config.ini", "gui", "GotoPlanterField"
-	IniWrite GatherFieldSipping, "settings\nm_config.ini", "gui", "GatherFieldSipping"
-	IniWrite ConvertFullBagHarvest, "settings\nm_config.ini", "gui", "ConvertFullBagHarvest"
-	IniWrite GatherPlanterLoot, "settings\nm_config.ini", "gui", "GatherPlanterLoot"
+	IniWrite nPreset, "settings\nm_config.ini", "Planters", "nPreset"
+	IniWrite n1priority, "settings\nm_config.ini", "Planters", "n1priority"
+	IniWrite n2priority, "settings\nm_config.ini", "Planters", "n2priority"
+	IniWrite n3priority, "settings\nm_config.ini", "Planters", "n3priority"
+	IniWrite n4priority, "settings\nm_config.ini", "Planters", "n4priority"
+	IniWrite n5priority, "settings\nm_config.ini", "Planters", "n5priority"
+	IniWrite n1minPercent, "settings\nm_config.ini", "Planters", "n1minPercent"
+	IniWrite n2minPercent, "settings\nm_config.ini", "Planters", "n2minPercent"
+	IniWrite n3minPercent, "settings\nm_config.ini", "Planters", "n3minPercent"
+	IniWrite n4minPercent, "settings\nm_config.ini", "Planters", "n4minPercent"
+	IniWrite n5minPercent, "settings\nm_config.ini", "Planters", "n5minPercent"
+	IniWrite PlasticPlanterCheck, "settings\nm_config.ini", "Planters", "PlasticPlanterCheck"
+	IniWrite CandyPlanterCheck, "settings\nm_config.ini", "Planters", "CandyPlanterCheck"
+	IniWrite BlueClayPlanterCheck, "settings\nm_config.ini", "Planters", "BlueClayPlanterCheck"
+	IniWrite RedClayPlanterCheck, "settings\nm_config.ini", "Planters", "RedClayPlanterCheck"
+	IniWrite TackyPlanterCheck, "settings\nm_config.ini", "Planters", "TackyPlanterCheck"
+	IniWrite PesticidePlanterCheck, "settings\nm_config.ini", "Planters", "PesticidePlanterCheck"
+	IniWrite HeatTreatedPlanterCheck, "settings\nm_config.ini", "Planters", "HeatTreatedPlanterCheck"
+	IniWrite HydroponicPlanterCheck, "settings\nm_config.ini", "Planters", "HydroponicPlanterCheck"
+	IniWrite PetalPlanterCheck, "settings\nm_config.ini", "Planters", "PetalPlanterCheck"
+	IniWrite PaperPlanterCheck, "settings\nm_config.ini", "Planters", "PaperPlanterCheck"
+	IniWrite TicketPlanterCheck, "settings\nm_config.ini", "Planters", "TicketPlanterCheck"
+	IniWrite PlanterOfPlentyCheck, "settings\nm_config.ini", "Planters", "PlanterOfPlentyCheck"
+	IniWrite BambooFieldCheck, "settings\nm_config.ini", "Planters", "BambooFieldCheck"
+	IniWrite BlueFlowerFieldCheck, "settings\nm_config.ini", "Planters", "BlueFlowerFieldCheck"
+	IniWrite CactusFieldCheck, "settings\nm_config.ini", "Planters", "CactusFieldCheck"
+	IniWrite CloverFieldCheck, "settings\nm_config.ini", "Planters", "CloverFieldCheck"
+	IniWrite CoconutFieldCheck, "settings\nm_config.ini", "Planters", "CoconutFieldCheck"
+	IniWrite DandelionFieldCheck, "settings\nm_config.ini", "Planters", "DandelionFieldCheck"
+	IniWrite MountainTopFieldCheck, "settings\nm_config.ini", "Planters", "MountainTopFieldCheck"
+	IniWrite MushroomFieldCheck, "settings\nm_config.ini", "Planters", "MushroomFieldCheck"
+	IniWrite PepperFieldCheck, "settings\nm_config.ini", "Planters", "PepperFieldCheck"
+	IniWrite PineTreeFieldCheck, "settings\nm_config.ini", "Planters", "PineTreeFieldCheck"
+	IniWrite PineappleFieldCheck, "settings\nm_config.ini", "Planters", "PineappleFieldCheck"
+	IniWrite PumpkinFieldCheck, "settings\nm_config.ini", "Planters", "PumpkinFieldCheck"
+	IniWrite RoseFieldCheck, "settings\nm_config.ini", "Planters", "RoseFieldCheck"
+	IniWrite SpiderFieldCheck, "settings\nm_config.ini", "Planters", "SpiderFieldCheck"
+	IniWrite StrawberryFieldCheck, "settings\nm_config.ini", "Planters", "StrawberryFieldCheck"
+	IniWrite StumpFieldCheck, "settings\nm_config.ini", "Planters", "StumpFieldCheck"
+	IniWrite SunflowerFieldCheck, "settings\nm_config.ini", "Planters", "SunflowerFieldCheck"
+	IniWrite PlanterMode, "settings\nm_config.ini", "Planters", "PlanterMode"
+	IniWrite MaxAllowedPlanters, "settings\nm_config.ini", "Planters", "MaxAllowedPlanters"
+	IniWrite HarvestInterval, "settings\nm_config.ini", "Planters", "HarvestInterval"
+	IniWrite AutomaticHarvestInterval, "settings\nm_config.ini", "Planters", "AutomaticHarvestInterval"
+	IniWrite HarvestFullGrown, "settings\nm_config.ini", "Planters", "HarvestFullGrown"
+	IniWrite GotoPlanterField, "settings\nm_config.ini", "Planters", "GotoPlanterField"
+	IniWrite GatherFieldSipping, "settings\nm_config.ini", "Planters", "GatherFieldSipping"
+	IniWrite ConvertFullBagHarvest, "settings\nm_config.ini", "Planters", "ConvertFullBagHarvest"
+	IniWrite GatherPlanterLoot, "settings\nm_config.ini", "Planters", "GatherPlanterLoot"
 }
 
 ; STATUS TAB
@@ -7054,9 +7053,9 @@ nm_WebhookGUI(*){
 		global
 		IniWrite %var%, "settings\nm_config.ini", "Status", var
 		if WinExist("natro_macro.ahk ahk_class AutoHotkey")
-			PostMessage 0x5553, str_enum[var], 8
+			PostMessage 0x5553, str_enum[var], 7
 		if WinExist("Status.ahk ahk_class AutoHotkey")
-			PostMessage 0x5553, str_enum[var], 8
+			PostMessage 0x5553, str_enum[var], 7
 	}
 
 	ReplaceSystemCursors(IDC := "")
@@ -7301,7 +7300,7 @@ nm_ServerLink(GuiCtrl, *){
 		IniWrite %k%, "settings\nm_config.ini", "Settings", k
 
 		if (k = "PrivServer")
-			PostSubmacroMessage("Status", 0x5553, 10, 7)
+			PostSubmacroMessage("Status", 0x5553, 10, 6)
 	}
 }
 nm_ReconnectMethod(GuiCtrl, *){
@@ -8302,7 +8301,7 @@ nm_saveNightAnnouncementName(GuiCtrl, *){
 	{
 		NightAnnouncementName := NewNightAnnouncementName
 		IniWrite NightAnnouncementName, "settings\nm_config.ini", "Status", "NightAnnouncementName"
-		PostSubmacroMessage("Status", 0x5553, 48, 8)
+		PostSubmacroMessage("Status", 0x5553, 48, 7)
 	}
 
 	;enum
@@ -8317,7 +8316,7 @@ nm_saveNightAnnouncementPingID(GuiCtrl, *){
 	{
 		NightAnnouncementPingID := NewNightAnnouncementPingID
 		IniWrite NightAnnouncementPingID, "settings\nm_config.ini", "Status", "NightAnnouncementPingID"
-		PostSubmacroMessage("Status", 0x5553, 49, 8)
+		PostSubmacroMessage("Status", 0x5553, 49, 7)
 	}
 	else
 	{
@@ -8336,7 +8335,7 @@ nm_saveNightAnnouncementWebhook(GuiCtrl, *){
 	{
 		NightAnnouncementWebhook := IsObject(NewNightAnnouncementWebhook) ? NewNightAnnouncementWebhook[0] : ""
 		IniWrite NightAnnouncementWebhook, "settings\nm_config.ini", "Status", "NightAnnouncementWebhook"
-		PostSubmacroMessage("Status", 0x5553, 50, 8)
+		PostSubmacroMessage("Status", 0x5553, 50, 7)
 	}
 	else
 	{
@@ -15845,7 +15844,7 @@ DisconnectCheck(testCheck := 0)
 				MainGui["FallbackServer" n].Value := FallbackServer%n%
 				IniWrite PrivServer, "settings\nm_config.ini", "Settings", "PrivServer"
 				IniWrite FallbackServer%n%, "settings\nm_config.ini", "Settings", "FallbackServer" n
-				PostSubmacroMessage("Status", 0x5553, 10, 7)
+				PostSubmacroMessage("Status", 0x5553, 10, 6)
 			}
 			PostSubmacroMessage("Status", 0x5552, 221, (server = 0))
 
@@ -19103,7 +19102,7 @@ ba_planter(){
 								nm_setStatus("Error", "Failed to place planter in 10 tries!`nMaxAllowedPlanters has been reduced.")
 								MaxAllowedPlanters:=max(0, MaxAllowedPlanters-1)
 								MainGui["MaxAllowedPlanters"].Value := MaxAllowedPlanters
-								IniWrite MaxAllowedPlanters, "settings\nm_config.ini", "gui", "MaxAllowedPlanters"
+								IniWrite MaxAllowedPlanters, "settings\nm_config.ini", "Planters", "MaxAllowedPlanters"
 								break
 							}
 						}
@@ -19259,7 +19258,7 @@ ba_planter(){
 							nm_setStatus("Error", "Failed to place planter in 10 tries!`nMaxAllowedPlanters has been reduced.")
 							MaxAllowedPlanters:=max(0, MaxAllowedPlanters-1)
 							MainGui["MaxAllowedPlanters"].Value := MaxAllowedPlanters
-							IniWrite MaxAllowedPlanters, "settings\nm_config.ini", "gui", "MaxAllowedPlanters"
+							IniWrite MaxAllowedPlanters, "settings\nm_config.ini", "Planters", "MaxAllowedPlanters"
 							break
 						}
 					}
@@ -19307,7 +19306,7 @@ ba_planter(){
 								nm_setStatus("Error", "Failed to place planter in 10 tries!`nMaxAllowedPlanters has been reduced.")
 								MaxAllowedPlanters:=max(0, MaxAllowedPlanters-1)
 								MainGui["MaxAllowedPlanters"].Value := MaxAllowedPlanters
-								IniWrite MaxAllowedPlanters, "settings\nm_config.ini", "gui", "MaxAllowedPlanters"
+								IniWrite MaxAllowedPlanters, "settings\nm_config.ini", "Planters", "MaxAllowedPlanters"
 								break
 							}
 						}
@@ -19428,7 +19427,7 @@ ba_planter(){
 							nm_setStatus("Error", "Failed to place planter in 10 tries!`nMaxAllowedPlanters has been reduced.")
 							MaxAllowedPlanters:=max(0, MaxAllowedPlanters-1)
 							MainGui["MaxAllowedPlanters"].Value := MaxAllowedPlanters
-							IniWrite MaxAllowedPlanters, "settings\nm_config.ini", "gui", "MaxAllowedPlanters"
+							IniWrite MaxAllowedPlanters, "settings\nm_config.ini", "Planters", "MaxAllowedPlanters"
 							break
 						}
 					}
@@ -20485,7 +20484,7 @@ getout(*){
 	nm_saveGUIPos()
 	nm_endWalk()
 	DetectHiddenWindows 1
-	try IniWrite !!WinExist("PlanterTimers.ahk ahk_class AutoHotkey"), "settings\nm_config.ini", "gui", "TimersOpen"
+	try IniWrite !!WinExist("PlanterTimers.ahk ahk_class AutoHotkey"), "settings\nm_config.ini", "Planters", "TimersOpen"
 	CloseScripts()
 	try Gdip_Shutdown(pToken)
 	DllCall(A_WorkingDir "\nm_image_assets\Styles\USkin.dll\USkinExit")
@@ -20961,7 +20960,7 @@ nm_setGlobalStr(wParam, lParam, *)
 	Critical
 	; enumeration
 	#Include "%A_ScriptDir%\..\lib\enum\EnumStr.ahk"
-	static sections := ["Boost","Collect","Gather","Gui","Planters","Quests","Settings","Status","Blender","Shrine"]
+	static sections := ["Boost","Collect","Gather","Planters","Quests","Settings","Status","Blender","Shrine"]
 
 	local var := arr[wParam], section := sections[lParam]
 	try %var% := IniRead("settings\nm_config.ini", section, var)

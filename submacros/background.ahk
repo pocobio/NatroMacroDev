@@ -235,7 +235,7 @@ nm_dayOrNight(){
 	}
 	;GuiControl,Text, timeOfDay, %dayOrNight%
 	if(winexist("PlanterTimers.ahk ahk_class AutoHotkey")) {
-		try IniWrite dayOrNight, "settings\nm_config.ini", "Gui", "DayOrNight" ;make this a PostMessage too, fewer disk reads/writes is better!
+		try IniWrite dayOrNight, "settings\nm_config.ini", "Planters", "DayOrNight" ;make this a PostMessage too, fewer disk reads/writes is better!
 	}
 }
 
@@ -487,7 +487,7 @@ nm_setGlobalStr(wParam, lParam, *)
 	Critical
 	; enumeration
 	#Include "%A_ScriptDir%\..\lib\enum\EnumStr.ahk"
-	static sections := ["Boost","Collect","Gather","Gui","Planters","Quests","Settings","Status","Blender","Shrine"]
+	static sections := ["Boost","Collect","Gather","Planters","Quests","Settings","Status","Blender","Shrine"]
 
 	local var := arr[wParam], section := sections[lParam]
 	try %var% := IniRead("settings\nm_config.ini", section, var)

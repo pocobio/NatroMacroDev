@@ -279,8 +279,8 @@ if ((A_Args.Length > 0) && (natro_version := A_Args[1]))
 		consumables .= (HotkeyWhile%i% != "Never") ? (((StrLen(consumables) = 0) ? "" : ", " ) . "#" . i) : ""
 	}
 
-	PlanterMode := IniRead("settings\nm_config.ini", "gui", "PlanterMode", 0)
-	MaxAllowedPlanters := IniRead("settings\nm_config.ini", "gui", "MaxAllowedPlanters", 0)
+	PlanterMode := IniRead("settings\nm_config.ini", "Planters", "PlanterMode", 0)
+	MaxAllowedPlanters := IniRead("settings\nm_config.ini", "Planters", "MaxAllowedPlanters", 0)
 }
 
 ; FORM MESSAGE
@@ -1441,7 +1441,7 @@ SendHourlyReport()
 
 			MPlanterHold%i% := IniRead("settings\nm_config.ini", "Planters", "MPlanterHold" i)
 			MPlanterSmoking%i% := IniRead("settings\nm_config.ini", "Planters", "MPlanterSmoking" i)
-			PlanterMode := IniRead("settings\nm_config.ini", "Gui", "PlanterMode")
+			PlanterMode := IniRead("settings\nm_config.ini", "Planters", "PlanterMode")
 			duration := ((time := PlanterHarvestTime%A_Index% - unix_now) > 360000) ? "N/A" : (time > 0) ? hmsFromSeconds(PlanterHarvestTime%A_Index% - unix_now) : (((MPlanterSmoking%i%) && (PlanterMode = 1)) ? "Smoking" : ((MPlanterHold%i%) && (PlanterMode = 1)) ? "Holding" :  "Ready")
 			pos := Gdip_TextToGraphics(G, duration, "s46 Center Bold ccfffffff x" stat_regions["planters"][1]+stat_regions["planters"][3]//2-(110+220*(planters-1))+(i-1)*440+130 " y" stat_regions["planters"][2]+406, "Segoe UI")
 			x := SubStr(pos, 1, InStr(pos, "|", , , 1)-1)

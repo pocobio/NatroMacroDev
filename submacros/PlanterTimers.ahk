@@ -48,9 +48,9 @@ DllCall(DllCall("GetProcAddress"
 	, "Int",0, "Int",0, "AStr",A_WorkingDir "\nm_image_assets\styles\" GuiTheme ".msstyles")
 
 ; GUI position
-TimerX := IniRead("settings\nm_config.ini", "gui", "TimerX", 0)
-TimerY := IniRead("settings\nm_config.ini", "gui", "TimerY", 0)
-TimerGuiTransparency := IniRead("settings\nm_config.ini", "gui", "TimerGuiTransparency", 0)
+TimerX := IniRead("settings\nm_config.ini", "Planters", "TimerX", 0)
+TimerY := IniRead("settings\nm_config.ini", "Planters", "TimerY", 0)
+TimerGuiTransparency := IniRead("settings\nm_config.ini", "Planters", "TimerGuiTransparency", 0)
 if (TimerX && TimerY)
 {
 	Loop (MonitorCount := MonitorGetCount())
@@ -227,7 +227,7 @@ Loop {
 
         MPlanterHold%i% := IniRead("settings/nm_config.ini", "Planters", "MPlanterHold" i)
         MPlanterSmoking%i% := IniRead("settings/nm_config.ini", "Planters", "MPlanterSmoking" i)
-        PlanterMode := IniRead("settings/nm_config.ini", "Gui", "PlanterMode")
+        PlanterMode := IniRead("settings/nm_config.ini", "Planters", "PlanterMode")
 
         TimersGui["p" i "timer"].Text := DurationFromSeconds(p%i%timer := PlanterHarvestTime%i% - nowUnix(), (p%i%timer > 360000) ? "'No Planter'" : (p%i%timer > 0) ? (((p%i%timer >= 3600) ? "h'h' m" : "") . ((p%i%timer >= 60) ? "m'm' s" : "") . "s's'") : ((MPlanterSmoking%i%) && (PlanterMode = 1)) ? "'Smoking'" : ((MPlanterHold%i%) && (PlanterMode = 1)) ? "'Holding'" : "'Ready'")
     }
@@ -317,7 +317,7 @@ Loop {
 		TimersGui["psessionTotalHoney"].Text := IniRead("settings\nm_config.ini", "Status", "SessionTotalHoney", 0)
 	}
 
-    TimersGui["dayOrNight"].Text := IniRead("settings\nm_config.ini", "Gui", "dayOrNight") " Detected"
+    TimersGui["dayOrNight"].Text := IniRead("settings\nm_config.ini", "Planters", "dayOrNight") " Detected"
     TimersGui["pstatus"].Text := ControlGetText("Static4", "Natro ahk_class AutoHotkeyGUI")
 
 	Sleep (1100 - A_MSec)
@@ -326,7 +326,7 @@ Loop {
 setTimerGuiTransparency(GuiCtrl?, *){
 	global TimerGuiTransparency
     if IsSet(GuiCtrl)
-        IniWrite TimerGuiTransparency := GuiCtrl.Value, "settings\nm_config.ini", "Gui", "TimerGuiTransparency"
+        IniWrite TimerGuiTransparency := GuiCtrl.Value, "settings\nm_config.ini", "Planters", "TimerGuiTransparency"
 	WinSetTransparent 255-floor(TimerGuiTransparency*2.55), TimersGui
 }
 ba_resetPlanterTimer(GuiCtrl, *){
@@ -511,8 +511,8 @@ ba_setBlenderData(GuiCtrl, *){
         if WinExist("natro_macro ahk_class AutoHotkey") {
             PostMessage 0x5552, 232+i, 0 ; BlenderAmount
             PostMessage 0x5552, 238+i, 0 ; BlenderTime
-            PostMessage 0x5553, 58+i, 9 ; BlenderIndex
-            PostMessage 0x5553, 61+i, 9 ; BlenderItem
+            PostMessage 0x5553, 58+i, 8 ; BlenderIndex
+            PostMessage 0x5553, 61+i, 8 ; BlenderItem
         }
     }
 }
@@ -565,8 +565,8 @@ ba_AddBlenderItem(GuiCtrl?, *){
     IniWrite values.BAddindexOption ? "Infinite" : values.BAddindex, "settings\nm_config.ini", "Blender", "BlenderIndex" BlenderaddIndex
     if WinExist("natro_macro ahk_class AutoHotkey") {
         PostMessage 0x5552, 232+BlenderaddIndex, values.BAddamount ; BlenderAmount
-        PostMessage 0x5553, 58+BlenderaddIndex, 9 ; BlenderIndex
-        PostMessage 0x5553, 61+BlenderaddIndex, 9 ; BlenderItem
+        PostMessage 0x5553, 58+BlenderaddIndex, 8 ; BlenderIndex
+        PostMessage 0x5553, 61+BlenderaddIndex, 8 ; BlenderItem
     }
 }
 
@@ -603,8 +603,8 @@ ba_setShrineData(GuiCtrl, *){
         IniWrite 0, "settings\nm_config.ini", "Shrine", "LastShrine"
         if WinExist("natro_macro ahk_class AutoHotkey") {
             PostMessage 0x5552, 230+i, 0 ; ShrineAmount
-            PostMessage 0x5553, 56+i, 10 ; ShrineIndex
-            PostMessage 0x5553, 54+i, 10 ; ShrineItem
+            PostMessage 0x5553, 56+i, 9 ; ShrineIndex
+            PostMessage 0x5553, 54+i, 9 ; ShrineItem
         }
     }
 }
@@ -657,8 +657,8 @@ ba_AddShrineItem(GuiCtrl?, *){
     IniWrite values.SAddindexOption ? "Infinite" : values.SAddindex, "settings\nm_config.ini", "Shrine", "ShrineIndex" ShrineaddIndex
     if WinExist("natro_macro ahk_class AutoHotkey") {
         PostMessage 0x5552, 230+ShrineaddIndex, values.SAddamount ; ShrineAmount
-        PostMessage 0x5553, 56+ShrineaddIndex, 10 ; ShrineIndex
-        PostMessage 0x5553, 54+ShrineaddIndex, 10 ; ShrineItem
+        PostMessage 0x5553, 56+ShrineaddIndex, 9 ; ShrineIndex
+        PostMessage 0x5553, 54+ShrineaddIndex, 9 ; ShrineItem
     }
 }
 
@@ -682,7 +682,7 @@ UpdateStr(var, value)
 	IniWrite value, "settings\nm_config.ini", "Planters", var
 	DetectHiddenWindows 1
 	if WinExist("natro_macro ahk_class AutoHotkey")
-		PostMessage 0x5553, enum[var], 5
+		PostMessage 0x5553, enum[var], 4
 }
 
 UpdateInt(var, value)
@@ -737,9 +737,9 @@ ba_saveTimerGui(){
     DllCall("GetWindowPlacement", "UInt", TimersGui.Hwnd, "Ptr", wp)
 	x := NumGet(wp, 28, "Int"), y := NumGet(wp, 32, "Int")
 	if (x > 0)
-		IniWrite x, "settings\nm_config.ini", "Gui", "TimerX"
+		IniWrite x, "settings\nm_config.ini", "Planters", "TimerX"
 	if (y > 0)
-		IniWrite y, "settings\nm_config.ini", "Gui", "TimerY"
+		IniWrite y, "settings\nm_config.ini", "Planters", "TimerY"
 }
 
 ba_timersExit(*){

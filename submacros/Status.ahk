@@ -295,44 +295,44 @@ settings["PhantomPingCheck"] := {enum: 20, type: "int", section: "Status", regex
 settings["UnexpectedDeathPingCheck"] := {enum: 21, type: "int", section: "Status", regex: "i)^(0|1)$"}
 settings["EmergencyBalloonPingCheck"] := {enum: 22, type: "int", section: "Status", regex: "i)^(0|1)$"}
 ;settings["MacroState"] := {enum: 23, type: "int", regex: "i)^(0|1|2)$"} dangerous
-settings["PlanterMode"] := {enum: 24, type: "int", section: "Gui", regex: "i)^(0|1|2)$"}
-settings["MaxAllowedPlanters"] := {enum: 25, type: "int", section: "Gui", regex: "i)^(0|1|2|3)$"}
-settings["HarvestInterval"] := {enum: 26, type: "int", section: "Gui", regex: "i)^\d{1,2}$"}
-settings["AutomaticHarvestInterval"] := {enum: 27, type: "int", section: "Gui", regex: "i)^(0|1)$"}
-settings["HarvestFullGrown"] := {enum: 28, type: "int", section: "Gui", regex: "i)^(0|1)$"}
-settings["GotoPlanterField"] := {enum: 29, type: "int", section: "Gui", regex: "i)^(0|1)$"}
-settings["GatherFieldSipping"] := {enum: 30, type: "int", section: "Gui", regex: "i)^(0|1)$"}
-settings["ConvertFullBagHarvest"] := {enum: 31, type: "int", section: "Gui", regex: "i)^(0|1)$"}
-settings["GatherPlanterLoot"] := {enum: 32, type: "int", section: "Gui", regex: "i)^(0|1)$"}
-settings["PlasticPlanterCheck"] := {enum: 33, type: "int", section: "Gui", regex: "i)^(0|1)$"}
-settings["CandyPlanterCheck"] := {enum: 34, type: "int", section: "Gui", regex: "i)^(0|1)$"}
-settings["BlueClayPlanterCheck"] := {enum: 35, type: "int", section: "Gui", regex: "i)^(0|1)$"}
-settings["RedClayPlanterCheck"] := {enum: 36, type: "int", section: "Gui", regex: "i)^(0|1)$"}
-settings["TackyPlanterCheck"] := {enum: 37, type: "int", section: "Gui", regex: "i)^(0|1)$"}
-settings["PesticidePlanterCheck"] := {enum: 38, type: "int", section: "Gui", regex: "i)^(0|1)$"}
-settings["HeatTreatedPlanterCheck"] := {enum: 39, type: "int", section: "Gui", regex: "i)^(0|1)$"}
-settings["HydroponicPlanterCheck"] := {enum: 40, type: "int", section: "Gui", regex: "i)^(0|1)$"}
-settings["PetalPlanterCheck"] := {enum: 41, type: "int", section: "Gui", regex: "i)^(0|1)$"}
-settings["PaperPlanterCheck"] := {enum: 42, type: "int", section: "Gui", regex: "i)^(0|1)$"}
-settings["TicketPlanterCheck"] := {enum: 43, type: "int", section: "Gui", regex: "i)^(0|1)$"}
-settings["PlanterOfPlentyCheck"] := {enum: 44, type: "int", section: "Gui", regex: "i)^(0|1)$"}
-settings["BambooFieldCheck"] := {enum: 45, type: "int", section: "Gui", regex: "i)^(0|1)$"}
-settings["BlueFlowerFieldCheck"] := {enum: 46, type: "int", section: "Gui", regex: "i)^(0|1)$"}
-settings["CactusFieldCheck"] := {enum: 47, type: "int", section: "Gui", regex: "i)^(0|1)$"}
-settings["CloverFieldCheck"] := {enum: 48, type: "int", section: "Gui", regex: "i)^(0|1)$"}
-settings["CoconutFieldCheck"] := {enum: 49, type: "int", section: "Gui", regex: "i)^(0|1)$"}
-settings["DandelionFieldCheck"] := {enum: 50, type: "int", section: "Gui", regex: "i)^(0|1)$"}
-settings["MountainTopFieldCheck"] := {enum: 51, type: "int", section: "Gui", regex: "i)^(0|1)$"}
-settings["MushroomFieldCheck"] := {enum: 52, type: "int", section: "Gui", regex: "i)^(0|1)$"}
-settings["PepperFieldCheck"] := {enum: 53, type: "int", section: "Gui", regex: "i)^(0|1)$"}
-settings["PineTreeFieldCheck"] := {enum: 54, type: "int", section: "Gui", regex: "i)^(0|1)$"}
-settings["PineappleFieldCheck"] := {enum: 55, type: "int", section: "Gui", regex: "i)^(0|1)$"}
-settings["PumpkinFieldCheck"] := {enum: 56, type: "int", section: "Gui", regex: "i)^(0|1)$"}
-settings["RoseFieldCheck"] := {enum: 57, type: "int", section: "Gui", regex: "i)^(0|1)$"}
-settings["SpiderFieldCheck"] := {enum: 58, type: "int", section: "Gui", regex: "i)^(0|1)$"}
-settings["StrawberryFieldCheck"] := {enum: 59, type: "int", section: "Gui", regex: "i)^(0|1)$"}
-settings["StumpFieldCheck"] := {enum: 60, type: "int", section: "Gui", regex: "i)^(0|1)$"}
-settings["SunflowerFieldCheck"] := {enum: 61, type: "int", section: "Gui", regex: "i)^(0|1)$"}
+settings["PlanterMode"] := {enum: 24, type: "int", section: "Planters", regex: "i)^(0|1|2)$"}
+settings["MaxAllowedPlanters"] := {enum: 25, type: "int", section: "Planters", regex: "i)^(0|1|2|3)$"}
+settings["HarvestInterval"] := {enum: 26, type: "int", section: "Planters", regex: "i)^\d{1,2}$"}
+settings["AutomaticHarvestInterval"] := {enum: 27, type: "int", section: "Planters", regex: "i)^(0|1)$"}
+settings["HarvestFullGrown"] := {enum: 28, type: "int", section: "Planters", regex: "i)^(0|1)$"}
+settings["GotoPlanterField"] := {enum: 29, type: "int", section: "Planters", regex: "i)^(0|1)$"}
+settings["GatherFieldSipping"] := {enum: 30, type: "int", section: "Planters", regex: "i)^(0|1)$"}
+settings["ConvertFullBagHarvest"] := {enum: 31, type: "int", section: "Planters", regex: "i)^(0|1)$"}
+settings["GatherPlanterLoot"] := {enum: 32, type: "int", section: "Planters", regex: "i)^(0|1)$"}
+settings["PlasticPlanterCheck"] := {enum: 33, type: "int", section: "Planters", regex: "i)^(0|1)$"}
+settings["CandyPlanterCheck"] := {enum: 34, type: "int", section: "Planters", regex: "i)^(0|1)$"}
+settings["BlueClayPlanterCheck"] := {enum: 35, type: "int", section: "Planters", regex: "i)^(0|1)$"}
+settings["RedClayPlanterCheck"] := {enum: 36, type: "int", section: "Planters", regex: "i)^(0|1)$"}
+settings["TackyPlanterCheck"] := {enum: 37, type: "int", section: "Planters", regex: "i)^(0|1)$"}
+settings["PesticidePlanterCheck"] := {enum: 38, type: "int", section: "Planters", regex: "i)^(0|1)$"}
+settings["HeatTreatedPlanterCheck"] := {enum: 39, type: "int", section: "Planters", regex: "i)^(0|1)$"}
+settings["HydroponicPlanterCheck"] := {enum: 40, type: "int", section: "Planters", regex: "i)^(0|1)$"}
+settings["PetalPlanterCheck"] := {enum: 41, type: "int", section: "Planters", regex: "i)^(0|1)$"}
+settings["PaperPlanterCheck"] := {enum: 42, type: "int", section: "Planters", regex: "i)^(0|1)$"}
+settings["TicketPlanterCheck"] := {enum: 43, type: "int", section: "Planters", regex: "i)^(0|1)$"}
+settings["PlanterOfPlentyCheck"] := {enum: 44, type: "int", section: "Planters", regex: "i)^(0|1)$"}
+settings["BambooFieldCheck"] := {enum: 45, type: "int", section: "Planters", regex: "i)^(0|1)$"}
+settings["BlueFlowerFieldCheck"] := {enum: 46, type: "int", section: "Planters", regex: "i)^(0|1)$"}
+settings["CactusFieldCheck"] := {enum: 47, type: "int", section: "Planters", regex: "i)^(0|1)$"}
+settings["CloverFieldCheck"] := {enum: 48, type: "int", section: "Planters", regex: "i)^(0|1)$"}
+settings["CoconutFieldCheck"] := {enum: 49, type: "int", section: "Planters", regex: "i)^(0|1)$"}
+settings["DandelionFieldCheck"] := {enum: 50, type: "int", section: "Planters", regex: "i)^(0|1)$"}
+settings["MountainTopFieldCheck"] := {enum: 51, type: "int", section: "Planters", regex: "i)^(0|1)$"}
+settings["MushroomFieldCheck"] := {enum: 52, type: "int", section: "Planters", regex: "i)^(0|1)$"}
+settings["PepperFieldCheck"] := {enum: 53, type: "int", section: "Planters", regex: "i)^(0|1)$"}
+settings["PineTreeFieldCheck"] := {enum: 54, type: "int", section: "Planters", regex: "i)^(0|1)$"}
+settings["PineappleFieldCheck"] := {enum: 55, type: "int", section: "Planters", regex: "i)^(0|1)$"}
+settings["PumpkinFieldCheck"] := {enum: 56, type: "int", section: "Planters", regex: "i)^(0|1)$"}
+settings["RoseFieldCheck"] := {enum: 57, type: "int", section: "Planters", regex: "i)^(0|1)$"}
+settings["SpiderFieldCheck"] := {enum: 58, type: "int", section: "Planters", regex: "i)^(0|1)$"}
+settings["StrawberryFieldCheck"] := {enum: 59, type: "int", section: "Planters", regex: "i)^(0|1)$"}
+settings["StumpFieldCheck"] := {enum: 60, type: "int", section: "Planters", regex: "i)^(0|1)$"}
+settings["SunflowerFieldCheck"] := {enum: 61, type: "int", section: "Planters", regex: "i)^(0|1)$"}
 settings["MultiReset"] := {enum: 62, type: "int", section: "Settings", regex: "i)^(0|1|2|3)$"}
 settings["ConvertMins"] := {enum: 63, type: "int", section: "Settings", regex: "i)^\d{1,2}$"}
 settings["LastConvertBalloon"] := {enum: 64, type: "int", section: "Settings", regex: "i)^\d{1,10}$"}
@@ -791,22 +791,52 @@ nm_command(command)
 		switch params[2], 0
 		{
 			case "s","set":
-			sections := Map("Boost","","Collect","","Gather","","Gui","","Planters","","Quests","","Settings","","Status","","Blender","","Shrine","")
+			sections := Map("Boost", "**__Boost__**"
+				,"Collect", "**__Collect__**"
+				,"Gather", "**__Gather__**"
+				,"Planters", "**__Planters__**"
+				,"Quests", "**__Quests__**"
+				,"Settings", "**__Settings__**"
+				,"Status", "**__Status__**"
+				,"Blender", "**__Blender__**"
+				,"Shrine", "**__Shrine__**"), sections.Default := ""
+
+			; populate each variable list
 			for k,v in settings
-				sections[v.section] .= "\n" k
+				sections[v.section] .= "`n" k
+
+			; trim all lists to 4096 characters (max embed description)
+			for ,list in sections
+				list := SubStr(list, 1, 4096)
+
+			; split lists into max 4096 character embeds
+			enum := sections.__Enum(), enum.Call(,&section)
+			embeds := [], embed := Map("title", "List of Settings for ``?set``")
+			Loop 10
+			{
+				embed["color"] := 5066239, embed["description"] := section
+				Loop sections.Count
+				{
+					if (enum.Call(,&section) = 0)
+					{
+						embeds.Push(embed)
+						break 2
+					}
+					if (StrLen(embed["description"]) + StrLen(section) > 4092) ; 4 characters for "\n\n"
+						break
+					else
+						embed["description"] .= "`n`n" section
+				}
+				embeds.Push(embed.Clone()), embed.Clear()
+			}
+
+			; send embeds as separate messages (because of the max 6000 character limit)
+			enum := embeds.__Enum(), enum.Call(&embed)
 			postdata :=
 			(
 			'
 			{
-				"embeds": [{
-					"title": "List of Settings for ``?set``",
-					"color": "5066239",
-					"description": "' ("**__Boost__**" sections["Boost"] "\n\n**__Collect__**" sections["Collect"] "\n\n**__Gather__**" sections["Gather"]) '"
-				},
-				{
-					"color": "5066239",
-					"description": "' ("**__Planters__**" sections["Gui"] "\n\n**__Quests__**" sections["Quests"] "\n\n**__Settings__**" sections["Settings"] "\n\n**__Status__**" sections["Status"] "\n\n**__Blender__**" sections["Blender"] "\n\n**__Shrine__**" sections["Shrine"]) '"
-				}],
+				"embeds": [' JSON.stringify(embed) '],
 				"allowed_mentions": {
 					"parse": []
 				},
@@ -817,6 +847,8 @@ nm_command(command)
 			}
 			'
 			)
+			while enum.Call(&embed)
+				discord.SendMessageAPI(postdata), postdata := '{"embeds": [' JSON.stringify(embed) ']}'
 
 			case "a","ad","adv","advance","advanced":
 			postdata :=
@@ -1208,7 +1240,7 @@ nm_command(command)
 			case "smoking":
 			if ((params[3] = 1) || (params[3] = 2) || (params[3] = 3))
 			{
-				vars["PlanterMode"] := IniRead("settings\nm_config.ini", "Gui", "PlanterMode")
+				vars["PlanterMode"] := IniRead("settings\nm_config.ini", "Planters", "PlanterMode")
 				n := params[3]
 				if (vars["PlanterName" n] && (vars["PlanterName" n] != "None") && (vars["MPlanterHold" n] = 1) && (vars["PlanterMode"] = 1))
 				{
@@ -1381,7 +1413,7 @@ nm_command(command)
 			)
 
 			t := nowUnix()
-			vars["PlanterMode"] := IniRead("settings\nm_config.ini", "Gui", "PlanterMode")
+			vars["PlanterMode"] := IniRead("settings\nm_config.ini", "Planters", "PlanterMode")
 			Loop 3
 			{
 				if (vars["PlanterName" A_Index] && (vars["PlanterName" A_Index] != "None") && planters.Has(vars["PlanterName" A_Index]))
@@ -1974,8 +2006,8 @@ nm_command(command)
 				DetectHiddenWindows 1
 				if WinExist("natro_macro ahk_class AutoHotkey") {
                     PostMessage 0x5552, 230+n, 0 ; ShrineAmount
-                    PostMessage 0x5553, 56+n, 10 ; ShrineIndex
-                    PostMessage 0x5553, 54+n, 10 ; ShrineItem
+                    PostMessage 0x5553, 56+n, 9 ; ShrineIndex
+                    PostMessage 0x5553, 54+n, 9 ; ShrineItem
                 }
 				discord.SendEmbed("Cleared Slot " n "!", 5066239, , , , id)
 			}
@@ -2057,8 +2089,8 @@ nm_command(command)
 				if WinExist("natro_macro ahk_class AutoHotkey") {
                     PostMessage 0x5552, 232+n, 0 ; BlenderAmount
                     PostMessage 0x5552, 238+n, 0 ; BlenderTime
-                    PostMessage 0x5553, 58+n, 9 ; BlenderIndex
-                    PostMessage 0x5553, 61+n, 9 ; BlenderItem
+                    PostMessage 0x5553, 58+n, 8 ; BlenderIndex
+                    PostMessage 0x5553, 61+n, 8 ; BlenderItem
                 }
 				discord.SendEmbed("Cleared Slot " n "!", 5066239, , , , id)
 
@@ -2441,7 +2473,7 @@ nowUnix() => DateDiff(A_NowUTC, "19700101000000", "Seconds")
 UpdateStr(var, value, section)
 {
 	global
-	static sections := Map("Boost",1,"Collect",2,"Gather",3,"Gui",4,"Planters",5,"Quests",6,"Settings",7,"Status",8,"Blender",9,"Shrine",10)
+	static sections := Map("Boost",1,"Collect",2,"Gather",3,"Planters",4,"Quests",5,"Settings",6,"Status",7,"Blender",8,"Shrine",9)
 	try %var% := value
 	IniWrite value, "settings\nm_config.ini", section, var
 	DetectHiddenWindows 1
@@ -2482,7 +2514,7 @@ nm_setGlobalStr(wParam, lParam, *)
 	local var
 	; enumeration
 	#Include %A_ScriptDir%\..\lib\enum\EnumStr.ahk
-	static sections := ["Boost","Collect","Gather","Gui","Planters","Quests","Settings","Status","Blender","Shrine"]
+	static sections := ["Boost","Collect","Gather","Planters","Quests","Settings","Status","Blender","Shrine"]
 
 	var := arr[wParam], section := sections[lParam]
 	%var% := IniRead(A_ScriptDir "\..\settings\nm_config.ini", section, var)
