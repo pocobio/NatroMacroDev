@@ -20686,6 +20686,7 @@ start(*){
 	global RileyLadybugs:=0
 	global RileyScorpions:=0
 	global RileyAll:=0
+	global GatherFieldBoosted:=0
 	global GatherFieldBoostedStart:=nowUnix()-3600
 	global ConvertGatherFlag:=0
 	CurrentField := MainGui["CurrentField"].Text
