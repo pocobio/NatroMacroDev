@@ -4430,7 +4430,7 @@ nm_FieldSprinklerLoc(GuiCtrl, *){
 		index := 1
 		case "FSL2Left", "FSL2Right":
 		index := 2
-		case "FSL3Left", "hFSL3Right":
+		case "FSL3Left", "FSL3Right":
 		index := 3
 	}
 
@@ -9273,7 +9273,7 @@ nm_Reset(checkAll:=1, wait:=2000, convert:=1, force:=0){
 		{
 			GetRobloxClientPos(hwnd)
 			pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//2-50 "|" windowY+2*windowHeight//3 "|100|" windowHeight//3)
-			if (Gdip_ImageSearch(pBMScreen, bitmaps["dialog"], &pos, , , , , 10, , 3) = 0) {
+			if (Gdip_ImageSearch(pBMScreen, bitmaps["dialog"], &pos, , , , , 10, , 3) != 1) {
 				Gdip_DisposeImage(pBMScreen)
 				break
 			}
@@ -10811,11 +10811,11 @@ nm_SolveMemoryMatch(MemoryMatchGame:="") {
 
 	GridOAC:= [] ;Define MM Tile Coordinates
 	Loop 5 {
-		Xcord:=middleX-230+80*A_Index
+		Xcord:=middleX-200+80*A_Index
 		x:=A_index
 		Loop 4 {
 			row := []
-			Ycord:=middleY-230+80*A_Index
+			Ycord:=middleY-200+80*A_Index
 			R:=A_index+(x-1)*4
 			Row.push(Xcord)
 			Row.push(Ycord)
@@ -10937,33 +10937,26 @@ nm_SolveMemoryMatch(MemoryMatchGame:="") {
 			DllCall("GetSystemTimeAsFileTime", "int64p", &f:=s)
 			Sleep Max(500 - (f - s)//10000, -1) ; match previous version's total sleep 500
 
-
 			Loop 500 {
-				pBMScreen := Gdip_BitmapFromScreen(TileXCordOAC-5 "|" TileYCordOAC+10 "|8|20") ; Detect Clicked Item
-				;Gdip_SaveBitmapToFile(pBMScreen, "Border.png")
-				if (Gdip_ImageSearch(pBMScreen, bitmaps["MMBorder"], , , , , , 1, , 2) = 1) {
-					Gdip_DisposeImage(pBMScreen)
-					break
-				}
-				Gdip_DisposeImage(pBMScreen)
-				sleep 10
-			}
-			Loop 500 {
-				pBMScreen := Gdip_BitmapFromScreen(TileXCordOAC+20 "|" TileYCordOAC+20 "|20|20") ; Detect Clicked Item
-				;Gdip_SaveBitmapToFile(pBMScreen, "empty" A_index ".png")
-				if (Gdip_ImageSearch(pBMScreen, bitmaps["MMEmptyTile"], , , , , , 1, , 2) != 1) {
-					Gdip_DisposeImage(pBMScreen)
-					emptytiletemp:=1
-					break
-				}
-				Gdip_DisposeImage(pBMScreen)
-				sleep 10
-			}
-			;msgbox emptytiletemp
+			  pBMScreen := Gdip_BitmapFromScreen(TileXCordOAC-35 "|" TileYCordOAC-20 "|45|30") ; Detect Clicked Item
+			  Gdip_SaveBitmapToFile(pBMScreen, "empty" A_index ".png")
+			  if (Gdip_ImageSearch(pBMScreen, bitmaps["MMBorder"], , , , 8, 20, 1, , 2) = 1) {
+			    if (Gdip_ImageSearch(pBMScreen, bitmaps["MMEmptyTile"], , 25, 10, , , 1, , 2) != 1) {
+			      Gdip_DisposeImage(pBMScreen)
+			      break
+			    }
+			  } else {
+			    Gdip_DisposeImage(pBMScreen)
+			    ; no border but tile never showed an image (because the loop still isn't broken), handle this
+			  }
+			  Gdip_DisposeImage(pBMScreen)
+			  sleep 10
+			}			
+			
 			sleep 300
 
 			if(PairFoundOAC!=1 && (A_Index=1 || (A_Index=2 &&  MatchFoundOAC!=1))) {
-				StoreItemOAC[Tile] := Gdip_BitmapFromScreen(TileXCordOAC+20 "|" TileYCordOAC+25 "|35|30") ; Detect Clicked Item
+				StoreItemOAC[Tile] := Gdip_BitmapFromScreen(TileXCordOAC-25 "|" TileYCordOAC-25 "|50|50") ; Detect Clicked Item
 				nm_CreateFolder(path := A_WorkingDir "\MMScreenshots"), Gdip_SaveBitmapToFile(StoreItemOAC[Tile], path "\image" Tile ".png") ; comment out this line for public release
 				for item in MemoryMatchItems {
   					if %item%MatchIgnoreCheck {
@@ -11382,7 +11375,7 @@ nm_shrine(){
 						GetRobloxClientPos(hwnd)
 						Loop 500 {
 							pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//2-50 "|" windowY+2*windowHeight//3 "|100|" windowHeight//3)
-							if (Gdip_ImageSearch(pBMScreen, bitmaps["dialog"], &pos, , , , , 10, , 3) = 0) {
+							if (Gdip_ImageSearch(pBMScreen, bitmaps["dialog"], &pos, , , , , 10, , 3) != 1) {
 								Gdip_DisposeImage(pBMScreen)
 								break
 							}
@@ -16194,18 +16187,22 @@ nm_activeHoney(){
 		offsetY := GetYOffset(hwnd)
 		x1 := windowX + windowWidth//2 - 90
 		y1 := windowY + offsetY
-		if (PixelSearch(&bx2, &by2, x1, y1, x1+70, y1+34, 0xFFE280, 20) = 1){
+		try
+			result := PixelSearch(&bx2, &by2, x1, y1, x1+70, y1+34, 0xFFE280, 20)
+		catch
+			result := 0
+		if (result = 1){
 			GameFrozenCounter:=0
 			return 1
 		} else {
 			if(HiveBees<25){
 				x1 := windowX + windowWidth//2 + 210
 				y1 := windowY + offsetY
-				if (PixelSearch(&bx2, &by2, x1, y1, x1+70, y1+34, 0xFFFFFF, 20) = 1){
-					return 1
-				} else {
-					return 0
-				}
+				try
+					result := PixelSearch(&bx2, &by2, x1, y1, x1+70, y1+34, 0xFFFFFF, 20)
+				catch
+					result := 0
+				return result
 			} else {
 				return 0
 			}
@@ -18343,7 +18340,7 @@ nm_Feed(food){
 			}
 		}
 
-		if ((Gdip_ImageSearch(pBMScreen, bitmaps[food], &pos, , , 306, , 10, , 5) = 0) || (Gdip_ImageSearch(pBMScreen, bitmaps["feed"], , (54*windowWidth)//100-300, , , , 2, , 2) = 1)) {
+		if ((Gdip_ImageSearch(pBMScreen, bitmaps[food], &pos, , , 306, , 10, , 5) != 1) || (Gdip_ImageSearch(pBMScreen, bitmaps["feed"], , (54*windowWidth)//100-300, , , , 2, , 2) = 1)) {
 			Gdip_DisposeImage(pBMScreen)
 			break
 		}
@@ -18778,7 +18775,7 @@ nm_gotoQuestgiver(giver){
 				{
 					GetRobloxClientPos(hwnd)
 					pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//2-50 "|" windowY+2*windowHeight//3 "|100|" windowHeight//3)
-					if (Gdip_ImageSearch(pBMScreen, bitmaps["dialog"], &pos, , , , , 10, , 3) = 0) {
+					if (Gdip_ImageSearch(pBMScreen, bitmaps["dialog"], &pos, , , , , 10, , 3) != 1) {
 						Gdip_DisposeImage(pBMScreen)
 						break
 					}
@@ -19468,7 +19465,11 @@ ba_GetNectarPercent(var){
 			hwnd := GetRobloxHWND()
 			offsetY := GetYOffset(hwnd)
 			GetRobloxClientPos(hwnd)
-			If (PixelSearch(&bx2, &by2, windowX, windowY+offsetY+30, windowX+860, windowY+offsetY+150, nectarColor) = 1) {
+			try
+				result := PixelSearch(&bx2, &by2, windowX, windowY+offsetY+30, windowX+860, windowY+offsetY+150, nectarColor)
+			catch
+				result := 0
+			If (result = 1) {
 				nexty:=by2+1
 				pixels:=1
 				loop 38 {
@@ -19627,7 +19628,7 @@ ba_placePlanter(fieldName, planter, planterNum, atField:=0){
 			}
 		}
 
-		if ((Gdip_ImageSearch(pBMScreen, bitmaps[planterName], &planterPos, , , 306, , 10, , 5) = 0) || (Gdip_ImageSearch(pBMScreen, bitmaps["yes"], , windowWidth//2-250, , , , 2, , 2) = 1)) {
+		if ((Gdip_ImageSearch(pBMScreen, bitmaps[planterName], &planterPos, , , 306, , 10, , 5) != 1) || (Gdip_ImageSearch(pBMScreen, bitmaps["yes"], , windowWidth//2-250, , , , 2, , 2) = 1)) {
 			Gdip_DisposeImage(pBMScreen)
 			break
 		}
@@ -20131,7 +20132,7 @@ mp_PlantPlanter(PlanterIndex) {
 			}
 		}
 
-		if ((Gdip_ImageSearch(pBMScreen, bitmaps[MPlanterName], &planterPos, , , 306, , 10, , 5) = 0) || (Gdip_ImageSearch(pBMScreen, bitmaps["yes"], , windowWidth//2-250, , , , 2, , 2) = 1)) {
+		if ((Gdip_ImageSearch(pBMScreen, bitmaps[MPlanterName], &planterPos, , , 306, , 10, , 5) != 1) || (Gdip_ImageSearch(pBMScreen, bitmaps["yes"], , windowWidth//2-250, , , , 2, , 2) = 1)) {
 			Gdip_DisposeImage(pBMScreen)
 			break
 		}
@@ -20280,7 +20281,7 @@ mp_UseGlitter(PlanterIndex, atField:=0) {
 			}
 		}
 
-		if ((Gdip_ImageSearch(pBMScreen, bitmaps["glitter"], &glitterPos, , , 306, , 10, , 5) = 0)) {
+		if ((Gdip_ImageSearch(pBMScreen, bitmaps["glitter"], &glitterPos, , , 306, , 10, , 5) != 1)) {
 			Gdip_DisposeImage(pBMScreen)
 			break
 		}
