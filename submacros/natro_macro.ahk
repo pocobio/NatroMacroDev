@@ -20399,10 +20399,14 @@ mp_HarvestPlanter(PlanterIndex) {
 	else if ((MPuffModeA = 1) && (MPuffMode%PlanterIndex% = 1) && (PlanterHarvestNow%PlanterIndex% != 1)) {
 		; screenshot and set to hold instead of harvest, if auto harvest is disabled for the slot, and the user hasn't selected to release it by remote control
 		Sleep 200 ; wait for game to update frame
-		nm_setStatus("Holding", (MPlanterName . " (" . MFieldName . ")"))
-		Sleep 2000
-		MPlanterHold%PlanterIndex% := 1
-		IniWrite MPlanterHold%PlanterIndex%, "settings\nm_config.ini", "Planters", "MPlanterHold" PlanterIndex
+		nm_PlanterTimeUpdate(MFieldName)
+		sleep 1000		
+		If (nowUnix() >= PlanterHarvestTime%PlanterIndex%) {
+			nm_setStatus("Holding", (MPlanterName . " (" . MFieldName . ")"))
+			Sleep 2000
+			MPlanterHold%PlanterIndex% := 1
+			IniWrite MPlanterHold%PlanterIndex%, "settings\nm_config.ini", "Planters", "MPlanterHold" PlanterIndex
+		}
 		return 1
 	}
 	else {
