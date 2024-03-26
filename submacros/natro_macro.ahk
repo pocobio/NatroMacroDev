@@ -15058,7 +15058,14 @@ nm_createWalk(movement, name:="", vars:="") ; this function generates the 'walk'
 	gifted_hasty := ((Mod(base_movespeed*10, 12) = 0) && base_movespeed != 18 && base_movespeed != 24 && base_movespeed != 30) ? 1 : 0
 	base_movespeed /= (gifted_hasty ? 1.2 : 1)
 	'
-	) : '(bitmaps := Map()).CaseSense := 0')
+	) :
+	(
+	'
+	(bitmaps := Map()).CaseSense := 0
+	pToken := Gdip_Startup()
+	Walk(param, *) => HyperSleep(4000/' MoveSpeedNum '*param)
+	'
+	))
 
 	. (
 	(
@@ -15074,7 +15081,7 @@ nm_createWalk(movement, name:="", vars:="") ; this function generates the 'walk'
 	nm_Walk(tiles, MoveKey1, MoveKey2:=0)
 	{
 		Send "{" MoveKey1 " down}" (MoveKey2 ? "{" MoveKey2 " down}" : "")
-		' (NewWalk ? 'Walk(tiles)' : ('HyperSleep(4000/' MoveSpeedNum '*tiles')) '
+		' (NewWalk ? 'Walk(tiles)' : ('HyperSleep(4000/' MoveSpeedNum '*tiles)')) '
 		Send "{" MoveKey1 " up}" (MoveKey2 ? "{" MoveKey2 " up}" : "")
 	}
 
@@ -15082,7 +15089,7 @@ nm_createWalk(movement, name:="", vars:="") ; this function generates the 'walk'
 		start(hk?)
 		{
 			Send "{F14 down}"
-			' (NewWalk ? movement : RegExReplace(movement, "im)Walk\((?<param>.+?)(?:\,|\)(?=[^()]*(?:\(|$)))(?:.*\))?", "HyperSleep(4000/" MoveSpeedNum "*(${param}))")) '
+			' movement '
 			Send "{F14 up}"
 		}
 
@@ -18581,10 +18588,9 @@ nm_PathVars(){
 			Send "{" SC_Space " down}{" RightKey " down}"
 			Sleep 100
 			Send "{" SC_Space " up}"
-			Walk(2)
-			Send "{" FwdKey " down}"
-			Walk(1.5)
-			Send "{" FwdKey " up}"
+			nm_Walk(2, RightKey)
+			nm_Walk(1.5, FwdKey, RightKey)
+			Send "{" RightKey " down}"
 
 			DllCall("GetSystemTimeAsFileTime","int64p",&s:=0)
 			n := s, f := s+100000000
