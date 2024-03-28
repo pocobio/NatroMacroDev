@@ -180,8 +180,14 @@ nm_importPatterns()
 	Loop Files A_WorkingDir "\patterns\*.ahk"
 	{
 		file := FileOpen(A_LoopFilePath, "r"), pattern := file.Read(), file.Close()
-		if !!RegexMatch(pattern, "im)^patterns\[")
-    	Throw Error("Deprecated pattern detected",,A_LoopFileName)
+		if !!RegexMatch(pattern, "im)patterns\[")
+    			MsgBox
+			(
+			"Pattern '" A_LoopFileName "' seems to be deprecated!
+			This means the pattern will NOT work!
+			Check for an updated version of the pattern
+			or ask the creator to update it"
+			), "Error", 0x40010 " T60"
 		if !InStr(imported, imported_pattern := '("' (pattern_name := StrReplace(A_LoopFileName, "." A_LoopFileExt)) '")`r`n' pattern '`r`n`r`n')
 		{
 			script :=
@@ -260,8 +266,14 @@ nm_importPaths()
 		{
 			try {
 				file := FileOpen(A_WorkingDir "\paths\" k "-" v ".ahk", "r"), paths[k][v] := file.Read(), file.Close()
-				if !!regexMatch(paths[k][v], "im)^paths\[")
-    			throw Error("Deprecated path detected!",,k "-" v)
+				if !!regexMatch(paths[k][v], "im)paths\[")
+    					MsgBox
+					(
+					"Path '" k '-' v "' seems to be deprecated!
+					This means the macro will NOT work correctly!
+					Check for an updated version of the path or
+					restore the default path"
+					), "Error", 0x40010 " T60"
 			}
 			catch
 				MsgBox
