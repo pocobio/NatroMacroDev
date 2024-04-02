@@ -1,4 +1,4 @@
-/*
+﻿/*
 Natro Macro (https://github.com/NatroTeam/NatroMacro)
 Copyright © Natro Team (https://github.com/NatroTeam)
 
@@ -180,8 +180,8 @@ nm_importPatterns()
 	Loop Files A_WorkingDir "\patterns\*.ahk"
 	{
 		file := FileOpen(A_LoopFilePath, "r"), pattern := file.Read(), file.Close()
-		if !!RegexMatch(pattern, "im)patterns\[")
-    			MsgBox
+		if RegexMatch(pattern, "im)patterns\[")
+    		MsgBox
 			(
 			"Pattern '" A_LoopFileName "' seems to be deprecated!
 			This means the pattern will NOT work!
@@ -266,8 +266,8 @@ nm_importPaths()
 		{
 			try {
 				file := FileOpen(A_WorkingDir "\paths\" k "-" v ".ahk", "r"), paths[k][v] := file.Read(), file.Close()
-				if !!regexMatch(paths[k][v], "im)paths\[")
-    					MsgBox
+				if regexMatch(paths[k][v], "im)paths\[")
+    				MsgBox
 					(
 					"Path '" k '-' v "' seems to be deprecated!
 					This means the macro will NOT work correctly!
@@ -8027,35 +8027,35 @@ nm_BondCalculatorButton(*)
 nm_AutoClickerButton(*)
 {
 	global
-  local GuiCtrl,GuiCtrlDuration, GuiCtrlDelay
-  GuiClose(*){
-    if (IsSet(AutoClickerGui) && IsObject(AutoClickerGui))
-      AutoClickerGui.Destroy(), AutoClickerGui := ""
-  }
-  GuiClose()
-  AutoClickerGui := Gui("+AlwaysOnTop +Border", "AutoClicker")
-  AutoClickerGui.OnEvent("Close", GuiClose)
-  AutoClickerGui.SetFont("s8 cDefault w700", "Tahoma")
-  AutoClickerGui.Add("GroupBox", "x5 y2 w161 h80", "Settings")
+	local GuiCtrl,GuiCtrlDuration, GuiCtrlDelay
+	GuiClose(*){
+		if (IsSet(AutoClickerGui) && IsObject(AutoClickerGui))
+			AutoClickerGui.Destroy(), AutoClickerGui := ""
+	}
+	GuiClose()
+	AutoClickerGui := Gui("+AlwaysOnTop +Border", "AutoClicker")
+	AutoClickerGui.OnEvent("Close", GuiClose)
+	AutoClickerGui.SetFont("s8 cDefault w700", "Tahoma")
+	AutoClickerGui.Add("GroupBox", "x5 y2 w161 h80", "Settings")
 	AutoClickerGui.SetFont("Norm")
-  AutoClickerGui.Add("CheckBox", "x76 y2 vClickMode Checked" ClickMode, "Infinite").OnEvent("Click", nm_ClickMode)
-  AutoClickerGui.Add("Text", "x13 y21", "Repeat")
-  AutoClickerGui.Add("Edit", "x50 y19 w80 h18 vClickCountEdit Number Limit7 Disabled" ClickMode)
-  (GuiCtrl := AutoClickerGui.Add("UpDown", "vClickCount Range0-9999999 Disabled" ClickMode, ClickCount)).Section := "Settings", GuiCtrl.OnEvent("Change", nm_saveConfig)
-  AutoClickerGui.Add("Text", "x133 y21", "times")
-  AutoClickerGui.Add("Text", "x10 y41", "Click Interval (ms):")
-  AutoClickerGui.Add("Edit", "x100 y39 w61 h18 Number Limit5", ClickDelay).OnEvent("Change", (*) => nm_saveConfig(GuiCtrlDelay))
-  (GuiCtrlDelay := AutoClickerGui.Add("UpDown", "vClickDelay Range0-99999", ClickDelay)).Section := "Settings", GuiCtrlDelay.OnEvent("Change", nm_saveConfig)
-  AutoClickerGui.Add("Text", "x10 y61", "Click Duration (ms):")
-  AutoClickerGui.Add("Edit", "x104 y59 w57 h18 Number Limit4", ClickDuration).OnEvent("Change", (*) => nm_saveConfig(GuiCtrlDuration))
-  (GuiCtrlDuration := AutoClickerGui.Add("UpDown", "vClickDuration Range0-9999", ClickDuration)).Section := "Settings", GuiCtrlDuration.OnEvent("Change", nm_saveConfig)
-  AutoClickerGui.Add("Button", "x45 y88 w80 h20", "Start (" AutoClickerHotkey ")").OnEvent("Click", nm_StartAutoClicker)
-  AutoClickerGui.Show("w160 h104")
-  nm_StartAutoClicker(*){
-    GuiClose()
-    MainGui.Minimize()
-    autoclicker()
-  }
+	AutoClickerGui.Add("CheckBox", "x76 y2 vClickMode Checked" ClickMode, "Infinite").OnEvent("Click", nm_ClickMode)
+	AutoClickerGui.Add("Text", "x13 y21", "Repeat")
+	AutoClickerGui.Add("Edit", "x50 y19 w80 h18 vClickCountEdit Number Limit7 Disabled" ClickMode)
+	(GuiCtrl := AutoClickerGui.Add("UpDown", "vClickCount Range0-9999999 Disabled" ClickMode, ClickCount)).Section := "Settings", GuiCtrl.OnEvent("Change", nm_saveConfig)
+	AutoClickerGui.Add("Text", "x133 y21", "times")
+	AutoClickerGui.Add("Text", "x10 y41", "Click Interval (ms):")
+	AutoClickerGui.Add("Edit", "x100 y39 w61 h18 Number Limit5", ClickDelay).OnEvent("Change", (*) => nm_saveConfig(GuiCtrlDelay))
+	(GuiCtrlDelay := AutoClickerGui.Add("UpDown", "vClickDelay Range0-99999", ClickDelay)).Section := "Settings", GuiCtrlDelay.OnEvent("Change", nm_saveConfig)
+	AutoClickerGui.Add("Text", "x10 y61", "Click Duration (ms):")
+	AutoClickerGui.Add("Edit", "x104 y59 w57 h18 Number Limit4", ClickDuration).OnEvent("Change", (*) => nm_saveConfig(GuiCtrlDuration))
+	(GuiCtrlDuration := AutoClickerGui.Add("UpDown", "vClickDuration Range0-9999", ClickDuration)).Section := "Settings", GuiCtrlDuration.OnEvent("Change", nm_saveConfig)
+	AutoClickerGui.Add("Button", "x45 y88 w80 h20", "Start (" AutoClickerHotkey ")").OnEvent("Click", nm_StartAutoClicker)
+	AutoClickerGui.Show("w160 h104")
+	nm_StartAutoClicker(*){
+		GuiClose()
+		MainGui.Minimize()
+		autoclicker()
+	}
 }
 nm_ClickMode(*){
 	global
