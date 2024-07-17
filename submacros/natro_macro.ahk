@@ -15069,12 +15069,12 @@ nm_createWalk(movement, name:="", vars:="") ; this function generates the 'walk'
 	(
 	'
 	#Include "Walk.ahk"
-
-	movespeed := ' MoveSpeedNum '
-	hasty_guard := (Mod(movespeed*10, 11) = 0) ? 1 : 0
-	base_movespeed := movespeed / (hasty_guard ? 1.1 : 1)
-	gifted_hasty := ((Mod(base_movespeed*10, 12) = 0) && base_movespeed != 18 && base_movespeed != 24 && base_movespeed != 30) ? 1 : 0
-	base_movespeed /= (gifted_hasty ? 1.2 : 1)
+	
+	speeds := { %"20"% : { hasty: 0, guard: 0 }, %"23"% : { hasty: 1, guard: 0 }, %"22"% : { hasty: 0, guard: 1 }, %"21"% : { hasty: 0, guard: 0 }, %"24.15"% : { hasty: 1, guard: 0 }, %"23.10"% : { hasty: 0, guard: 1 }, %"26.56"% : { hasty: 1, guard: 1 }, %"25.30"% : { hasty: 1, guard: 0 }, %"24.20"% : { hasty: 0, guard: 1 }, %"27.83"% : { hasty: 1, guard: 1 }, %"26.45"% : { hasty: 1, guard: 0 }, %"29.09"% : { hasty: 1, guard: 1 }, %"24"% : { hasty: 0, guard: 0 }, %"27.60"% : { hasty: 1, guard: 0 }, %"26.40"% : { hasty: 0, guard: 1 }, %"30.36"% : { hasty: 1, guard: 1 }, %"25"% : { hasty: 0, guard: 0 }, %"28.75"% : { hasty: 1, guard: 0 }, %"27.50"% : { hasty: 0, guard: 1 }, %"31.62"% : { hasty: 1, guard: 1 }, %"26"% : { hasty: 0, guard: 0 }, %"29.90"% : { hasty: 1, guard: 0 }, %"28.60"% : { hasty: 0, guard: 1 }, %"32.89"% : { hasty: 1, guard: 1 }, %"27"% : { hasty: 0, guard: 0 }, %"31.05"% : { hasty: 1, guard: 0 }, %"29.70"% : { hasty: 0, guard: 1 }, %"34.15"% : { hasty: 1, guard: 1 }, %"28"% : { hasty: 0, guard: 0 }, %"32.20"% : { hasty: 1, guard: 0 }, %"30.80"% : { hasty: 0, guard: 1 }, %"35.42"% : { hasty: 1, guard: 1 }, %"29"% : { hasty: 0, guard: 0 }, %"33.35"% : { hasty: 1, guard: 0 }, %"31.90"% : { hasty: 0, guard: 1 }, %"36.68"% : { hasty: 1, guard: 1 }, %"30"% : { hasty: 0, guard: 0 }, %"34.50"% : { hasty: 1, guard: 0 }, %"33"% : { hasty: 0, guard: 1 }, %"37.95"% : { hasty: 1, guard: 1 }, %"31"% : { hasty: 0, guard: 0 }, %"35.65"% : { hasty: 1, guard: 0 }, %"34.10"% : { hasty: 0, guard: 1 }, %"39.21"% : { hasty: 1, guard: 1 }, %"32"% : { hasty: 0, guard: 0 }, %"36.80"% : { hasty: 1, guard: 0 }, %"35.20"% : { hasty: 0, guard: 1 }, %"40.48"% : { hasty: 1, guard: 1 } }
+	movespeed := Format("{:0.2f}", ' MoveSpeedNum ')
+	gifted_hasty := speeds.%movespeed%.hasty
+	hasty_guard := speeds.%movespeed%.guard
+	base_movespeed := movespeed / ((hasty_guard ? 1.1 : 1) * (gifted_hasty ? 1.15 : 1))
 	'
 	) :
 	(
