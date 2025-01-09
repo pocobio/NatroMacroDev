@@ -13147,45 +13147,13 @@ nm_Bugrun(){
 					{
 						nm_setStatus("Attacking")
 						SendInput "{" RotUp " 4}"
+						SendInput "{" RotLeft " 4}"
 						;Send "{" SC_1 "}"
 						if(!DisableToolUse)
 							Click "Down"
 						loop 17 { ;wait to kill
 							i:=A_Index
 							if(mod(A_Index,4)=1){
-								nm_Move(1500*MoveSpeedFactor, FwdKey)
-								loop 5
-								{
-									roseDead:=nm_HealthDetection()
-									if(roseDead.Length > 0)
-									{
-										Break
-									}
-									SendInput "{" ZoomOut "}"
-									if (A_Index=5)
-									{
-										Success:=1
-										Break 2
-									}
-									Sleep 250
-								}
-							} else if(mod(A_Index,4)=2){
-								nm_Move(1500*MoveSpeedFactor, LeftKey)
-								loop 5
-								{
-									roseDead:=nm_HealthDetection()
-									if(roseDead.Length > 0)
-									{
-										Break
-									}
-									if (A_Index=5)
-									{
-										Success:=1
-										Break 2
-									}
-									Sleep 250
-								}
-							} else if(mod(A_Index,4)=3){
 								nm_Move(1500*MoveSpeedFactor, BackKey)
 								loop 5
 								{
@@ -13202,8 +13170,41 @@ nm_Bugrun(){
 									}
 									Sleep 250
 								}
-							} else if(mod(A_Index,4)=0){
+							} else if(mod(A_Index,4)=2){
 								nm_Move(1500*MoveSpeedFactor, RightKey)
+								loop 5
+								{
+									roseDead:=nm_HealthDetection()
+									if(roseDead.Length > 0)
+									{
+										Break
+									}
+									if (A_Index=5)
+									{
+										Success:=1
+										Break 2
+									}
+									Sleep 250
+								}
+							} else if(mod(A_Index,4)=3){
+								nm_Move(1500*MoveSpeedFactor, FwdKey)
+								loop 5
+								{
+									roseDead:=nm_HealthDetection()
+									if(roseDead.Length > 0)
+									{
+										Break
+									}
+									SendInput "{" ZoomOut "}"
+									if (A_Index=5)
+									{
+										Success:=1
+										Break 2
+									}
+									Sleep 250
+								}
+							} else if(mod(A_Index,4)=0){
+								nm_Move(1500*MoveSpeedFactor, LeftKey)
 								loop 5
 								{
 									roseDead:=nm_HealthDetection()
@@ -13247,17 +13248,18 @@ nm_Bugrun(){
 					nm_setStatus("Looting")
 					movement :=
 					(
-					(((Mod(i, 4) = 1) || (Mod(i, 4) = 2)) ? nm_Walk(4.5, BackKey) : nm_Walk(4.5, FwdKey)) "
-					" (((Mod(i, 4) = 0) || (Mod(i, 4) = 1)) ? nm_Walk(4.5, LeftKey) : nm_Walk(4.5, RightKey)) "
-					" nm_Walk(2, BackKey) "
-					" nm_Walk(8, BackKey, RightKey) "
+					(((Mod(i, 4) = 1) || (Mod(i, 4) = 2)) ? nm_Walk(4.5, FwdKey) : nm_Walk(4.5, BackKey)) "
+					" (((Mod(i, 4) = 0) || (Mod(i, 4) = 1)) ? nm_Walk(4.5, RightKey) : nm_Walk(4.5, LeftKey)) "
+					" nm_Walk(2, FwdKey) "
+					" nm_Walk(10, FwdKey, LeftKey) "
 					loop 4 {
-						" nm_Walk(16, FwdKey) "
-						" nm_Walk(1.5, LeftKey) "
 						" nm_Walk(16, BackKey) "
-						" nm_Walk(1.5, LeftKey) "
+						" nm_Walk(1.5, RightKey) "
+						" nm_Walk(16, FwdKey) "
+						" nm_Walk(1.5, RightKey) "
 					}
-					" nm_Walk(16, FwdKey)
+					" nm_Walk(16, BackKey) "
+					" nm_Walk(6, FwdKey, LeftKey)
 					)
 					nm_createWalk(movement)
 					KeyWait "F14", "D T5 L"
