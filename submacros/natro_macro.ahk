@@ -14240,7 +14240,7 @@ nm_Mondo(){
 			}
 			if (found)
 			{
-				nm_setStatus("Found")
+				nm_setStatus("Found", "Mondo")
 				for index, value in mChick ;Mondo is already dmging itself before we get there
 				{
 					if (value = 100.00) ;Planter detected since mondo will already have taken dmg by the time you come up
@@ -14254,7 +14254,7 @@ nm_Mondo(){
 				}
 				if (mondoChick)
 				{
-					nm_setStatus("Attacking")
+					nm_setStatus("Attacking", "Mondo")
 					if(MondoAction="Buff"){
 						repeat:=0
 						loop MondoSecs { ;2 mins
@@ -14331,8 +14331,9 @@ nm_Mondo(){
 							sleep 250
 						}
 						if (success = 1) {
+							nm_setStatus("Defeated", "Mondo")
+							repeat := 0
 							if !(MondoLootDirection = "Ignore") {
-								repeat := 0
 								;loot mondo after death
 								if (MondoLootDirection = "Random")
 									dir := Random(0, 1)
@@ -14344,7 +14345,7 @@ nm_Mondo(){
 								else
 									tc := "right", afc := "left"
 
-								nm_setStatus("Looting")
+								nm_setStatus("Looting", "Mondo")
 								movement :=
 								(
 								"send '{" RotLeft "}'
