@@ -320,7 +320,6 @@ nm_importConfig()
 		, "ReconnectInterval", ""
 		, "ReconnectHour", ""
 		, "ReconnectMin", ""
-		, "ReconnectMessage", 0
 		, "PublicFallback", 1
 		, "GuiX", ""
 		, "GuiY", ""
@@ -1991,6 +1990,9 @@ QuestRedBoost := 0
 HiveConfirmed := 0
 ShiftLockEnabled := 0
 
+ForceStart := 0
+RemoteStart := 0
+
 ;ensure Gui will be visible
 if (GuiX && GuiY)
 {
@@ -2611,12 +2613,6 @@ MainGui.SetFont("s6 w700")
 MainGui.Add("Text", "x295 yp+6 +BackgroundTrans", "UTC")
 MainGui.SetFont("s8 cDefault Norm", "Tahoma")
 MainGui.Add("Button", "x315 yp-3 w10 h15 vReconnectTimeHelp Disabled", "?").OnEvent("Click", nm_ReconnectTimeHelp)
-(GuiCtrl := MainGui.Add("CheckBox", "x176 yp+24 w88 h15 vReconnectMessage Disabled Checked" ReconnectMessage, "Natro so broke")).Section := "Settings", GuiCtrl.OnEvent("Click", nm_saveConfig)
-hBM := Gdip_CreateHBITMAPFromBitmap(bitmaps["weary"])
-MainGui.Add("Picture", "+BackgroundTrans x269 yp-2 w20 h20", "HBITMAP:*" hBM)
-DllCall("DeleteObject", "ptr", hBM)
-Gdip_DisposeImage(bitmaps["weary"])
-MainGui.Add("Button", "x315 yp+2 w10 h15 vNatroSoBrokeHelp Disabled", "?").OnEvent("Click", nm_NatroSoBrokeHelp)
 (GuiCtrl := MainGui.Add("CheckBox", "x176 yp+18 w132 h15 vPublicFallback Disabled Checked" PublicFallback, "Fallback to Public Server")).Section := "Settings", GuiCtrl.OnEvent("Click", nm_saveConfig)
 MainGui.Add("Button", "x315 yp w10 h15 vPublicFallbackHelp Disabled", "?").OnEvent("Click", nm_PublicFallbackHelp)
 
@@ -2647,7 +2643,6 @@ MainGui.Add("Text", "x345 y170 w110 +BackgroundTrans", "Multiple Reset:")
 (GuiCtrl := MainGui.Add("Slider", "x415 y168 w78 h16 vMultiReset Thick16 Disabled ToolTipTop Range0-3 Page1 TickInterval1", MultiReset)).Section := "Settings", GuiCtrl.OnEvent("Change", nm_saveConfig)
 (GuiCtrl := MainGui.Add("CheckBox", "x345 y186 vGatherDoubleReset Disabled Checked" GatherDoubleReset, "Gather Double Reset")).Section := "Settings", GuiCtrl.OnEvent("Click", nm_saveConfig)
 (GuiCtrl := MainGui.Add("CheckBox", "x345 y201 vDisableToolUse Disabled Checked" DisableToolUse, "Disable Tool Use")).Section := "Settings", GuiCtrl.OnEvent("Click", nm_saveConfig)
-GuiCtrl := MainGui.Add("CheckBox", "x345 y216 vAnnounceGuidingStar Disabled Checked" AnnounceGuidingStar, "Announce Guiding Star").OnEvent("Click", nm_AnnounceGuidWarn)
 SetLoadingProgress(30)
 
 ;COLLECT/Kill TAB
@@ -3231,8 +3226,10 @@ try {
 }
 
 SetTimer Background, 2000
-if (A_Args.Has(1) && (A_Args[1] = 1))
+if (A_Args.Has(1) && (A_Args[1] = 1)){
+	ForceStart := 1
 	SetTimer start, -1000
+}
 
 return
 
@@ -3960,7 +3957,6 @@ nm_TabSettingsLock(){
 	MainGui["HiveBeesHelp"].Enabled := 0
 	MainGui["ConvertDelay"].Enabled := 0
 	MainGui["PrivServer"].Enabled := 0
-	MainGui["ReconnectMessage"].Enabled := 0
 	MainGui["PublicFallback"].Enabled := 0
 	MainGui["ResetFieldDefaultsButton"].Enabled := 0
 	MainGui["ResetAllButton"].Enabled := 0
@@ -3970,7 +3966,6 @@ nm_TabSettingsLock(){
 	MainGui["ReconnectHour"].Enabled := 0
 	MainGui["ReconnectMin"].Enabled := 0
 	MainGui["ReconnectTimeHelp"].Enabled := 0
-	MainGui["NatroSoBrokeHelp"].Enabled := 0
 	MainGui["PublicFallbackHelp"].Enabled := 0
 	MainGui["NewWalkHelp"].Enabled := 0
 }
@@ -4001,7 +3996,6 @@ nm_TabSettingsUnLock(){
 	MainGui["HiveBeesHelp"].Enabled := 1
 	MainGui["ConvertDelay"].Enabled := 1
 	MainGui["PrivServer"].Enabled := 1
-	MainGui["ReconnectMessage"].Enabled := 1
 	MainGui["PublicFallback"].Enabled := 1
 	MainGui["ResetFieldDefaultsButton"].Enabled := 1
 	MainGui["ResetAllButton"].Enabled := 1
@@ -4011,7 +4005,6 @@ nm_TabSettingsUnLock(){
 	MainGui["ReconnectHour"].Enabled := 1
 	MainGui["ReconnectMin"].Enabled := 1
 	MainGui["ReconnectTimeHelp"].Enabled := 1
-	MainGui["NatroSoBrokeHelp"].Enabled := 1
 	MainGui["PublicFallbackHelp"].Enabled := 1
 	MainGui["NewWalkHelp"].Enabled := 1
 }
@@ -7240,8 +7233,9 @@ nm_HiveBeesHelp(*){
 	)", "Hive Bees", 0x40000
 }
 nm_AnnounceGuidWarn(GuiCtrl, *){
+	global AnnounceGuidingStar
 	if GuiCtrl.Value = 0
-		IniWrite (GuiCtrl.Value := 0), "settings\nm_config.ini", "Settings", "AnnounceGuidingStar"
+		IniWrite (AnnounceGuidingStar := 0), "settings\nm_config.ini", "Settings", "AnnounceGuidingStar"
 	else {
 		if (MsgBox("
 		(
@@ -7251,9 +7245,12 @@ nm_AnnounceGuidWarn(GuiCtrl, *){
 
 		DESCRIPTION:
 		When enabled, the macro will send a message to the Roblox chat reading <<Guiding Star in (field) until __:mm>> when the "Guiding star in (field)" text is detected on the bottom right of your screen.
-		)", "Announce Guiding Star", 0x40031)="Ok"){
-			IniWrite (GuiCtrl.Value := 1), "settings\nm_config.ini", "Settings", "AnnounceGuidingStar"
-		} else IniWrite (GuiCtrl.Value := 0), "settings\nm_config.ini", "Settings", "AnnounceGuidingStar"
+
+		Pressing "Cancel" will disable this feature.
+		)", "Announce Guiding Star", 0x40031)="Ok")
+			IniWrite (GuiCtrl.Value := AnnounceGuidingStar := 1), "settings\nm_config.ini", "Settings", "AnnounceGuidingStar"
+		 else 
+			IniWrite (GuiCtrl.Value := AnnounceGuidingStar := 0), "settings\nm_config.ini", "Settings", "AnnounceGuidingStar"
 	}
 }
 nm_ResetConfig(*){
@@ -7540,13 +7537,6 @@ nm_ReconnectTimeHelp(*){
 
 	RECONNECT TIMES: " ReconnectTimeString
 	), "Coordinated Universal Time (UTC)", 0x40000 " Owner" MainGui.Hwnd
-}
-nm_NatroSoBrokeHelp(*){ ; so broke information
-	MsgBox "
-	(
-	DESCRIPTION:
-	Enable this to have the macro say 'Natro so broke :weary:' in chat after it reconnects! This is a reference to e_lol's macros which type 'e_lol so pro :weary:' in chat.
-	)", "Natro so broke :weary:", 0x40000
 }
 nm_PublicFallbackHelp(*){ ; public fallback information
 	MsgBox "
@@ -9356,13 +9346,14 @@ nm_showAdvancedSettings(*){
 nm_AdvancedGUI(init:=0){
 	global
 	local hBM, GuiCtrl
+	
 	TabCtrl.UseTab("Advanced")
 	MainGui.SetFont("s8 cDefault Norm", "Tahoma")
 	MainGui.SetFont("w700")
 	MainGui.Add("GroupBox", "x5 y24 w240 h90", "Fallback Private Servers")
+	MainGui.Add("GroupBox", "x5 yp+90 w240 h115", "Danger Zone")
 	MainGui.Add("GroupBox", "x255 y24 w240 h38", "Debugging")
 	MainGui.Add("GroupBox", "x255 y62 w240 h168", "Test Paths/Patterns")
-	MainGui.Add("GroupBox", "x5 y114 w240 h50", "Priorities")
 	MainGui.SetFont("s8 cDefault Norm", "Tahoma")
 	;reconnect
 	MainGui.Add("Text", "x15 y44", "3 Fails:")
@@ -9371,6 +9362,9 @@ nm_AdvancedGUI(init:=0){
 	MainGui.Add("Edit", "x55 y64 w180 h18 vFallbackServer2", FallbackServer2).OnEvent("Change", nm_ServerLink)
 	MainGui.Add("Text", "x15 y88", "9 Fails:")
 	MainGui.Add("Edit", "x55 y86 w180 h18 vFallbackServer3", FallbackServer3).OnEvent("Change", nm_ServerLink)
+	;danger
+	MainGui.Add("Button", "x90 y114 w12 h14","?").OnEvent("Click", DangerInfo)
+	GuiCtrl := MainGui.Add("CheckBox", "x10 yp+15 vAnnounceGuidingStar Disabled Checked" AnnounceGuidingStar, "Announce Guiding Star").OnEvent("Click", nm_AnnounceGuidWarn)
 	;debugging
 	(GuiCtrl := MainGui.Add("CheckBox", "x265 y42 vssDebugging Checked" ssDebugging, "Enable Discord Debugging Screenshots")).Section := "Status", GuiCtrl.OnEvent("Click", nm_saveConfig)
 	;test
@@ -9390,7 +9384,7 @@ nm_AdvancedGUI(init:=0){
 	MainGui.Add("CheckBox", "x362 y174 vTestReset Checked", "Reset")
 	MainGui.Add("CheckBox", "x413 y174 vTestMsgBox", "MsgBox")
 	MainGui.Add("Button", "x325 y197 w100 h24", "Start Test").OnEvent("Click", nm_testButton)
-	MainGui.Add("Button", "x15 y130 w220 h25 vMainLoopPriorityButton", "Main Loop Priority List").OnEvent("Click", nm_priorityListGui)
+	MainGui.Add("Button", "x15 y200 w220 h25 vMainLoopPriorityButton", "Main Loop Priority List").OnEvent("Click", nm_priorityListGui)
 	if (init = 1)
 	{
 		TabCtrl.Choose("Advanced")
@@ -9403,6 +9397,12 @@ nm_AdvancedGUI(init:=0){
 		)", "Advanced Settings", 0x40040 " T20"
 	}
 }
+DangerInfo(*) => MsgBox("
+	(
+	These settings could case the macro to not function correctly, or for your roblox account to be at risk.
+
+	Read each warning CAREFULLY. If you are unsure about any of these settings, it is recommended to leave them off.
+	)")
 nm_TestInfinite(*){
 	global
 	MainGui["TestCount"].Enabled := !(TestInfinite := MainGui["TestInfinite"].Value)
@@ -17210,8 +17210,7 @@ ShellRun(prms*)
 	shell.ShellExecute(prms*)
 }
 nm_claimHiveSlot(){
-	global KeyDelay, FwdKey, RightKey, LeftKey, BackKey, ZoomOut, HiveSlot, HiveConfirmed, SC_E, SC_Esc, SC_R, SC_Enter, bitmaps, ReconnectMessage
-	static LastNatroSoBroke := 1
+	global KeyDelay, FwdKey, RightKey, LeftKey, BackKey, ZoomOut, HiveSlot, HiveConfirmed, SC_E, SC_Esc, SC_R, SC_Enter, bitmaps
 
 	GetBitmap() {
 		pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//2-200 "|" windowY+offsetY "|400|125")
@@ -17349,12 +17348,7 @@ nm_claimHiveSlot(){
 	MainGui["HiveSlot"].Text := HiveSlot
 	IniWrite HiveSlot, "settings\nm_config.ini", "Settings", "HiveSlot"
 	nm_setStatus("Claimed", "Hive Slot " . HiveSlot)
-	;;;;; Natro so broke :weary:
-	if(ReconnectMessage && ((nowUnix()-LastNatroSoBroke)>3600)) { ;limit to once per hour
-		LastNatroSoBroke:=nowUnix()
-		Send "{Text}/[" A_Hour ":" A_Min "] Natro so broke :weary:`n"
-		sleep 250
-	}
+	PostSubmacroMessage("background", 0x5554, 2, HiveSlot)
 	MouseMove windowX+350, windowY+offsetY+100
 
 	return 1
@@ -21700,6 +21694,10 @@ Background(){
 ; HOTKEYS
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;START MACRO
+/**
+ * Force start: errors/info are suppressed.
+ * RC start: errors/info are sent to status instead of msgboxes.
+ */
 start(*){
 	global
 	SetKeyDelay 100+KeyDelay
@@ -21707,103 +21705,130 @@ start(*){
 	MainGui["StartButton"].Enabled := 0
 	Hotkey StartHotkey, "Off"
 	nm_setStatus("Begin", "Macro")
-	local ForceStart := (A_Args.Has(1) && (A_Args[1] = 1))
+	
 	for i in StrSplit(priorityListNumeric)
 		priorityList.push(defaultPriorityList[i])
-	;Auto Field Boost WARNING @ start
-	if(AutoFieldBoostActive){
-		if(AFBDiceEnable)
-			if(AFBDiceLimitEnable)
-				futureDice:=AFBDiceLimit-AFBdiceUsed
-			else
-				futureDice:="ALL"
-		else
-			futureDice:="None"
-		if(AFBGlitterEnable)
-			if(AFBGlitterLimitEnable)
-				futureGlitter:=AFBGlitterLimit-AFBglitterUsed
-			else
-				futureGlitter:="ALL"
-		else
-			futureGlitter:="None"
-		if !ForceStart {
-			if (MsgBox(
-			(
-			"Automatic Field Boost is ACTIVATED.
-			------------------------------------------------------------------------------------
-			If you continue the following quantity of items can be used:
-			Dice: " futureDice "
-			Glitter: " futureGlitter "
-
-			HIGHLY RECOMMENDED:
-			Disable any non-essential tasks such as quests, bug runs, stingers, etc. Any time away from your gathering field can result in the loss of your field boost."
-			), "WARNING!!", 257 " T30") = "Cancel")
-				return
-		}
-	}
+	
 	if !ForceStart {
-		;Field drift compensation warning
-		Loop 3 {
-			;if gathering in a field with FDC on and without supreme set in settings, warn user
-			if (FDCWarn = 1 && FieldName%A_Index% != "None" && FieldName%A_Index% && FieldDriftCheck%A_Index% && SprinklerType != "Supreme") {
+		;Auto Field Boost WARNING @ start
+		nm_SetStatus("Debug", "AFB" AutoFieldBoostActive " RC" RemoteStart " Force" ForceStart) 
+		if AutoFieldBoostActive {
+			local futureDice  := (AFBDiceEnable ? (AFBDiceLimitEnable ? (AFBDiceLimit-AFBdiceUsed) : 'All') : 'None')
+			local futureGlitter  := (AFBGlitterEnable ? (AFBGlitterLimitEnable ? (AFBGlitterLimit-AFBglitterUsed) : 'All') : 'None')
+			if !RemoteStart {
 				MsgBox
 				(
-				"You have Field Drift Compensation enabled for Gathering Field " A_Index ", however you do not have supreme saturator as your sprinkler type set in settings.
-				Please note that Field Drift Compensation requires you to own the Supreme saturator, as it searches for the blue pixel."
-				), "Field Drift Compensation", 0x1040 " T30"
-				if (MsgBox("Would you like to disable this warning for the future?", "Field Drift Compensation", 0x1124 " T30") = "Yes")
-					IniWrite (FDCWarn := 0), "settings\nm_config.ini", "Settings", "FDCWarn"
-				break
+				"Automatic Field Boost is ACTIVATED.
+				------------------------------------------------------------------------------------
+				If you continue the following quantity of items can be used:
+				Dice: " futureDice "
+				Glitter: " futureGlitter "
+	
+				HIGHLY RECOMMENDED:
+				Disable any non-essential tasks such as quests, bug runs, stingers, etc. Any time away from your gathering field can result in the loss of your field boost."
+				), "WARNING!!", 257 " T30"
+			} else {
+				nm_setstatus("Warning","Automatic Field Boost is ACTIVATED.`nIf you continue the following quantity of items can be used`nDice: " futureGlitter "`nGlitter: " futureGlitter)
+			}
+		}
+		;Field drift compensation warning
+		;if gathering in a field with FDC on and without supreme set in settings, warn user
+		if (FDCWarn = 1 && SprinklerType != "Supreme") {
+			local Driftablefields := []
+			Loop 3 {
+				if (FieldName%A_Index% != "None" && FieldName%A_Index% && FieldDriftCheck%A_Index%)
+					Driftablefields.Push(A_Index)
+			}
+			if (Driftablefields.Length > 0){
+				; humanize text
+				local formattedfields := "field" (Driftablefields.Length > 1 ? "s" : "") " "
+				local index, field
+				for index, field in Driftablefields {
+					formattedfields .= field " (" FieldName%field% ")" ((index < Driftablefields.Length) ? (index = Driftablefields.Length-1 ? ", and " : ", ") : "")
+				}
+
+				if !RemoteStart {
+					MsgBox
+					(
+					"You have Field Drift Compensation enabled for gathering " formattedfields ". However, you do not have supreme saturator as your sprinkler type set in settings.
+					Please note that Field Drift Compensation requires you to own the Supreme saturator, as it searches for the blue pixel."
+					), "Field Drift Compensation", 0x1040 " T30"
+					if (MsgBox("Would you like to disable this warning for the future?", "Field Drift Compensation", 0x1124 " T30") = "Yes")
+						IniWrite (FDCWarn := 0), "settings\nm_config.ini", "Settings", "FDCWarn"
+				} else
+					nm_setStatus("Warning","`nField Drift Compensation is enabled for gathering " formattedfields " without supreme saturator. This means that you may run out of the fields easily in these fields.")
 			}
 		}
 		;Sticker Warning
 		if ((StickerStackCheck = 1) && InStr(StickerStackItem, "Sticker")) { ;Warns user about stickers
-			msgbox
-			(
-			"You have enabled the Sticker option for Sticker Stack!
-			Consider trading all of your valuable stickers to alternative account, to ensure that you do not lose any valuable stickers."
-			(((StickerStackHive + StickerStackCub + StickerStackVoucher > 0) &&
-			(
-			"
-
-			EXTRA WARNING!!
-			You have enabled the donation of:" ((StickerStackHive = 1) ? "`n- Hive Skins" : "") ((StickerStackCub = 1) ? "`n- Cub Skins" : "") ((StickerStackVoucher = 1) ? "`n- Vouchers" : "") "
-			Make sure this is correct because the macro WILL use them!"
-			)
-			) || "")
-			), "Sticker Stack", 0x1040 " T30"
+			if !RemoteStart
+				Msgbox(
+				(
+					"You have enabled the Sticker option for Sticker Stack!
+					Consider trading all of your valuable stickers to alternative account, to ensure that you do not lose any valuable stickers."
+					(((StickerStackHive + StickerStackCub + StickerStackVoucher > 0) ?
+						(
+						"`n`nEXTRA WARNING!!
+						You have enabled the donation of:" ((StickerStackHive = 1) ? "`n- Hive Skins" : "") ((StickerStackCub = 1) ? "`n- Cub Skins" : "") ((StickerStackVoucher = 1) ? "`n- Vouchers" : "") "
+						Make sure this is correct because the macro WILL use them!"
+						))
+					: "")
+				), "Sticker Stack", 0x1040 " T30")
+			else
+				nm_setStatus("Warning",
+					(StickerStackHive + StickerStackCub > 0) ? ("`nSticker Stack is enabled. Unwanted stickers may be donated.`nYou have also enabled **VALUABLE STICKERS:**"
+					(StickerStackHive ? "`n- **__Hive Skins__**" : "") 
+					(StickerStackCub ? "`n- **__Cub Skins__**" : "") 
+					(StickerStackVoucher ? "`n- **__Vouchers__**" : ""))
+				: "")
 		}
+		;Guid star Warning
+		if AnnounceGuidingStar
+			if !RemoteStart
+				nm_AnnounceGuidWarn(MainGui["AnnounceGuidingStar"])
+			else 
+				nm_setStatus("Warning","`nAnnounce Guiding Star is enabled. Make sure you are in a private server.")
 	}
 	ActivateRoblox()
 	disconnectCheck()
-	;check UIPI
-	try PostMessage 0x100, 0x7, 0, , "ahk_id " (hRoblox := GetRobloxHWND())
-	catch
-		MsgBox "
-		(
-		Your Roblox window is run as admin, but the macro is not!
-		This means the macro will be unable to send any inputs to Roblox.
-		You must either reinstall Roblox without administrative rights, or run Natro Macro as admin!
-
-		NOTE: It is recommended to stop the macro now, as this issue also causes hotkeys to not work while Roblox is active."
-		)", "WARNING!!", 0x1030 " T60"
-	try PostMessage 0x101, 0x7, 0xC0000000, , "ahk_id " hRoblox
 	nm_setShiftLock(0)
-	GetRobloxClientPos(hRoblox)
-	offsetY := GetYOffset(hRoblox, &offsetfail)
-	if (offsetfail = 1)
-		MsgBox "
-		(
-		Unable to detect in-game GUI offset!
-		This means the macro will NOT work correctly!
+	offsetY := GetYOffset((hRoblox := GetRobloxHWND()), &offsetfail)
 
-		There are a few reasons why this can happen, including:
-		- Incorrect graphics settings
-		- Your 'Experience Language' is not set to English
-		- Something is covering the top of your Roblox window
+	;addition warnings after roblox window is confirmed
+	if !ForceStart {
+		;check UIPI
+		try PostMessage 0x100, 0x7, 0, , "ahk_id " hRoblox
+		catch {
+			if !RemoteStart 
+				MsgBox "
+				(
+				Your Roblox window is run as admin, but the macro is not!
+				This means the macro will be unable to send any inputs to Roblox.
+				You must either reinstall Roblox without administrative rights, or run Natro Macro as admin!
 
-		Join our Discord server for support and our Knowledge Base post on this topic (Unable to detect in-game GUI offset)!
-		)", "WARNING!!", 0x1030 " T60"
+				NOTE: It is recommended to stop the macro now, as this issue also causes hotkeys to not work while Roblox is active."
+				)", "WARNING!!", 0x1030 " T60"
+			else
+				nm_setStatus("Error","`nRoblox is run as admin, but the macro is not. The macro cannot work in this state.")
+		}
+		try PostMessage 0x101, 0x7, 0xC0000000, , "ahk_id " hRoblox
+		if (offsetfail = 1)
+			if !RemoteStart 
+				MsgBox "
+				(
+				Unable to detect in-game GUI offset!
+				This means the macro will NOT work correctly!
+
+				There are a few reasons why this can happen, including:
+				- Incorrect graphics settings
+				- Your 'Experience Language' is not set to English
+				- Something is covering the top of your Roblox window
+
+				Join our Discord server for support and our Knowledge Base post on this topic (Unable to detect in-game GUI offset)!
+				)", "WARNING!!", 0x1030 " T60"
+			else 
+				nm_setStatus("Error","`nUnable to detect in-game GUI offset! Please check that all of your settings are correct.")
+	}
 	nm_OpenMenu()
 	MouseMove windowX+350, windowY+offsetY+100
 	DetectHiddenWindows 1
@@ -22115,8 +22140,10 @@ nm_ForceLabel(wParam, *){
 	switch wParam
 	{
 		case 1:
-		if (MainGui["StartButton"].Enabled = 1)
+		if (MainGui["StartButton"].Enabled = 1){
+			global RemoteStart := 1
 			SetTimer start, -500
+		}
 
 		case 2:
 		nm_pause()
