@@ -18,8 +18,8 @@ You should have received a copy of the license along with Natro Macro. If not, p
 #Include "Gdip_All.ahk"
 #Include "DurationFromSeconds.ahk"
 #Include "nowUnix.ahk"
+#Include "ErrorHandling.ahk"
 
-OnError (e, mode) => (mode = "Return") ? -1 : 0
 DetectHiddenWindows 1
 SetWorkingDir A_ScriptDir "\.."
 
@@ -67,6 +67,7 @@ else
 
 pToken := Gdip_Startup()
 OnExit(ba_timersExit)
+OnMessage(0x5552, nm_setGlobalInt, 255)
 
 ;Blender/shrine images
 hBitmapsSBT := Map()
@@ -175,7 +176,7 @@ TimersGui.Add("Button", "x322 y200 w25 h15 vAddShrineAmount1", "+1").OnEvent("Cl
 TimersGui.Add("Button", "x436 y200 w25 h15 vAddShrineAmount2", "+1").OnEvent("Click", ba_setShrineAmount)
 
 
-TimersGui.Add("text", "x388 y73 w112 +center +BackgroundTrans vdayOrNight", "Day Detected")
+TimersGui.Add("text", "x388 y73 w112 +center +BackgroundTrans vdayOrNight", "Detected: N/A")
 TimersGui.Add("text", "x391 y2 w110 h60 vstatus +center +BackgroundTrans", "Status:")
 TimersGui.Add("text", "x392 y13 w104 h56 vpstatus +left +BackgroundTrans", "unknown")
 
@@ -203,6 +204,7 @@ global PlanterField1, PlanterField2, PlanterField3
 
     , LastKing, LastTunnel, LastWolf
     , pkingtimer, ptunneltimer, pwolftimer
+    , dayOrNight:=0
 
 
 Loop {
@@ -317,7 +319,6 @@ Loop {
 		TimersGui["psessionTotalHoney"].Text := IniRead("settings\nm_config.ini", "Status", "SessionTotalHoney", 0)
 	}
 
-    TimersGui["dayOrNight"].Text := IniRead("settings\nm_config.ini", "Planters", "dayOrNight") " Detected"
     try TimersGui["pstatus"].Text := ControlGetText("Static4", "Natro ahk_class AutoHotkeyGUI")
 
 	Sleep (1100 - A_MSec)
@@ -729,6 +730,30 @@ UpdateInt(var, value)
 	DetectHiddenWindows 1
 	if WinExist("natro_macro ahk_class AutoHotkey")
 		PostMessage 0x5552, enum[var], value
+}
+
+nm_setGlobalInt(wParam, lParam, *)
+{
+	global
+	Critical
+	; enumeration
+	#Include "%A_ScriptDir%\..\lib\enum\EnumInt.ahk"
+
+	local var := arr[wParam]
+	try %var% := lParam
+    UpdateGui(var)
+	return 0
+}
+
+UpdateGui(var){
+    switch var {
+        case "dayOrNight":
+            Humanize := Map(0, 'Day'
+                , 2, 'Dusk'
+                , 1, 'Night'
+            )
+            TimersGui["dayOrNight"].Text := "Detected: " Humanize[dayOrNight]
+    }
 }
 
 ba_saveTimerGui(){
