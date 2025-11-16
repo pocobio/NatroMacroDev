@@ -10250,29 +10250,17 @@ robloxFPSGui(*) {
 	uwpfps := webfps := 60
 	for robloxtype in [RobloxTypes.Web, RobloxTypes.UWP] {
 		xmlpath := nm_LocateRobloxSettingsXML(robloxtype)
-		if !xmlpath
+		if (!xmlpath || !RegExMatch(FileRead(xmlpath), "<int name=`"FramerateCap`">(-?\d+)</int>", &match))
 			continue
-		if RegExMatch(FileRead(xmlpath), "<int name=`"FramerateCap`">(-?\d+)</int>", &match) {
-			fps := match[1] = "-1" ? 60 : Integer(match[1])
-			if robloxtype = RobloxTypes.Web {
-				fpsUnlockerGui["WebFPSCount"].Value := fps
-				fpsUnlockerGui["WebFPSCountLabel"].Enabled := 1
-				fpsUnlockerGui["WebFPSCountEdit"].Enabled := 1
-				fpsUnlockerGui["WebFPSCount"].Enabled := 1
-				fpsUnlockerGui["Apply"].Enabled := 1
-				webxml := xmlpath
-				webfps := fps
-			}
-			else {
-				fpsUnlockerGui["UWPFPSCount"].Value := fps
-				fpsUnlockerGui["UWPFPSCountLabel"].Enabled := 1
-				fpsUnlockerGui["UWPFPSCountEdit"].Enabled := 1
-				fpsUnlockerGui["UWPFPSCount"].Enabled := 1
-				fpsUnlockerGui["Apply"].Enabled := 1
-				uwpxml := xmlpath
-				uwpfps := fps
-			}
-		}
+		fps := match[1] = "-1" ? 60 : Integer(match[1])
+		isweb := (robloxtype = RobloxTypes.Web)
+		prefix := isweb ? "Web" : "UWP"
+		fpsUnlockerGui[prefix "FPSCount"].Value := fps
+		fpsUnlockerGui[prefix "FPSCountLabel"].Enabled := 1
+		fpsUnlockerGui[prefix "FPSCountEdit"].Enabled := 1
+		fpsUnlockerGui[prefix "FPSCount"].Enabled := 1
+		fpsUnlockerGui["Apply"].Enabled := 1
+		%prefix%xml := xmlpath, %prefix%fps := fps
 	}
 	WriteFPSCounts() {
 		if fpsUnlockerGui["WebFPSCount"].Value < 25 && fpsUnlockerGui["WebFPSCount"].Value != webfps
@@ -10282,33 +10270,41 @@ robloxFPSGui(*) {
 		for robloxtype, xmlpath in Map(RobloxTypes.Web, webxml, RobloxTypes.UWP, uwpxml) {
 			if !xmlpath
 				continue
-			local guikey := robloxtype == RobloxTypes.Web ? "WebFPSCount" : "UWPFPSCount"
-			local newfps := fpsUnlockerGui[guikey].Value
-			newfps := (newfps = 60) ? "-1" : String(newfps)
-			if newfps = String((robloxtype = RobloxTypes.Web) ? webfps : uwpfps)
+			prefix := (robloxtype = RobloxTypes.Web) ? "Web" : "FPS"
+			newfps := fpsUnlockerGui[prefix "FPSCount"].Value
+			newfpsxml := (newfps = 60) ? "-1" : newfps
+			oldfps := (robloxtype = RobloxTypes.Web) ? webfps : uwpfps
+			if newfps = oldfps
 				continue
-			while (
-				(robloxtype = RobloxTypes.Web && WinExist("Roblox ahk_exe RobloxPlayerBeta.exe")) ||
-				(robloxtype = RobloxTypes.Web && WinExist("Roblox ahk_exe ApplicationFrameHost.exe"))
-			) {
-				if MsgBox("Please close " robloxtype " Roblox before applying FPS changes.", , 0x40135) != "Retry"
-					continue 2
+			if robloxtype = RobloxTypes.Web {
+				while WinExist("ahk_exe RobloxPlayerBeta.exe") || WinExist("ahk_exe ApplicationFrameHost.exe")
+					if MsgBox("Please close Web Roblox before applying FPS changes.", , 0x40135) != "Retry"
+						continue 2 
+			} else {
+				while WinExist("ahk_exe ApplicationFrameHost.exe")
+					if MsgBox("Please close UWP Roblox before applying FPS changes.", , 0x40135) != "Retry"
+						continue 2 
 			}
 			try {
-				xmlcontent := RegExReplace(FileRead(xmlpath), "<int name=`"FramerateCap`">-?\d+</int>",
-				"<int name=`"FramerateCap`">" newfps "</int>")
+				xml := FileRead(xmlpath)
+				xml := RegExReplace(
+					xml,
+					"<int name=`"FramerateCap`">-?\d+</int>",
+					"<int name=`"FramerateCap`">" newfpsxml "</int>"
+				)
 				FileDelete(xmlpath)
-				FileAppend(xmlcontent, xmlpath)
+				FileAppend(xml, xmlpath)
 			}
-			catch Error as e {
-				MsgBox("Failed to write FPS settings to " robloxtype " Roblox settings file.`nSupposed path: " StrReplace(xmlpath,
-					EnvGet("USERPROFILE"), '%USERPROFILE%') '``', , 0x40030)
+			catch {
+				MsgBox(
+					"Failed to write FPS settings to " robloxtype " Roblox settings file.`nSupposed path: "
+					StrReplace(xmlpath, EnvGet("USERPROFILE"), "%USERPROFILE%")
+					, , 0x40030
+				)
+				continue
 			}
 			MsgBox(robloxtype " Roblox FPS limit has been set to " ((newfps = "-1") ? "60" : newfps) "", , 0x40040)
-			if robloxtype = RobloxTypes.Web
-				webfps := newfps
-			else
-				uwpfps := newfps
+			%prefix%fps = newfps
 		}
 	}
 }
