@@ -9526,7 +9526,9 @@ nm_ContributorsImage(page:=1, contributors:=""){
 
 	if !IsSet(hBM1)
 	{
-		devs := [["bastianauryn",0xffa202c0,"779430642043191307"]
+		; display name, color (ARGB), discord ID or web link
+		devs := [
+			["bastianauryn",0xffa202c0,"779430642043191307"]
 			, ["zez_",0xff7df9ff,"253742141124116481"]
 			, ["ScriptingNoob",0xfffa01c5,"245481556355973121"]
 			, ["zaappiix",0xffa2a4a3,"747945550888042537"]
@@ -9535,11 +9537,14 @@ nm_ContributorsImage(page:=1, contributors:=""){
 			, ["baguetto",0xff3d85c6,"323507959957028874"]
 			, ["raychal71",0xffb7c9e2,"259441167068954624"]
 			, ["axetar",0xffec8fd0,"487989990937198602"]
-			, ["mis.c",0xffa174fe,"996025853286817815"]
+			, ["mis.c",0xffa174fe,"https://github.com/misc-et"]
 			, ["ninju",0xffe6a157,"727937385274540046"]
-			, ["Dully176",0xff138718,"522940239904243712"]]
+			, ["Dully176",0xff138718,"522940239904243712"]
+			, ["nooby", 0xff915dd5, "https://n-by.me"]
+		]
 
-		testers := [["thatcasualkiwi",0xffff00ff,"334634052361650177"]
+		testers := [
+			["thatcasualkiwi",0xffff00ff,"334634052361650177"]
 			, ["ziz_jake",0xffa45ee9,"227604929806729217"]
 			, ["nick9",0xffdfdfdf,"700353887512690759"]
 			, ["heatsky",0xff3f8d4d,"725444258835726407"]
@@ -9550,7 +9555,8 @@ nm_ContributorsImage(page:=1, contributors:=""){
 			, ["anniespony",0xff0096ff,"217700684835979265"]
 			, ["idote",0xfff47fff,"350433227380621322"]
 			, ["mahirishere",0xffa3bded,"724740667158429747"]
-			, ["Pinwheel",0xfff49fbc,"849962858774003712"]]
+			, ["Pinwheel",0xfff49fbc,"849962858774003712"]
+		]
 
 		pBM := Gdip_CreateBitmap(244,212)
 		G := Gdip_GraphicsFromImage(pBM)
@@ -9620,7 +9626,10 @@ nm_ContributorsImage(page:=1, contributors:=""){
 			{
 				if ((x >= v[4][1]) && (x <= v[4][3]) && (y >= v[4][2]) && (y <= v[4][4]))
 				{
-					nm_RunDiscord("users/" v[3])
+					if InStr(v[3], "http")
+						Run(v[3])
+					else
+						nm_RunDiscord("users/" v[3])
 					break
 				}
 			}
