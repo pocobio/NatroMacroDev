@@ -188,7 +188,7 @@ class discord
 			wr.SetRequestHeader("Content-Type", "application/json")
 			wr.Send()
 			wr.WaitForResponse()
-			return StrReplace(wr.ResponseText, "\", "\\")
+			return wr.ResponseText
 		}
 	}
 
