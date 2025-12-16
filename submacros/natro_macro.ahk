@@ -312,7 +312,6 @@ nm_importConfig()
 		, "NewWalk", 1
 		, "HiveSlot", 6
 		, "HiveBees", 50
-		, "ConvertDelay", 5
 		, "PrivServer", ""
 		, "FallbackServer1", ""
 		, "FallbackServer2", ""
@@ -2759,9 +2758,6 @@ MainGui.Add("Text", "x92 yp w48 vClaimMethod +Center +BackgroundTrans", ClaimMet
 MainGui.Add("Button", "x80 yp w12 h15 vCMLeft Disabled", "<").OnEvent("Click", nm_ClaimMethod)
 MainGui.Add("Button", "x139 yp w12 h15 vCMRight Disabled", ">").OnEvent("Click", nm_ClaimMethod)
 MainGui.Add("Button", "x150 yp w10 h15 vClaimMethodHelp Disabled", "?").OnEvent("Click", nm_ClaimMethodHelp)
-;MainGui.Add("Text", "x9 y142 w110 +BackgroundTrans", "Wait")
-;(GuiCtrl := MainGui.Add("Edit", "x33 y141 w18 h16 Limit2 number vConvertDelay Disabled", ValidateInt(&ConvertDelay))).Section := "Settings", GuiCtrl.OnEvent("Change", nm_saveConfig)
-;MainGui.Add("Text", "x54 y142 w110 +BackgroundTrans", "seconds after convert")
 
 ;reset settings
 MainGui.Add("Button", "x20 y183 w130 h22 vResetFieldDefaultsButton Disabled", "Reset Field Defaults").OnEvent("Click", nm_ResetFieldDefaultGUI)
@@ -4159,7 +4155,6 @@ nm_TabSettingsLock(){
 	MainGui["HiveSlot"].Enabled := 0
 	MainGui["HiveBees"].Enabled := 0
 	MainGui["HiveBeesHelp"].Enabled := 0
-	MainGui["ConvertDelay"].Enabled := 0
 	MainGui["PrivServer"].Enabled := 0
 	MainGui["PublicFallback"].Enabled := 0
 	MainGui["ResetFieldDefaultsButton"].Enabled := 0
@@ -4202,7 +4197,6 @@ nm_TabSettingsUnLock(){
 	MainGui["HiveSlot"].Enabled := 1
 	MainGui["HiveBees"].Enabled := 1
 	MainGui["HiveBeesHelp"].Enabled := 1
-	MainGui["ConvertDelay"].Enabled := 1
 	MainGui["PrivServer"].Enabled := 1
 	MainGui["PublicFallback"].Enabled := 1
 	MainGui["ResetFieldDefaultsButton"].Enabled := 1
@@ -9794,8 +9788,8 @@ nm_AdvancedGUI(init:=0){
 	MainGui.Add("Edit", "x65 y86 w170 h18 vFallbackServer3", FallbackServer3).OnEvent("Change", nm_ServerLink)
 	;danger
 	MainGui.Add("Button", "x90 y114 w12 h14","?").OnEvent("Click", DangerInfo)
-	MainGui.Add("CheckBox", "x10 yp+15 vAnnounceGuidingStar Disabled Checked" AnnounceGuidingStar, "Announce Guiding Star").OnEvent("Click", nm_AnnounceGuidWarn)
-	MainGui.Add("CheckBox", "xp yp+15 vHideErrors Disabled Checked" HideErrors, "Hide Errors").OnEvent("Click", nm_HideErrorsWarn)
+	MainGui.Add("CheckBox", "x10 yp+15 vAnnounceGuidingStar Checked" AnnounceGuidingStar, "Announce Guiding Star").OnEvent("Click", nm_AnnounceGuidWarn)
+	MainGui.Add("CheckBox", "xp yp+15 vHideErrors Checked" HideErrors, "Hide Errors").OnEvent("Click", nm_HideErrorsWarn)
 	;debugging
 	(GuiCtrl := MainGui.Add("CheckBox", "x265 y42 vssDebugging Checked" ssDebugging, "Enable Discord Debugging Screenshots")).Section := "Status", GuiCtrl.OnEvent("Click", nm_saveConfig)
 	;test
@@ -16929,7 +16923,7 @@ nm_convert(){
 		, ConvertStartTime, TotalConvertTime, SessionConvertTime
 		, BackpackPercent, BackpackPercentFiltered
 		, PFieldBoosted, GatherFieldBoosted, GatherFieldBoostedStart, LastGlitter, GlitterKey
-		, GameFrozenCounter, LastConvertBalloon, ConvertBalloon, ConvertMins, HiveBees, ConvertDelay, ConvertGatherFlag
+		, GameFrozenCounter, LastConvertBalloon, ConvertBalloon, ConvertMins, HiveBees, ConvertGatherFlag
 
 	if (nm_NightInterrupt() || nm_MondoInterrupt())
 		return
@@ -17071,10 +17065,6 @@ nm_convert(){
 	TotalConvertTime:=TotalConvertTime+(nowUnix()-ConvertStartTime)
 	SessionConvertTime:=SessionConvertTime+(nowUnix()-ConvertStartTime)
 	ConvertStartTime:=0
-
-	;hive wait
-	;Sleep 500+((5-Min(HiveBees, 50)/10)**0.5)*10000
-	Sleep 500+(IsNumber(ConvertDelay) ? ConvertDelay : 0)*1000
 }
 nm_setSprinkler(field, loc, dist){
 	global FwdKey, LeftKey, BackKey, RightKey, SC_1, SC_Space, KeyDelay, SprinklerType, MoveSpeedNum
@@ -17485,6 +17475,8 @@ DisconnectCheck(testCheck := 0)
 				nm_setStatus("Error", ServerLabels[index] " Invalid")
 		}
 	}
+	; public server
+	PossibleServers[0] := Map("type", "None", "code", "")
 
 	; main reconnect loop
 	usingBrowser := false
