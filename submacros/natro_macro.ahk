@@ -2216,11 +2216,11 @@ nm_MsgBoxIncorrectRobloxSettings()
 	}
 	GuiClose()
 	if IgnoreIncorrectRobloxSettings
-		return
+		return 0
 	robloxtype := nm_DetectRobloxType()
 	xmlpath := nm_LocateRobloxSettingsXML(robloxtype)
 	if !xmlpath
-		return
+		return 0
 	xml := FileRead(xmlpath)
 	recommendations := []
 	for tier, tiermap in RecommendedRobloxSettings {
@@ -2256,7 +2256,7 @@ nm_MsgBoxIncorrectRobloxSettings()
 				? (MsgBox("You ticked the 'Do not show again' checkbox, which means you won't get any warning messages about incorrect Roblox settings anymore. Are you sure that you want to do this?", "Are you sure?", 0x1034) = "Yes"
 					? (IniWrite((IgnoreIncorrectRobloxSettings := 1), "settings\nm_config.ini", "Settings", "IgnoreIncorrectRobloxSettings"), IncSettingsGui.Destroy())
 					: "")
-				: IncSettingsGui.Destroy()
+				: (IncSettingsGui.Destroy(), IgnoreIncorrectRobloxSettings := 1) ; disable for this session
 		))
 		IncSettingsGui.Show("AutoSize Center")
 		return 1
@@ -22147,15 +22147,15 @@ Background(){
  */
 start(*){
 	global
-	unlockstartbutton() => (MainGui["StartButton"].Enabled := 1, Hotkey(StartHotkey, "On"))
-
-	;//todo: make startup errors an array
+	unlockstartbutton() => (MainGui["StartButton"].Enabled := 1, Hotkey(StartHotkey, "On"), nm_LockTabs(0))
 
 	SetKeyDelay 100+KeyDelay
 	nm_LockTabs()
 	MainGui["StartButton"].Enabled := 0
 	Hotkey StartHotkey, "Off"
 	nm_setStatus("Begin", "Macro")
+
+	;//todo: make startup errors an array
 	
 	for i in StrSplit(priorityListNumeric)
 		priorityList.push(defaultPriorityList[i])
