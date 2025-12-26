@@ -17780,13 +17780,17 @@ nm_claimHiveSlot(){
 	global KeyDelay, FwdKey, RightKey, LeftKey, BackKey, ZoomOut, HiveSlot, HiveConfirmed, SC_E, SC_Esc, SC_R, SC_Enter, bitmaps
 	GetBitmap() {
 		pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//2-200 "|" windowY+offsetY "|400|125")
-		while ((A_Index <= 20) && (Gdip_ImageSearch(pBMScreen, bitmaps["FriendJoin"], , , , , , 6) = 1)) {
-			Gdip_DisposeImage(pBMScreen)
-			MouseMove windowX+windowWidth//2-3, windowY+24
-			Click
-			MouseMove windowX+350, windowY+offsetY+100
-			Sleep 500
-			pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//2-200 "|" windowY+offsetY "|400|125")
+		loop 20 {
+			for , bitmap in bitmaps["FriendJoin"] {
+				if (Gdip_ImageSearch(pBMScreen, bitmap, , , , , , 6) = 1) {
+					Gdip_DisposeImage(pBMScreen)
+					MouseMove windowX+windowWidth//2-3, windowY+24
+					Click
+					MouseMove windowX+350, windowY+offsetY+100
+					Sleep 500
+					pBMScreen := Gdip_BitmapFromScreen(windowX+windowWidth//2-200 "|" windowY+offsetY "|400|125")
+				}
+			}
 		}
 		return pBMScreen
 	}

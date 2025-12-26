@@ -19,5 +19,5 @@ bitmaps["spawn"]["day-honey"] := Gdip_CreateBitmap(22, 4), G := Gdip_GraphicsFro
 ;bitmaps["spawn"]["night-honey"] := Gdip_CreateBitmap(22, 4), G := Gdip_GraphicsFromImage(bitmaps["spawn"]["night-honey"]), Gdip_GraphicsClear(G, 0xff000000), Gdip_DeleteGraphics(G)
 bitmaps["spawn"]["day-meteor"] := Gdip_CreateBitmap(22, 4), G := Gdip_GraphicsFromImage(bitmaps["spawn"]["day-meteor"]), Gdip_GraphicsClear(G, 0xff957A70), Gdip_DeleteGraphics(G)
 ;bitmaps["spawn"]["night-meteor"] := Gdip_CreateBitmap(22, 4), G := Gdip_GraphicsFromImage(bitmaps["spawn"]["night-meteor"]), Gdip_GraphicsClear(G, 0xff000000), Gdip_DeleteGraphics(G)
-;bitmaps["spawn"]["day-snow"] := Gdip_CreateBitmap(22, 4), G := Gdip_GraphicsFromImage(bitmaps["spawn"]["day-snow"]), Gdip_GraphicsClear(G, 0xff000000), Gdip_DeleteGraphics(G)
-;bitmaps["spawn"]["night-snow"] := Gdip_CreateBitmap(22, 4), G := Gdip_GraphicsFromImage(bitmaps["spawn"]["night-snow"]), Gdip_GraphicsClear(G, 0xff000000), Gdip_DeleteGraphics(G)
+bitmaps["spawn"]["day-snow"] := Gdip_CreateBitmap(22, 4), G := Gdip_GraphicsFromImage(bitmaps["spawn"]["day-snow"]), Gdip_GraphicsClear(G, 0xff988a55), Gdip_DeleteGraphics(G)
+bitmaps["spawn"]["day-snow-storm"] := Gdip_CreateBitmap(22, 4), G := Gdip_GraphicsFromImage(bitmaps["spawn"]["day-snow-storm"]), Gdip_GraphicsClear(G, 0xffc3bca5), Gdip_DeleteGraphics(G)
