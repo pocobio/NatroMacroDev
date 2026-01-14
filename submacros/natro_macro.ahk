@@ -18124,32 +18124,9 @@ nm_Night(){
 	nm_ViciousBee()
 	CheckNight := 0
 }
-nm_confirmNight(){
-	global CheckNight
-	nm_setStatus("Confirming", "Night")
-	nm_Reset(0, 2000, 0)
-	sendinput "{" RotDown "}"
-	loop 10 {
-		SendInput "{" ZoomOut "}"
-		Sleep 100
-		if ((findImg := nm_imgSearch("nightsky.png", 50, "abovebuff"))[1] = 0)
-			break
-		sendinput "{" RotLeft " 4}"
-		findImg := nm_imgSearch("nightsky.png", 50, "abovebuff")
-		sendinput "{" RotRight " 4}"
-		if findImg[1] = 0		
-			break
-
-	}
-	sendinput "{" RotUp " 1}"
-	send "{" ZoomOut " 8}"
-	if findImg[1]=0
-		CheckNight := 0
-	return (findImg[1]=0)
-}
 nm_NightMemoryMatch(){
 	; night (general) + no amulet + nightmm ready + night confirmed (last b/c reset)
-	if (!nm_NightInterrupt() || nm_AmuletPrompt() || !(NightMemoryMatchCheck && (nowUnix()-LastNightMemoryMatch)>28800) || !nm_confirmNight())
+	if (!nm_NightInterrupt() || nm_AmuletPrompt() || !(NightMemoryMatchCheck && (nowUnix()-LastNightMemoryMatch)>28800))
 			return
 	nm_MemoryMatch("Night")
 }
@@ -18225,12 +18202,8 @@ nm_locateVB(){
 			return
 	}
 
-	if(nm_confirmNight()){
-		nm_setStatus("Starting", "Vicious Bee Cycle")
-	} else {
-		nm_setStatus("Aborting", "Vicious Bee - Not Night")
-		return
-	}
+	
+	nm_setStatus("Starting", "Vicious Bee Cycle")
 	nm_updateAction("Stingers")
 
 	for data in VicData
