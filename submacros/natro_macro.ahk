@@ -2896,7 +2896,7 @@ MainGui.Add("Text", "x456 y152", "Mins")
 
 ;update settings
 MainGui.Add("Text", "x340 y210 w110 +BackgroundTrans", "Release Channel:")
-MainGui.Add("Text", "x443 yp w35 +BackgroundTrans +Center" , ReleaseChannel)
+MainGui.Add("Text", "x443 yp w35 vReleaseChannel +BackgroundTrans +Center" , ReleaseChannel)
 MainGui.Add("Button", "xp-16 yp w12 h16 vRCLeft Disabled", "<").OnEvent("Click", nm_ReleaseChannel)
 MainGui.Add("Button", "xp+52 yp wp hp vRCRight Disabled", ">").OnEvent("Click", nm_ReleaseChannel)
 SetLoadingProgress(30)
