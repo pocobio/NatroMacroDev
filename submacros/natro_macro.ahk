@@ -1255,8 +1255,20 @@ PolarBear := Map("Aromatic Pie",
 
 	, "Trail Mix",
 		[[1,"Collect","Sunflower"]
-		,[2,"Collect","Pineapple"]])
+		,[2,"Collect","Pineapple"]]
 
+	; TODO: PETALDETECT
+	, "Petal Tabbouleh",
+		[[1, "Collect", "Pineapple"]
+		, [2, "Collect", "Strawberry"]
+		, [3, "Kill", "RhinoBeetles"]]
+
+	, "Mashed Blooms",
+		[[1, "Collect", "Pumpkin"]
+		,[2, "Collect", "Spider"]
+		,[3, "Collect", "Bamboo"]
+		,[4, "Kill", "Spider"]]
+)
 
 BlackBear := Map("Just White",
 		[[1,"Collect","White"]]
@@ -1396,6 +1408,11 @@ BuckoBee := Map("Abilities",
 		,[4,"Kill","RhinoBeetles"]
 		,[1,"Collect","Blue Flower"]
 		,[2,"Collect","Bamboo"]
+		,[3,"Collect","Pine Tree"]]
+
+	, "Petals",
+		[[1,"Collect","Clover"]
+		,[2,"Collect","Pineapple"]
 		,[3,"Collect","Pine Tree"]])
 
 
@@ -1466,7 +1483,13 @@ RileyBee := Map("Abilities",
 		,[4,"Kill","Ladybugs"]
 		,[1,"Collect","Mushroom"]
 		,[2,"Collect","Strawberry"]
-		,[3,"Collect","Rose"]])
+		,[3,"Collect","Rose"]]
+
+	, "Petals",
+		[[1,"Collect","Clover"]
+		,[2,"Collect","Spider"]
+		,[3,"Collect","Strawberry"]]
+)
 
 ;field booster data
 FieldBooster:=Map("pine tree", {booster:"blue", stacks:1}
