@@ -11154,7 +11154,7 @@ nm_Reset(checkAll:=1, wait:=2000, convert:=1, force:=0){
 			if atHive()
 				HiveConfirmed := 1
 		} else {
-			nm_SetHiveCameraDirection(2)
+			nm_SetHiveCameraDirection(4)
 		}
 	}
 	;convert
@@ -16769,8 +16769,11 @@ nm_GoGather(){
 		pBMScreen := Gdip_BitmapFromScreen(WindowX+WindowWidth*0.5-260 "|" WindowY+WindowHeight-101 "|" 75*7 "|" 66) ;hotbar
 		if (Gdip_ImageSearch(pBMScreen,bitmaps["whirligigslot"], , , , , , 10, ,3) = 1) {
 			Gdip_DisposeImage(pBMScreen)
-			Send "{" WhirligigKey "}{ " RotUp " 10}{ " RotDown " 4}{" ZoomIn " 10}"
+			Send "{" WhirligigKey "}"
 			sleep(2000) ; make sure the player is on the ground
+
+			Send "{ " RotDown " 10}{ " RotUp " 7}{" ZoomIn " 10}"
+
 			if !nm_SetHiveCameraDirection(1)
 				nm_setStatus("Warning", "Unable to confirm hive!")
 			
