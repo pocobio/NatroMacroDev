@@ -1411,9 +1411,9 @@ BuckoBee := Map("Abilities",
 		,[3,"Collect","Pine Tree"]]
 
 	, "Petals",
-		[[1,"Collect","Clover"]
-		,[2,"Collect","Pineapple"]
-		,[3,"Collect","Pine Tree"]])
+		[[1,"Collect","Pine Tree"]
+		,[2,"Collect","Clover"]
+		,[3,"Collect","Pineapple"]])
 
 
 RileyBee := Map("Abilities",
@@ -1486,9 +1486,9 @@ RileyBee := Map("Abilities",
 		,[3,"Collect","Rose"]]
 
 	, "Petals",
-		[[1,"Collect","Clover"]
-		,[2,"Collect","Spider"]
-		,[3,"Collect","Strawberry"]]
+		[[1,"Collect","Strawberry"]
+		,[2,"Collect","Clover"]
+		,[3,"Collect","Spider"]]
 )
 
 ;field booster data
@@ -3265,8 +3265,13 @@ MainGui.Add("GroupBox", "x160 y131 w165 h108", "Brown Bear")
 MainGui.Add("GroupBox", "x330 y23 w165 h108", "Bucko Bee")
 MainGui.Add("GroupBox", "x330 y131 w165 h108", "Riley Bee")
 
+petalQuestDisclaimer := Msgbox.Bind(
+	"As of version 1.1.0, petal quests have been added to detection, but the macro will simply gather in the corresponding field, or the field with the highest concenctration of a specific petal color."
+	. "`n`nIT IS EXPECTED THAT PETAL QUESTS TAKE A LONG TIME, especially high-tier quests like Riley/Bucko at 250+ quests completed"
+	, "Petal Quest Warning", "Owner" MainGui.Hwnd)
+
 MainGui.SetFont("s8 cDefault Norm", "Tahoma")
-(GuiCtrl := MainGui.Add("CheckBox", "x80 y23 vPolarQuestCheck Disabled Checked" PolarQuestCheck, "Enable")).Section := "Quests", GuiCtrl.OnEvent("Click", nm_saveConfig)
+(GuiCtrl := MainGui.Add("CheckBox", "x80 y23 vPolarQuestCheck Disabled Checked" PolarQuestCheck, "Enable")).Section := "Quests", GuiCtrl.OnEvent("Click", nm_PolarQuestCheck)
 (GuiCtrl := MainGui.Add("CheckBox", "x15 y37 vPolarQuestGatherInterruptCheck Disabled Checked" PolarQuestGatherInterruptCheck, "Allow Gather Interrupt")).Section := "Quests", GuiCtrl.OnEvent("Click", nm_saveConfig)
 MainGui.Add("Text", "x8 y51 w145 h78 vPolarQuestProgress", StrReplace(PolarQuestProgress, "|", "`n"))
 
@@ -6211,6 +6216,8 @@ nm_BuckoQuestCheck(*){
 		IniWrite (MainGui["AntPassAction"].Text := AntPassAction := "Pass"), "settings\nm_config.ini", "Collect", "AntPassAction"
 		MsgBox 'Ant Pass collection has been automatically enabled so the passes can be stockpiled for the "Picnic" quest.', "Bucko Bee Quest", "Owner" MainGui.Hwnd
 	}
+	if BuckoQuestCheck
+		petalQuestDisclaimer()
 }
 nm_RileyQuestCheck(*){
 	global
@@ -6221,6 +6228,14 @@ nm_RileyQuestCheck(*){
 		IniWrite (MainGui["AntPassAction"].Text := AntPassAction := "Pass"), "settings\nm_config.ini", "Collect", "AntPassAction"
 		MsgBox 'Ant Pass collection has been automatically enabled so the passes can be stockpiled for the "Picnic" quest.', "Riley Bee Quest", "Owner" MainGui.Hwnd
 	}
+	if RileyQuestCheck
+		petalQuestDisclaimer()
+}
+nm_PolarQuestCheck(*){
+	global
+	IniWrite (PolarQuestCheck := MainGui["PolarQuestCheck"].Value), "settings\nm_config.ini", "Quests", "PolarQuestCheck"
+	if (PolarQuestCheck = 1)
+		petalQuestDisclaimer()
 }
 nm_QuestGatherReturnBy(GuiCtrl, *){
 	global QuestGatherReturnBy
@@ -7956,9 +7971,9 @@ nm_ClaimMethodHelp(*){ ; join method information
 	MsgBox "
 	(
 	DESCRIPTION:
-	This option lets you choose between 'Detect' and 'To Hive' Hive Claiming.
+	This option lets you choose between 'Detect' and 'To Slot' Hive Claiming.
 
-	'To Hive' is the more reliable option out of the bunch, this will go straight to hive without any concern to if it's claimed or not.
+	'To Slot' is the more reliable option out of the bunch, this will go straight to the set hive slot without any concern as to if it's claimed or not.
 	This is the best choice if you are in a private server.
 
 	'Detect' is only recommended if you are playing in a public server for speed.
@@ -14318,7 +14333,7 @@ nm_Bugrun(){
 				nm_setStatus("Traveling", "Rhino Beetles (Blue Flower)")
 				movement :=
 				(
-				nm_Walk(18, BackKey) '
+				nm_Walk(22, BackKey) '
 				send "{' RotLeft ' 2}"
 				' nm_Walk(10, BackKey)
 				)
